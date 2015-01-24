@@ -16,10 +16,12 @@ pp = pprint.PrettyPrinter()
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 
+LIMIT = 5000
+REMOTE = 'https://dm.csirtgadgets.com/api'
+TIMEOUT = 300
+
 __all__ = []
-__version__ = cif.sdk.__version__
-__date__ = '2014-05-19'
-__updated__ = '2014-05-19'
+__version__ = dm.sdk.__version__
 __max_field_size__ = 30
 
 class CLIError(Exception):
@@ -32,28 +34,6 @@ class CLIError(Exception):
     def __unicode__(self):
         return self.msg
 
-def make_table(r):
-    ##TODO factory this out with snort rule, etc
-    cols = ['tlp','group','lasttime','observable','cc','confidence','tags','rdata','provider']
-    
-    t = PrettyTable(cols)
-    t.align['provider'] = 'l'
-    if type(r) is not list:
-        r = [r]
-    
-    for obs in r:
-        r = []
-        for c in cols:
-            y = obs.get(c) or ''
-            if type(y) is list:
-                y = ','.join(y)
-            y = str(y)
-            y = (y[:__max_field_size__] + '..') if len(y) > __max_field_size__ else y
-            r.append(y)
-        t.add_row(r)
-    print t
-    ## END
-    
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
     
@@ -64,33 +44,32 @@ def main(argv=None): # IGNORE:C0111
 
     program_name = os.path.basename(sys.argv[0])
     program_version = "v%s" % __version__
-    program_build_date = str(__updated__)
-    program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
+    program_version_message = '%%(prog)s %s' % (program_version)
 
     try:
         # Setup argument parser
         parser = ArgumentParser(description='', formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument('-d', '--debug', dest='debug', action="store_true")
-        parser.add_argument('-q',"--search", dest="search", help="search for observable")
-        parser.add_argument('--firsttime', dest='firsttime', help='firsttime or later')
-        parser.add_argument('--lasttime', dest='lasttime', help='lasttime or earlier')
-        parser.add_argument("--tags", dest="tags", help="filter for tags")
-        parser.add_argument('--otype', dest='otype', help='filter by otype')
-        parser.add_argument("--cc", dest="cc", help="filter for countrycode")
-        parser.add_argument('--token', dest='token', help="specify token")
-        parser.add_argument('--confidence', dest="confidence", help="specify confidence")
-        parser.add_argument('--rdata',dest='rdata', help='filter by rdata')
-        parser.add_argument('--limit', dest="limit", help="result limit", default=500)
-        parser.add_argument('--no-verify-ssl', dest="no_verify_ssl", action="store_true", default=False)
-        parser.add_argument('--remote', dest="remote", help="remote api location (eg: https://example.com)")
-        parser.add_argument('--timeout', dest="timeout", help='connection timeout [default: %(default)s]', default="300")
-        parser.add_argument('-C', '--config', dest="config", help="configuration file [default: %(default)s]", default=os.path.expanduser("~/.cif.yml") )
-        parser.add_argument('--ping', dest="ping", action="store_true", help="ping")
-        parser.add_argument('--sort',dest='sort',help='sort output ASC by key',default='lasttime')
-        parser.add_argument('--submit', help="submit json string")
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
-        parser.add_argument('-n', '--nolog', help='do not log the search', default=None, action="store_true")
+
+        parser.add_argument('-q',"--search", dest="search", help="search for observable")
+        parser.add_argument('--token', dest='token', help="specify token")
+        parser.add_argument('--limit', dest="limit", help="result limit", default=LIMIT)
+        parser.add_argument('--no-verify-ssl', dest="no_verify_ssl", action="store_true", default=False)
+        parser.add_argument('--remote', dest="remote", help="remote api location [default: %(default)s]",
+                            default=REMOTE)
+        parser.add_argument('--timeout', dest="timeout", help='connection timeout [default: %(default)s]',
+                            default=TIMEOUT)
+        parser.add_argument('-C', '--config', dest="config", help="configuration file [default: %(default)s]",
+                            default=os.path.expanduser("~/.dm.yml") )
+        parser.add_argument('--ping', dest="ping", action="store_true", help="ping")
+        parser.add_argument('--submit', help="submit json string")
+
+        parser.add_argument('--feed', dest='feed')
+        parser.add_argument('--user', dest='user')
+
+
         
         # Process arguments
         args = parser.parse_args()
@@ -111,6 +90,7 @@ def main(argv=None): # IGNORE:C0111
 
         options = vars(args)
 
+        # TODO -- defaults
         if os.path.isfile(args.config):
             f = file(args.config)
             config = yaml.load(f)
@@ -121,45 +101,29 @@ def main(argv=None): # IGNORE:C0111
             for k in config:
                 if not options.get(k):
                     options[k] = config[k]
-        
-        if(options.get('search') or options.get('tags') or options.get('cc') or options.get('rdata') or options.get('otype')):
+
+        cli = Client(**options)
+
+        if(options.get('submit')):
+            ret = cli.submit(feed=options.get('feed'), user=options.get('user'), data={
+                'observable': {
+                    'thing': 'example.com'
+                }
+            })
+            pp.pprint(ret)
+        elif(options.get('feed')):
             filters = {}
             if options.get('search'):
                 filters['observable'] = options['search']
-            if options.get('cc'):
-                filters['cc'] = options['cc']
-            
-            if options.get('tags'):
-                filters['tags'] = options['tags']
-                
-            if options.get('confidence'):
-                filters['confidence'] = options['confidence']
-                
-            if options.get('firsttime'):
-                filters['firsttime'] = options['firsttime']
-            
-            if options.get('lasttime'):
-                filters['lasttime'] = options['lasttime']
-                
-            if options.get('otype'):
-                filters['otype'] = options['otype']
-            
-            if options.get('rdata'):
-                filters['rdata'] = options['rdata']
-            
-            if options.get('nolog'):
-                options['nolog'] = 1
-                
-            ret = Client(**options).search(limit=options['limit'],nolog=options['nolog'],filters=filters,sort=options.get('sort'))
-            make_table(ret)
+
+
+            ret = cli.feed(user=options['user'], feed=options['feed'])
+            print cli.table(data=ret)
         elif(options.get('ping')):
             for num in range(0,4):
                 ret = Client(**options).ping()
                 print "roundtrip: %s ms" % ret
-                select.select([],[],[],1) ## TODO -- does this work on windows?
-        elif(options.get('submit')):
-            ret = Client(**options).submit(**options)
-            make_table(ret)
+                select.select([], [], [], 1)
         else:
             logger.warning('operation not supported')
             sys.exit()

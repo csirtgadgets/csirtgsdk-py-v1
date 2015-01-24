@@ -3,10 +3,10 @@ from setuptools import setup
 import dm.sdk
 setup(
       name="dm-sdk",
-      version=cif.sdk.__version__,
+      version=dm.sdk.__version__,
       description="DM Python SDK",
       long_description="DM Software Development Kit for Python",
-      url="https://github.com/barely3am/py-dm-sdk",
+      url="https://github.com/csirtgadgets/py-dm-sdk",
       license='LGPL3',
       classifiers=[
                    "Topic :: System :: Networking",
