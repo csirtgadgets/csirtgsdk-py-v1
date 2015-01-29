@@ -69,8 +69,6 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
     ```python
     from whiteface.sdk.client import Client
     
-    ...
-    
     ret = cli.observables('example.com', username=None)
     print cli.table(data=ret)
     ```
@@ -78,8 +76,6 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ### observable_create
     ```python
     from whiteface.sdk.client import Client
-    
-    ...
     
     obs = {
         "thing": "example.com",
