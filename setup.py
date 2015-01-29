@@ -1,12 +1,12 @@
 from setuptools import setup
 
-import dm.sdk
+import whiteface.sdk
 setup(
-      name="dm-sdk",
-      version=dm.sdk.__version__,
-      description="DM Python SDK",
-      long_description="DM Software Development Kit for Python",
-      url="https://github.com/csirtgadgets/py-dm-sdk",
+      name="whiteface-sdk",
+      version=whiteface.sdk.VERSION,
+      description="WhiteFace Python SDK",
+      long_description="WhiteFace Software Development Kit for Python",
+      url="https://github.com/csirtgadgets/py-whiteface-sdk",
       license='LGPL3',
       classifiers=[
                    "Topic :: System :: Networking",
@@ -18,11 +18,11 @@ setup(
       keywords=['security'],
       author="Wes Young",
       author_email="wes@barely3am.com",
-      packages = ["dm","dm.sdk","test"],
+      packages = ["whiteface","whiteface.sdk","test"],
       install_requires = ["requests>=2.0"
                           "json",
                           'pyyaml',
                           'prettytable'],
-      scripts=['bin/dm'],
+      scripts=['bin/wf'],
       test_suite = "test"
 )

@@ -1,14 +1,12 @@
-# DrunkMonkey Software Development Kit for Python
-The CIF  Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using CIF.
-
-[![Build Status](https://travis-ci.org/csirtgadgets/py-cif-sdk.png?branch=master)](https://travis-ci.org/csirtgadgets/py-cif-sdk)
+# WhiteFace Software Development Kit for Python
+The WhiteFace Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using WhiteFace.
 
 # Installation
 ## Ubuntu
   ```bash
   sudo apt-get install -y python-dev python-pip git
-  git clone https://github.com/csirtgadgets/py-cif-sdk.git -b master
-  cd py-cif-sdk
+  git clone https://github.com/csirtgadgets/py-whiteface-sdk.git -b master
+  cd py-whiteface-sdk
   pip install -r requirements.txt
   python setup.py build
   python setup.py test
@@ -19,64 +17,83 @@ The CIF  Software Development Kit (SDK) for Python contains library code and exa
 ## Client
 ### Config
   ```yaml
-  # ~/.cif.yml
+  # ~/.wf.yml
   client:
-    remote: https://localhost
     token: 1234
   ```
 ### Running
   ```bash
-  $ cif --token 1234 --remote 'https://localhost' -q example.com
+  $ wf --token 1234 --user wes --feed scanners
   ```
 
 ## API
-### Search
+### ping
   ```python
-  from cif.sdk.client import Client
-  from prettytable import PrettyTable
+    from whiteface.sdk.client import Client
+  
+    options = {
+        "token": "1234",
+    }
 
-  def make_table(r):
-    cols = ['id','provider','tlp','group','observable','confidence',
-            'firsttime','lasttime','reporttime','altid','altid_tlp',
-            'tags']
-
-    t = PrettyTable(cols)
-    t.align['provider'] = 'l'
-    if type(r) is not list:
-        r = [r]
-
-    for obs in r:
-        r = []
-        for c in cols:
-            y = obs.get(c)
-            if type(y) is list:
-                y = ','.join(y)
-            r.append(y)
-        t.add_row(r)
-    print t
-
-  cli = Client(token=1234,
-               remote='https://localhost',
-               noverifyssl=1)
-
-  ret = cli.search(query='example.com')
-  make_table(ret)
+    ret = cli.ping()
+    
+    print "roundtrip: %s ms" % ret
   ```
-### Ping
+
+### feed
   ```python
-  from cif.sdk.client import Client
-  ...
+    from whiteface.sdk.client import Client
+    
+    options = {
+        "token": "1234",
+        "user": "wes",
+        "feed": "scanners"
+    }
 
-  ret = cli.ping()
-  print "roundtrip: %s ms" % ret
+    cli = Client(token=options['token'])
+
+    ret = cli.feed(user=options['user'], feed=options['feed'])
+    print cli.table(data=ret)
   ```
+ 
+### feed_create
+    ```python
+    from whiteface.sdk.client import Client
+    
+    cli = Client(token="1234")
+    
+    cli.feed_create(name='my zeus feed'))
+    ```
+
+### observable
+    ```python
+    from whiteface.sdk.client import Client
+    
+    ...
+    
+    ret = cli.observables('example.com', username=None)
+    print cli.table(data=ret)
+    ```
+
+### observable_create
+    ```python
+    from whiteface.sdk.client import Client
+    
+    ...
+    
+    obs = {
+        "thing": "example.com",
+        "tags": ['zeus','bot'],
+    }
+    cli.observable_create(feed, thing, tags=[], comment=None)
+    ```
 
 # Support and Documentation
 
-You can also look for information at the [GitHub repo](https://github.com/csirtgadgets/py-cif-sdk).
+You can also look for information at the [GitHub repo](https://github.com/csirtgadgets/py-whiteface-sdk).
 
 # License and Copyright
 
-Copyright (C) 2014 [the CSIRT Gadgets Foundation](http://csirtgadgets.org)
+Copyright (C) 2015 [CSIRT Gadgets](http://csirtgadgets.com)
 
 Free use of this software is granted under the terms of the [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl.html) (LGPL v3.0). For details see the file ``LICENSE`` included with the distribution.

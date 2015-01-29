@@ -1,0 +1,3 @@
+VERSION = '0.0.0a1'
+
+API_VERSION = 0
