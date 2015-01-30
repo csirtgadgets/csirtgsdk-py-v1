@@ -129,7 +129,8 @@ def main(argv=None): # IGNORE:C0111
         if not options.get('user'):
             parser.error('--user is required')
 
-        cli.feed_create(options['user'], options['feed_create'])
+        ret = cli.feed_create(options['user'], options['feed_create'])
+        print('Feed {0} created...'.format(ret['feed']['name']))
 
     elif options.get('feed'):
         if not options.get('user'):
