@@ -23,7 +23,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   ```
 ### Running
   ```bash
-  $ wf --token 1234 --user wes --feed scanners
+  $ wf --ping
+  $ wf --observable example.com
+  $ wf --user wes --feed spyeye
+  $ wf --user wes --feed-create zeus
+  $ wf --user wes --feed zeus --observable-create badsite.com --tags zeus,bot --comment 'this is a really bad guy...'
   ```
 
 ## API
