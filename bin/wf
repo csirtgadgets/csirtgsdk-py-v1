@@ -117,12 +117,9 @@ def main(argv=None): # IGNORE:C0111
         ret = cli.observable_create(options['user'], options['feed'], options['thing'],
                                     tags=tags, comment=options.get('comment'))
 
-        pp.pprint(ret)
-
     elif options.get('observable'):
         ret = cli.observable(options['observable'], user=options.get('user'), feed=options.get('feed'))
         if len(ret) > 0:
-            pp.pprint(ret)
             print Table(data=ret)
 
     elif options.get('feed_create'):
