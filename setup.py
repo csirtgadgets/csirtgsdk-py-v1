@@ -20,7 +20,6 @@ setup(
       author_email="wes@barely3am.com",
       packages = ["whiteface","whiteface.sdk","test"],
       install_requires = ["requests>=2.0"
-                          "json",
                           'pyyaml',
                           'prettytable'],
       scripts=['bin/wf'],

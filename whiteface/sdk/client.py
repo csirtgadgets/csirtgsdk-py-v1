@@ -93,7 +93,7 @@ class Client(object):
         uri = self.remote + '/search'
 
         if user:
-            uri = uri + '/{0}/users/{1}'.format(uri, user)
+            uri = '/{0}/users/{1}'.format(uri, user)
 
         if feed:
             uri = '{0}/feeds/{1}'.format(uri, feed)
