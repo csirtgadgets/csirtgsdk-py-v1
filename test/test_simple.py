@@ -1,5 +1,5 @@
 import unittest
-from cif.sdk.client import Client
+from whiteface.sdk.client import Client
 
 class TestClient(unittest.TestCase):
 
