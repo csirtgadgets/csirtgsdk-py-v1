@@ -7,10 +7,9 @@ import whiteface.sdk
 from whiteface.sdk.client import Client
 import yaml
 import logging
-import traceback
 import select
-import pprint
-pp = pprint.PrettyPrinter()
+
+from pprint import pprint
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -127,7 +126,7 @@ def main(argv=None): # IGNORE:C0111
             parser.error('--user is required')
 
         ret = cli.feed_create(options['user'], options['feed_create'])
-        print('Feed {0} created...'.format(ret['feed']['name']))
+        print('{0} feed created...'.format(ret['name']))
 
     elif options.get('feed'):
         if not options.get('user'):

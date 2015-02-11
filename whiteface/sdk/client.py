@@ -4,8 +4,7 @@ import time
 import logging
 import whiteface.sdk
 
-import pprint
-pp = pprint.PrettyPrinter()
+from pprint import pprint
 
 API_VERSION = whiteface.sdk.API_VERSION
 
@@ -23,7 +22,7 @@ class Client(object):
         self.token = str(token)
         self.proxy = proxy
         self.timeout = timeout
-        
+
         if no_verify_ssl:
             self.verify_ssl = False
         else:
@@ -41,8 +40,14 @@ class Client(object):
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
             self.logger.debug(err)
-            self.logger.debug(json.loads(body.content).get('message'))
+            try:
+                err = json.loads(body.content).get('message')
+            except ValueError as e:
+                err = body.content
+
+            self.logger.error(err)
             raise RuntimeWarning(err)
+
 
         body = json.loads(body.content)
         return body
@@ -55,7 +60,12 @@ class Client(object):
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
             self.logger.debug(err)
-            self.logger.debug(json.loads(body.content).get('message'))
+            try:
+                err = json.loads(body.content).get('message')
+            except ValueError as e:
+                err = body.content
+
+            self.logger.error(err)
             raise RuntimeWarning(err)
 
         body = json.loads(body.content)
@@ -87,6 +97,9 @@ class Client(object):
         }
 
         body = self.post(uri, data)
+        if body.get('feed'):
+            return body['feed']
+
         return body
 
     def observable(self, thing, user=None, feed=None):

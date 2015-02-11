@@ -23,7 +23,6 @@ class Table(object):
 
                 # make sure we do this last
                 if isinstance(y, list):
-                    pp.pprint(y)
                     y = ','.join(y)
                 y = str(y)
                 y = (y[:self.max_field_size] + '..') if len(y) > self.max_field_size else y
