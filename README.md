@@ -28,61 +28,61 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 
 ## API
 ### ping
-  ```python
-    from whiteface.sdk.client import Client
+```python
+  from whiteface.sdk.client import Client
   
-    options = {
-        "token": "1234",
-    }
+  options = {
+      "token": "1234",
+  }
 
-    ret = cli.ping()
+  ret = cli.ping()
     
-    print "roundtrip: %s ms" % ret
-  ```
+  print "roundtrip: %s ms" % ret
+```
 
 ### feed
-  ```python
-    from whiteface.sdk.client import Client
-    
-    options = {
-        "token": "1234",
-        "user": "wes",
-        "feed": "scanners"
-    }
+```python
+  from whiteface.sdk.client import Client
+  
+  options = {
+    "token": "1234",
+    "user": "wes",
+    "feed": "scanners"
+  }
 
-    cli = Client(token=options['token'])
+  cli = Client(token=options['token'])
 
-    ret = cli.feed(user=options['user'], feed=options['feed'])
-    print cli.table(data=ret)
-  ```
+  ret = cli.feed(user=options['user'], feed=options['feed'])
+  print cli.table(data=ret)
+```
  
 ### feed_create
-    ```python
-    from whiteface.sdk.client import Client
-    
-    cli = Client(token="1234")
-    
-    cli.feed_create(name='my zeus feed'))
-    ```
+```python
+  from whiteface.sdk.client import Client
+  
+  cli = Client(token="1234")
+  
+  cli.feed_create(name='my zeus feed'))
+```
 
 ### observable
-    ```python
-    from whiteface.sdk.client import Client
+```python
+  from whiteface.sdk.client import Client
     
-    ret = cli.observables('example.com', username=None)
-    print cli.table(data=ret)
-    ```
+  ret = cli.observables('example.com', username=None)
+  print cli.table(data=ret)
+```
 
 ### observable_create
-    ```python
-    from whiteface.sdk.client import Client
-    
-    obs = {
-        "thing": "example.com",
-        "tags": ['zeus','bot'],
-    }
-    cli.observable_create(feed, thing, tags=[], comment=None)
-    ```
+```python
+  from whiteface.sdk.client import Client
+  
+  obs = {
+    "thing": "example.com",
+    "tags": ['zeus','bot'],
+  }
+  cli.observable_create(feed, thing, tags=[], comment=None)
+```
 
 # Support and Documentation
 
