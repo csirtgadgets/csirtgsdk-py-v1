@@ -60,13 +60,22 @@ class Client(object):
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
             self.logger.debug(err)
-            try:
-                err = json.loads(body.content).get('message')
-            except ValueError as e:
-                err = body.content
+            err = body.content
 
-            self.logger.error(err)
-            raise RuntimeWarning(err)
+            if body.status_code == 401:
+                err = 'unauthroized'
+                raise RuntimeError(err)
+            elif body.status_code == 404:
+                err = 'not found'
+                raise RuntimeError(err)
+            else:
+                try:
+                    err = json.loads(err).get('message')
+                except ValueError as e:
+                    err = body.content
+
+                self.logger.error(err)
+                raise RuntimeWarning(err)
 
         body = json.loads(body.content)
         return body
