@@ -31,22 +31,21 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   ```
 
 ## API
-### ping
+### search
 ```python
   from whiteface.sdk.client import Client
+  from whiteface.sdk.format.table import Table
   
-  options = {
-      "token": "1234",
-  }
-
-  ret = cli.ping()
-    
-  print "roundtrip: %s ms" % ret
+  cli = Client(token=options['token'])
+  ret = cli.search('1.2.3.4')
+  print Table(data=ret)
+  
 ```
 
 ### feed
 ```python
   from whiteface.sdk.client import Client
+  from whiteface.sdk.format.table import Table
   
   options = {
     "token": "1234",
@@ -57,7 +56,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   cli = Client(token=options['token'])
 
   ret = cli.feed(user=options['user'], feed=options['feed'])
-  print cli.table(data=ret)
+  print Table(data=ret)
 ```
  
 ### feed_create
@@ -72,9 +71,10 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ### observable
 ```python
   from whiteface.sdk.client import Client
+  from whiteface.sdk.format.table import Table
     
   ret = cli.observables('example.com', username=None)
-  print cli.table(data=ret)
+  print Table(data=ret)
 ```
 
 ### observable_create

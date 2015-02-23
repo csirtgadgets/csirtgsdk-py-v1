@@ -7,7 +7,6 @@ import whiteface.sdk
 from whiteface.sdk.client import Client
 import yaml
 import logging
-import select
 
 from pprint import pprint
 
@@ -45,7 +44,6 @@ def main(argv=None): # IGNORE:C0111
 
     parser.add_argument('--token', dest='token', help="specify token")
     parser.add_argument('--limit', dest="limit", help="result limit", default=LIMIT)
-    parser.add_argument('--no-verify-ssl', dest="no_verify_ssl", action="store_true", default=False)
     parser.add_argument('--remote', dest="remote", help="remote api location [default: %(default)s]",
                         default=REMOTE)
     parser.add_argument('--timeout', dest="timeout", help='connection timeout [default: %(default)s]',
@@ -54,12 +52,11 @@ def main(argv=None): # IGNORE:C0111
                         default=os.path.expanduser("~/.wf.yml") )
 
     # actions
-    parser.add_argument('-p', '--ping', dest="ping", action="store_true", help="ping")
+    parser.add_argument('-q', "--search", dest="observable", help="search for observable")
 
     parser.add_argument('--feed', dest='feed', help="retrieve a feed")
     parser.add_argument('--feed-create', dest="feed_create", help="create a new feed", )
 
-    parser.add_argument('-q',"--search", dest="observable", help="search for observable")
     parser.add_argument('--observable', dest='observable')
     parser.add_argument('--observable-create', action='store_true', dest="observable_create")
 
@@ -94,22 +91,19 @@ def main(argv=None): # IGNORE:C0111
         f = file(args.config)
         config = yaml.load(f)
         f.close()
-        if not config['client']:
+        if not config:
             raise Exception("Unable to read " + args.config + " config file")
-        config = config['client']
         for k in config:
             if not options.get(k):
                 options[k] = config[k]
 
     cli = Client(**options)
 
-    if options.get('ping'):
-        for num in range(0,4):
-            ret = Client(**options).ping()
-            print "roundtrip: %s ms" % ret
-            select.select([], [], [], 1)
+    if options.get('search'):
+        ret = cli.search(options['search'])
 
-    elif options.get('observable_create'):
+        print Table(data=ret)
+    if options.get('observable_create'):
         tags = []
         if options.get('tags'):
             tags = options['tags'].split(',')

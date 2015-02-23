@@ -12,6 +12,7 @@ REMOTE ='https://whiteface.csirtgadgets.com/api'
 LIMIT = 5000
 TIMEOUT = 300
 
+
 class Client(object):
 
     def __init__(self, remote=REMOTE, logger=logging.getLogger(__name__),
@@ -80,15 +81,12 @@ class Client(object):
         body = json.loads(body.content)
         return body
 
-    def ping(self):
-        t0 = time.time()
-        uri = str(self.remote)
+    def search(self, q):
+        uri = self.remote + '/search?q={0}'.format(q)
 
         body = self.get(uri)
+        pprint(body)
 
-        t1 = (time.time() - t0)
-        self.logger.debug('return time: %.15f' % t1)
-        return t1
 
     def feed(self, user, feed):
         uri = self.remote + '/users/{0}/feeds/{1}'.format(user, feed)
