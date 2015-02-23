@@ -18,13 +18,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ### Config
   ```yaml
   # ~/.wf.yml
-  client:
-    token: 1234
+  token: 1234
   ```
 ### Running
   ```bash
-  $ wf --ping
-  $ wf --observable example.com
+  $ wf --search badsite.com
   $ wf --user wes --feed spyeye
   $ wf --user wes --feed-create zeus
   $ wf --user wes --feed zeus --observable-create --thing badsite.com --tags zeus,bot --comment 'this is a really bad guy...'
@@ -87,10 +85,6 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   }
   cli.observable_create(feed, thing, tags=[], comment=None)
 ```
-
-# Support and Documentation
-
-You can also look for information at the [GitHub repo](https://github.com/csirtgadgets/py-whiteface-sdk).
 
 # License and Copyright
 
