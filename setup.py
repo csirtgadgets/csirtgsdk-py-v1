@@ -1,5 +1,4 @@
-from setuptools import setup
-import os
+from setuptools import setup, find_packages
 
 with open('requirements.txt') as f:
     reqs = f.read().splitlines()
@@ -22,7 +21,7 @@ setup(
       keywords=['security'],
       author="Wes Young",
       author_email="wes@barely3am.com",
-      packages = ["whiteface","whiteface.sdk","test"],
+      packages = find_packages(),
       install_requires=reqs,
       scripts=['bin/wf', 'bin/wf-ssh'],
       test_suite = "test"
