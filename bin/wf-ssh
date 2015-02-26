@@ -15,8 +15,7 @@ import socket
 
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 DEFAULT_FILE = '/var/log/auth.log'
-#PATTERN_RE = re.compile('^Invalid user (\S+) from (\S+)$')
-PATTERN_RE = r'unknown user for illegal user \S+ from (\S+)'
+RE_PATTERN = r'^Invalid user (\S+) from (\S+)$'
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -48,6 +47,8 @@ def main(argv=None): # IGNORE:C0111
     parser.add_argument('--protocol', dest='protocol', default='TCP')
     parser.add_argument('--tags', dest="tags", default="ssh, scanner")
 
+    parser.add_argument('--pattern', dest="pattern", default=RE_PATTERN)
+
     args = parser.parse_args()
 
     fmt = '%(asctime)s - %(levelname)s - %(name)s::%(threadName)s - %(message)s'
@@ -78,11 +79,10 @@ def main(argv=None): # IGNORE:C0111
         if config.get('remote') and (options['remote'] == REMOTE):
             options['remote'] = config['remote']
 
-
     cli = Client(**options)
 
     for line in tailer.follow(open(args.file)):
-        x = re.search(r'unknown user for illegal user \S+ from (\S+)', line)
+        x = re.search(options.get('pattern'), line)
         if x:
             try:
                 socket.inet_aton(x.group(1))
