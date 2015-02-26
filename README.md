@@ -5,12 +5,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ## Ubuntu
   ```bash
   sudo apt-get install -y python-dev python-pip git
-  git clone https://github.com/csirtgadgets/py-whiteface-sdk.git -b master
-  cd py-whiteface-sdk
-  pip install -r requirements.txt
-  python setup.py build
-  python setup.py test
-  python setup.py install
+  sudo pip install git+https://github.com/csirtgadgets/py-whiteface-sdk.git
   ```
 
 # Examples

@@ -15,7 +15,7 @@ import socket
 
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 DEFAULT_FILE = '/var/log/auth.log'
-RE_PATTERN = r'^Invalid user (\S+) from (\S+)$'
+RE_PATTERN = 'invalid user \S+ from (\S+)'
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -81,9 +81,12 @@ def main(argv=None): # IGNORE:C0111
 
     cli = Client(**options)
 
+    logger.info('starting up tail...')
     for line in tailer.follow(open(args.file)):
+        logger.debug(line)
         x = re.search(options.get('pattern'), line)
         if x:
+            logger.info('match found')
             try:
                 socket.inet_aton(x.group(1))
             except socket.error:
@@ -95,7 +98,7 @@ def main(argv=None): # IGNORE:C0111
                                             portlist=options.get('portlist'), protocol=options.get('protocol'),
                                             tags=options.get('tags'), comment=options['comment'])
 
-                    logger.info('posted: {0}'.ret['observable']['url'])
+                    logger.info('posted: {0}'.format(ret['observable']['url']))
                 except RuntimeError as e:
                     logger.error('post failed: {0}'.format(e))
 
