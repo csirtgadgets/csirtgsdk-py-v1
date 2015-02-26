@@ -1,10 +1,7 @@
 from prettytable import PrettyTable
-
 from whiteface.sdk.format import COLUMNS, MAX_FIELD_SIZE
-import pprint
-pp = pprint.PrettyPrinter()
 
-
+from pprint import pprint
 class Table(object):
 
     def __init__(self, cols=COLUMNS, max_field_size=MAX_FIELD_SIZE, data=[]):
@@ -14,9 +11,14 @@ class Table(object):
 
     def __repr__(self):
         t = PrettyTable(self.cols)
+        data = self.data
+
         for o in self.data:
             r = []
+
             for c in self.cols:
+                if c == 'observable':
+                    c = 'thing'
                 y = o['observable'].get(c) or ''
                 if c == 'comments':
                     y = len(y)

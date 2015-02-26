@@ -67,11 +67,15 @@ def main(argv=None): # IGNORE:C0111
     parser.add_argument('--tags', dest='tags')
     parser.add_argument('--comment', dest='comment')
 
+    parser.add_argument('--portlist', dest="portlist")
+    parser.add_argument('--protocol', dest='protocol', default=6)
+
     # Process arguments
     args = parser.parse_args()
 
     # setup the initial console logging
     fmt = '%(asctime)s - %(levelname)s - %(name)s::%(threadName)s - %(message)s'
+
     loglevel = logging.WARNING
     if args.verbose:
         loglevel = logging.INFO
@@ -97,6 +101,9 @@ def main(argv=None): # IGNORE:C0111
             if not options.get(k):
                 options[k] = config[k]
 
+        if config.get('remote') and (options['remote'] == REMOTE):
+            options['remote'] = config['remote']
+
     cli = Client(**options)
 
     if options.get('search'):
@@ -107,8 +114,14 @@ def main(argv=None): # IGNORE:C0111
         tags = []
         if options.get('tags'):
             tags = options['tags'].split(',')
-        ret = cli.observable_create(options['user'], options['feed'], options['thing'],
-                                    tags=tags, comment=options.get('comment'))
+
+        try:
+            ret = cli.observable_create(options['user'], options['feed'], options['thing'],
+                                        tags=tags, comment=options.get('comment'), protocol=options.get('protocol'),
+                                        portlist=options.get('portlist'))
+            logger.info('posted: {0}'.format(ret['observable']['location']))
+        except RuntimeError as e:
+            logger.error(e)
 
         print Table(data=[ret])
 

@@ -85,14 +85,13 @@ class Client(object):
         uri = self.remote + '/search?q={0}'.format(q)
 
         body = self.get(uri)
-        pprint(body)
-
+        return body
 
     def feed(self, user, feed):
         uri = self.remote + '/users/{0}/feeds/{1}'.format(user, feed)
 
         body = self.get(uri)
-        return body['feed']['observables']
+        return body
 
     def feed_create(self, user, name):
         uri = self.remote + '/users/{0}/feeds'.format(user)
@@ -125,20 +124,26 @@ class Client(object):
         body = self.get(uri)
         return body
 
-    def observable_create(self, user, feed, thing, tags=[], comment=None):
+    def observable_create(self, user, feed, thing, portlist=None, protocol=None, tags=None, comment=None):
         if not user:
             raise RuntimeError('missing user name')
 
         if not feed:
             raise RuntimeError('missing feed name')
 
+        if isinstance(tags, list):
+            tags = ','.join(tags)
+
         uri = self.remote + '/users/{0}/feeds/{1}/observables'.format(user, feed)
 
         data = {
             "observable": {
                 "thing": thing,
+                "tags": tags,
+                "portlist": portlist,
+                "protocol": protocol,
             },
-            "tags": tags,
+
             "comment": comment
         }
 

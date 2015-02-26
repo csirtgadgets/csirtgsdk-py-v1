@@ -1,4 +1,8 @@
 from setuptools import setup
+import os
+
+with open('requirements.txt') as f:
+    reqs = f.read().splitlines()
 
 import whiteface.sdk
 setup(
@@ -19,9 +23,7 @@ setup(
       author="Wes Young",
       author_email="wes@barely3am.com",
       packages = ["whiteface","whiteface.sdk","test"],
-      install_requires = ["requests>=2.0"
-                          'pyyaml',
-                          'prettytable'],
-      scripts=['bin/wf'],
+      install_requires=reqs,
+      scripts=['bin/wf', 'bin/wf-ssh'],
       test_suite = "test"
 )
