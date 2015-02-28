@@ -1,7 +1,8 @@
 from prettytable import PrettyTable
-from whiteface.sdk.format import COLUMNS, MAX_FIELD_SIZE
 
-from pprint import pprint
+from whiteface.format import COLUMNS, MAX_FIELD_SIZE
+
+
 class Table(object):
 
     def __init__(self, cols=COLUMNS, max_field_size=MAX_FIELD_SIZE, data=[]):

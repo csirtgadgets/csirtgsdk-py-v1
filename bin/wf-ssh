@@ -3,15 +3,17 @@
 import sys
 import os
 import os.path
-from whiteface.sdk.client import Client
-import yaml
 import logging
-import tailer
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import re
-from pprint import pprint
 import socket
+
+import yaml
+import tailer
+
+from whiteface.client import Client
+
 
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 DEFAULT_FILE = '/var/log/auth.log'

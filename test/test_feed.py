@@ -1,5 +1,6 @@
 import unittest
-from whiteface.sdk.feed import Feed
+
+from whiteface.feed import Feed
 
 
 class TestFeed(unittest.TestCase):

@@ -1,5 +1,6 @@
 import unittest
-from whiteface.sdk.client import Client
+
+from whiteface.client import Client
 
 
 class TestClient(unittest.TestCase):

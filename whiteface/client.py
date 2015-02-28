@@ -1,11 +1,9 @@
 import json
 import requests
 import logging
-import whiteface.sdk
+from whiteface import API_VERSION, VERSION
 
 logger = logging.getLogger(__name__)
-
-API_VERSION = whiteface.sdk.API_VERSION
 
 REMOTE ='https://whiteface.csirtgadgets.com/api'
 LIMIT = 5000
@@ -29,8 +27,8 @@ class Client(object):
             self.verify_ssl = True
         
         self.session = requests.session()
-        self.session.headers["Accept"] = 'application/vnd.wf.v' + str(API_VERSION) + 'json'
-        self.session.headers['User-Agent'] = 'whiteface-sdk-python/' + whiteface.sdk.VERSION
+        self.session.headers["Accept"] = 'application/vnd.wf.v{0}+json'.format(str(API_VERSION))
+        self.session.headers['User-Agent'] = 'whiteface-sdk-python/{0}'.format(VERSION)
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'
 

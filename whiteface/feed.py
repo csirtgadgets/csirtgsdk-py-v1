@@ -1,7 +1,7 @@
-from whiteface.sdk.client import Client
+from whiteface import client
 
 
-class Feed(Client):
+class Feed(client.Client):
     """
     Represents a Feed Object
     """

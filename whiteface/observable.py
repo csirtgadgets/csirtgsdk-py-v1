@@ -1,7 +1,7 @@
-from whiteface.sdk.client import Client
+from whiteface import client
 
 
-class Observable(Client):
+class Observable(client.Client):
 
     def __init__(self, **kwargs):
         super(Observable, self).__init__(**kwargs)

@@ -4,17 +4,18 @@
 import sys
 import os
 import os.path
-import yaml
 import logging
-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-
-from whiteface.sdk.feed import Feed
-from whiteface.sdk.observable import Observable
-from whiteface.sdk.search import Search
-from whiteface.sdk.format.table import Table
 import textwrap
+
+import yaml
+
+from whiteface.feed import Feed
+from whiteface.observable import Observable
+from whiteface.search import Search
+from whiteface.format.table import Table
+
 
 LIMIT = 5000
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
@@ -147,7 +148,7 @@ def main():
         f = Feed(**options)
         print Table(data=f.show())
 
-    elif options.get('feed') and options.get('thing') and options.get('new'):
+    elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
             ret = Observable(**options).new()
             logger.info('posted: {0}'.format(ret['observable']['location']))

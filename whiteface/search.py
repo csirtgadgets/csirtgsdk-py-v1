@@ -1,7 +1,7 @@
-from whiteface.sdk.client import Client
+from whiteface import client
 
 
-class Search(Client):
+class Search(client.Client):
 
     def __init__(self, **kwargs):
         super(Search, self).__init__(**kwargs)

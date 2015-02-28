@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
-import os
+from whiteface import VERSION
 
 with open('requirements.txt') as f:
     reqs = f.read().splitlines()
 
-import whiteface.sdk
+
 setup(
       name="whiteface-sdk",
-      version=whiteface.sdk.VERSION,
+      version=VERSION,
       description="WhiteFace Python SDK",
       long_description="WhiteFace Software Development Kit for Python",
       url="https://github.com/csirtgadgets/py-whiteface-sdk",
@@ -22,7 +22,7 @@ setup(
       keywords=['security'],
       author="Wes Young",
       author_email="wes@barely3am.com",
-      packages = find_packages(),
+      packages=find_packages(),
       install_requires=reqs,
       scripts=['bin/wf', 'bin/wf-ssh'],
       test_suite = "test"
