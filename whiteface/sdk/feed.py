@@ -2,14 +2,25 @@ from whiteface.sdk.client import Client
 
 
 class Feed(Client):
-
+    """
+    Represents a Feed Object
+    """
     def __init__(self, **kwargs):
+        """
+        name - feed name
+        user - user name
+        """
         super(Feed, self).__init__(**kwargs)
 
         self.user = kwargs.get('user')
         self.name = kwargs.get('name') or kwargs.get('feed')
 
     def new(self):
+        """
+        Creates a new feed
+
+        :return: dict
+        """
         uri = self.remote + '/users/{0}/feeds'.format(self.user)
 
         data = {
@@ -25,9 +36,19 @@ class Feed(Client):
         return body
 
     def index(self):
+        """
+        Returns a list of Feeds from the API
+
+        :return: dict
+        """
         uri = self.remote + '/users/{0}/feeds'.format(self.user)
         return self._get(uri)
 
     def show(self):
+        """
+        Returns a specific Feed from the API
+
+        :return: dict
+        """
         uri = self.remote + '/users/{0}/feeds/{1}'.format(self.user, self.name)
         return self._get(uri)

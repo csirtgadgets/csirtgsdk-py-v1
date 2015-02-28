@@ -7,18 +7,14 @@ import os.path
 import yaml
 import logging
 
-from pprint import pprint
-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-from argparse import ArgumentError
 
 from whiteface.sdk.feed import Feed
 from whiteface.sdk.observable import Observable
 from whiteface.sdk.search import Search
 from whiteface.sdk.format.table import Table
 import textwrap
-from whiteface.sdk import VERSION
 
 LIMIT = 5000
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
