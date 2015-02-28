@@ -1,10 +1,7 @@
 import json
 import requests
-import time
 import logging
 import whiteface.sdk
-
-from pprint import pprint
 
 API_VERSION = whiteface.sdk.API_VERSION
 
@@ -35,7 +32,7 @@ class Client(object):
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'
 
-    def get(self, uri, params={}):
+    def _get(self, uri, params={}):
         body = self.session.get(uri, params=params, verify=self.verify_ssl)
 
         if body.status_code > 303:
@@ -49,11 +46,10 @@ class Client(object):
             self.logger.error(err)
             raise RuntimeWarning(err)
 
-
         body = json.loads(body.content)
         return body
 
-    def post(self, uri, data):
+    def _post(self, uri, data):
         data = json.dumps(data)
 
         body = self.session.post(uri, data=data, verify=self.verify_ssl)
@@ -80,72 +76,3 @@ class Client(object):
 
         body = json.loads(body.content)
         return body
-
-    def search(self, q):
-        uri = self.remote + '/search?q={0}'.format(q)
-
-        body = self.get(uri)
-        return body
-
-    def feed(self, user, feed):
-        uri = self.remote + '/users/{0}/feeds/{1}'.format(user, feed)
-
-        body = self.get(uri)
-        return body
-
-    def feed_create(self, user, name):
-        uri = self.remote + '/users/{0}/feeds'.format(user)
-
-        data = {
-            'feed': {
-                'name': name
-            }
-        }
-
-        body = self.post(uri, data)
-        if body.get('feed'):
-            return body['feed']
-
-        return body
-
-    def observable(self, thing, user=None, feed=None):
-        uri = self.remote + '/search'
-
-        if user:
-            uri = '/{0}/users/{1}'.format(uri, user)
-
-        if feed:
-            uri = '{0}/feeds/{1}'.format(uri, feed)
-
-        uri = '{0}?q={1}'.format(uri, thing)
-
-        self.logger.debug(uri)
-
-        body = self.get(uri)
-        return body
-
-    def observable_create(self, user, feed, thing, portlist=None, protocol=None, tags=None, comment=None):
-        if not user:
-            raise RuntimeError('missing user name')
-
-        if not feed:
-            raise RuntimeError('missing feed name')
-
-        if isinstance(tags, list):
-            tags = ','.join(tags)
-
-        uri = self.remote + '/users/{0}/feeds/{1}/observables'.format(user, feed)
-
-        data = {
-            "observable": {
-                "thing": thing,
-                "tags": tags,
-                "portlist": portlist,
-                "protocol": protocol,
-            },
-
-            "comment": comment
-        }
-
-        data = self.post(uri, data)
-        return data

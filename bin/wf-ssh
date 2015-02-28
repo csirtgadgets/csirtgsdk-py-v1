@@ -40,7 +40,7 @@ def main(argv=None): # IGNORE:C0111
     parser.add_argument('--file', dest="file", default=DEFAULT_FILE)
 
     parser.add_argument('--user', dest="user")
-    parser.add_argument('--feed', dest="feed")
+    parser.add_argument('--feed.py', dest="feed.py")
     parser.add_argument('--comment', dest="comment")
 
     parser.add_argument('--portlist', dest="portlist", default=22)
@@ -94,11 +94,10 @@ def main(argv=None): # IGNORE:C0111
                 pass
             else:
                 try:
-                    ret = cli.observable_create(options['user'], options['feed'], x.group(1),
+                    ret = cli.observable_create(options['user'], options['feed.py'], x.group(1),
                                             portlist=options.get('portlist'), protocol=options.get('protocol'),
                                             tags=options.get('tags'), comment=options['comment'])
-
-                    logger.info('posted: {0}'.format(ret['observable']['url']))
+                    logger.info('posted: {0}'.format(ret['observable']['location']))
                 except RuntimeError as e:
                     logger.error('post failed: {0}'.format(e))
 

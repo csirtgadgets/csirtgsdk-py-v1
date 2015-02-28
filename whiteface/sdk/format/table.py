@@ -11,14 +11,12 @@ class Table(object):
 
     def __repr__(self):
         t = PrettyTable(self.cols)
-        data = self.data
-
-        for o in self.data:
+        for o in self.data['feed']['observables']:
             r = []
-
             for c in self.cols:
                 if c == 'observable':
                     c = 'thing'
+
                 y = o['observable'].get(c) or ''
                 if c == 'comments':
                     y = len(y)

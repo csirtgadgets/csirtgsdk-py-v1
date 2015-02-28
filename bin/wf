@@ -13,7 +13,9 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from argparse import ArgumentError
 
-from whiteface.sdk.client import Client
+from whiteface.sdk.feed import Feed
+from whiteface.sdk.observable import Observable
+from whiteface.sdk.search import Search
 from whiteface.sdk.format.table import Table
 from whiteface.sdk import VERSION
 
@@ -21,9 +23,8 @@ LIMIT = 5000
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 TIMEOUT = 300
 
-def main(argv=None): # IGNORE:C0111
-    '''Command line options.'''
-    
+
+def main(argv=None):
     if argv is None:
         argv = sys.argv
     else:
@@ -50,13 +51,12 @@ def main(argv=None): # IGNORE:C0111
                         default=os.path.expanduser("~/.wf.yml") )
 
     # actions
-    parser.add_argument('-q', "--search", dest="observable", help="search for observable")
+    parser.add_argument('-q', "--search", dest="search", help="search for observable")
 
     parser.add_argument('--feed', dest='feed', help="retrieve a feed")
-    parser.add_argument('--feed-create', dest="feed_create", help="create a new feed", )
+    parser.add_argument('--feeds', dest='feeds', action="store_true", help="list feeds for a user")
 
-    parser.add_argument('--observable', dest='observable')
-    parser.add_argument('--observable-create', action='store_true', dest="observable_create")
+    parser.add_argument('--new', dest="new", action='store_true')
 
 
     # vars
@@ -64,6 +64,7 @@ def main(argv=None): # IGNORE:C0111
     parser.add_argument('--thing', dest='thing')
     parser.add_argument('--tags', dest='tags')
     parser.add_argument('--comment', dest='comment')
+    parser.add_argument('--description', dest='description')
 
     parser.add_argument('--portlist', dest="portlist")
     parser.add_argument('--protocol', dest='protocol', default=6)
@@ -102,50 +103,67 @@ def main(argv=None): # IGNORE:C0111
         if config.get('remote') and (options['remote'] == REMOTE):
             options['remote'] = config['remote']
 
-    cli = Client(**options)
-
     if options.get('search'):
-        ret = cli.search(options['search'])
-
+        ret = Search(**options).get()
         print Table(data=ret)
-    if options.get('observable_create'):
-        tags = []
-        if options.get('tags'):
-            tags = options['tags'].split(',')
 
+    elif options.get('feeds'):
+        feeds = Feed(**options).index()
+        from prettytable import PrettyTable
+        cols = ['name', 'description', 'license', 'updated_at']
+        t = PrettyTable(cols)
+        for f in feeds:
+            r = []
+            for c in cols:
+                y = f['feed'].get(c)
+                if c == 'license':
+                    y = y['name']
+                y = str(y)
+                y = (y[:30] + '..') if len(y) > 30 else y
+                r.append(y)
+            t.add_row(r)
+        print str(t)
+
+    elif options.get('feed') and options.get('new') and not options.get('thing'):
+        if not options.get('user'):
+            parser.error('--user is required')
+
+        feed = Feed(**options).new()
+
+        from prettytable import PrettyTable
+        cols = ['name', 'description', 'license', 'updated_at']
+        t = PrettyTable(cols)
+        r = []
+        for c in cols:
+            y = feed.get(c)
+            if c == 'license':
+                y = y['name']
+            y = str(y)
+            y = (y[:30] + '..') if len(y) > 30 else y
+            r.append(y)
+        t.add_row(r)
+
+        print str(t)
+
+    elif options.get('feed') and not options.get('new'):
+        if not options.get('user'):
+            parser.error('--user is required')
+
+        f = Feed(**options)
+        print Table(data=f.show())
+
+    elif options.get('feed') and options.get('thing') and options.get('new'):
         try:
-            ret = cli.observable_create(options['user'], options['feed'], options['thing'],
-                                        tags=tags, comment=options.get('comment'), protocol=options.get('protocol'),
-                                        portlist=options.get('portlist'))
+            ret = Observable(**options).new()
             logger.info('posted: {0}'.format(ret['observable']['location']))
+            ret = {
+                'feed': {
+                    'observables': [ret]
+                }
+            }
+            print Table(data=ret)
         except RuntimeError as e:
             logger.error(e)
-
-        print Table(data=[ret])
-
-    elif options.get('observable'):
-        ret = cli.observable(options['observable'], user=options.get('user'), feed=options.get('feed'))
-        if len(ret) > 0:
-            print Table(data=ret)
-
-    elif options.get('feed_create'):
-        if not options.get('user'):
-            parser.error('--user is required')
-
-        ret = cli.feed_create(options['user'], options['feed_create'])
-        print('{0} feed created...'.format(ret['name']))
-
-    elif options.get('feed'):
-        if not options.get('user'):
-            parser.error('--user is required')
-
-        ret = cli.feed(options['user'], options['feed'])
-        if len(ret) > 0:
-            print Table(data=ret)
-
-    else:
-        logger.warning('operation not supported')
-        sys.exit()
 
 if __name__ == "__main__":
     sys.exit(main())
