@@ -1,5 +1,4 @@
 from whiteface.sdk.client import Client
-from whiteface.sdk.format.table import Table
 
 
 class Feed(Client):
@@ -8,7 +7,7 @@ class Feed(Client):
         super(Feed, self).__init__(**kwargs)
 
         self.user = kwargs.get('user')
-        self.name = kwargs.get('feed')
+        self.name = kwargs.get('name') or kwargs.get('feed')
 
     def new(self):
         uri = self.remote + '/users/{0}/feeds'.format(self.user)

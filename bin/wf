@@ -17,6 +17,7 @@ from whiteface.sdk.feed import Feed
 from whiteface.sdk.observable import Observable
 from whiteface.sdk.search import Search
 from whiteface.sdk.format.table import Table
+import textwrap
 from whiteface.sdk import VERSION
 
 LIMIT = 5000
@@ -24,22 +25,22 @@ REMOTE = 'https://whiteface.csirtgadgets.com/api'
 TIMEOUT = 300
 
 
-def main(argv=None):
-    if argv is None:
-        argv = sys.argv
-    else:
-        sys.argv.extend(argv)
+def main():
+    parser = ArgumentParser(
+        description=textwrap.dedent('''\
+        example usage:
+            $ wf --search example.com
+            $ wf --user wes --feeds
+            $ wf --user wes --feed scanners --new --thing 1.2.3.4 --portlist 22 --tags ssh,scanner
+            $ wf --user wes --feed vnc --new
+        '''),
+        formatter_class=RawDescriptionHelpFormatter,
+        prog='wf'
+    )
 
-    program_name = os.path.basename(sys.argv[0])
-    program_version = "v%s" % VERSION
-    program_version_message = '%%(prog)s %s' % (program_version)
-
-    # Setup argument parser
-    parser = ArgumentParser(description='', formatter_class=RawDescriptionHelpFormatter)
-    parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count",
+                        help="set verbosity level [default: %(default)s]")
     parser.add_argument('-d', '--debug', dest='debug', action="store_true")
-    parser.add_argument('-V', '--version', action='version', version=program_version_message)
-
 
     parser.add_argument('--token', dest='token', help="specify token")
     parser.add_argument('--limit', dest="limit", help="result limit", default=LIMIT)
@@ -51,23 +52,22 @@ def main(argv=None):
                         default=os.path.expanduser("~/.wf.yml") )
 
     # actions
-    parser.add_argument('-q', "--search", dest="search", help="search for observable")
-
-    parser.add_argument('--feed', dest='feed', help="retrieve a feed")
-    parser.add_argument('--feeds', dest='feeds', action="store_true", help="list feeds for a user")
-
-    parser.add_argument('--new', dest="new", action='store_true')
+    parser.add_argument("--search", dest="search", help="search for an observable")
+    parser.add_argument('--feeds', dest='feeds', action="store_true", help="list feeds")
+    parser.add_argument('--new', dest="new", action='store_true', help="create a new feed or observable")
 
 
     # vars
-    parser.add_argument('--user', dest='user')
-    parser.add_argument('--thing', dest='thing')
-    parser.add_argument('--tags', dest='tags')
-    parser.add_argument('--comment', dest='comment')
-    parser.add_argument('--description', dest='description')
+    parser.add_argument('--user', dest='user', help="specify a user")
+    parser.add_argument('--feed', dest='feed', help="specify feed name")
+    parser.add_argument('--observable', dest='thing', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
+                                                           "http://badsite.org/1.html")
+    parser.add_argument('--tags', dest='tags', help="specify tags")
+    parser.add_argument('--comment', dest='comment', help="specify a comment")
+    parser.add_argument('--description', dest='description', help="specify a feed description")
 
-    parser.add_argument('--portlist', dest="portlist")
-    parser.add_argument('--protocol', dest='protocol', default=6)
+    parser.add_argument('--portlist', dest="portlist", help="specify a portlist [eg: 22,23-35,443]")
+    parser.add_argument('--protocol', dest='protocol', help="specify TCP, UDP or ICMP")
 
     # Process arguments
     args = parser.parse_args()
@@ -89,7 +89,6 @@ def main(argv=None):
 
     options = vars(args)
 
-    # TODO -- defaults
     if os.path.isfile(args.config):
         f = file(args.config)
         config = yaml.load(f)
@@ -104,7 +103,7 @@ def main(argv=None):
             options['remote'] = config['remote']
 
     if options.get('search'):
-        ret = Search(**options).get()
+        ret = Search(**options).index()
         print Table(data=ret)
 
     elif options.get('feeds'):

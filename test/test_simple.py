@@ -1,6 +1,7 @@
 import unittest
 from whiteface.sdk.client import Client
 
+
 class TestClient(unittest.TestCase):
 
     def setUp(self):
@@ -15,6 +16,8 @@ class TestClient(unittest.TestCase):
         
     def test_token(self):
         self.assertEqual(self.cli.token,'1234','token-mismatch')
+
+
 
 if __name__ == '__main__':
     unittest.main()
