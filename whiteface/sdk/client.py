@@ -3,6 +3,8 @@ import requests
 import logging
 import whiteface.sdk
 
+logger = logging.getLogger(__name__)
+
 API_VERSION = whiteface.sdk.API_VERSION
 
 REMOTE ='https://whiteface.csirtgadgets.com/api'
@@ -46,6 +48,7 @@ class Client(object):
             self.logger.error(err)
             raise RuntimeWarning(err)
 
+        logger.debug(body.content)
         body = json.loads(body.content)
         return body
 
@@ -74,5 +77,6 @@ class Client(object):
                 self.logger.error(err)
                 raise RuntimeWarning(err)
 
+        logger.debug(body.content)
         body = json.loads(body.content)
         return body

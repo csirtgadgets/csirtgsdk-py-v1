@@ -14,6 +14,7 @@ class Feed(Client):
 
         self.user = kwargs.get('user')
         self.name = kwargs.get('name') or kwargs.get('feed')
+        self.description = kwargs.get('description')
 
     def new(self):
         """
@@ -25,7 +26,8 @@ class Feed(Client):
 
         data = {
             'feed': {
-                'name': self.name
+                'name': self.name,
+                'description': self.description
             }
         }
 
