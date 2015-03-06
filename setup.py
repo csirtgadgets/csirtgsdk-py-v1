@@ -24,6 +24,6 @@ setup(
       author_email="wes@barely3am.com",
       packages=find_packages(),
       install_requires=reqs,
-      scripts=['bin/wf', 'bin/wf-ssh'],
-      test_suite = "test"
+      scripts=['bin/wf'],
+      test_suite="test"
 )
