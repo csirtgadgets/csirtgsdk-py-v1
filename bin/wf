@@ -16,7 +16,6 @@ from whiteface.observable import Observable
 from whiteface.search import Search
 from whiteface.format.table import Table
 
-
 LIMIT = 5000
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 TIMEOUT = 300
