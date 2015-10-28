@@ -1,2 +1,4 @@
 include *.txt
 include *.md
+include versioneer.py
+include whiteface/_version.py

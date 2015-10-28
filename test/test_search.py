@@ -1,6 +1,6 @@
 import pytest
 
-from whitefacesdk.feed import Feed
+from whitefacesdk.search import Search
 from whitefacesdk.client import Client
 
 @pytest.fixture
@@ -9,6 +9,6 @@ def client():
 
 
 def test_feed(client):
-    f = Feed(client)
+    f = Search(client)
 
     assert f.client
