@@ -5,7 +5,7 @@ python:
 
 script:
     - python setup.py build
-    - python setup.py test
+    - pytest -s
 
 notifications:
     email:
