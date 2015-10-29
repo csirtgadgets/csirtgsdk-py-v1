@@ -5,7 +5,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ## Ubuntu
   ```bash
   $ apt-get install -y python-dev python-pip git
-  $ pip install git+https://github.com/csirtgadgets/py-whiteface-sdk.git
+  $ pip install https://github.com/csirtgadgets/py-whitefacesdk/archive/master.tar.gz
   ```
 
 # Examples
@@ -22,6 +22,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   $ wf --user wes --feed-create zeus
   $ wf --user wes --feed zeus --observable-create --thing badsite.com --tags zeus,bot --comment 'this is a really bad guy...'
   ```
+
+# Documentation
+
+http://py-whitefacesdk.readthedocs.org/
+
 
 # License and Copyright
 

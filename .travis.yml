@@ -4,13 +4,10 @@ python:
     - 3.3
 
 script:
-    - python setup.py build
-    - python setup.py test
+ - python setup.py build
+ - py.test -s
 
 notifications:
     email:
         on_success: never
         on_failure: never
-branches:
-    only:
-        - master
