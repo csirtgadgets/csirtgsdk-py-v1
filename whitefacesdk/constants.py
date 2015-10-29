@@ -3,7 +3,7 @@ API_VERSION = 0
 
 REMOTE = 'https://whiteface.csirtgadgets.com/api'
 
-LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s::%(threadName)s - %(message)s'
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 
 LIMIT = 500
 TIMEOUT = 300

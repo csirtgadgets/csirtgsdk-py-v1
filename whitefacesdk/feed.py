@@ -21,7 +21,7 @@ class Feed(object):
             }
         }
 
-        body = self._post(uri, data)
+        body = self.client._post(uri, data)
         if body.get('feed'):
             return body['feed']
 

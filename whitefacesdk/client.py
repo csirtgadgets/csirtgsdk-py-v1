@@ -65,7 +65,6 @@ class Client(object):
             self.logger.error(err)
             raise RuntimeWarning(err)
 
-        self.logger.debug(body.content)
         body = json.loads(body.content)
         return body
 
@@ -208,9 +207,9 @@ def main():
         if not options.get('user'):
             parser.error('--user is required')
 
-        f = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
+        data = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
         format = format_factory(options['format'])
-        print(format(f.show()))
+        print(format(data))
 
     elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
