@@ -4,8 +4,8 @@ python:
     - 3.3
 
 script:
-    - python setup.py build
-    - py.test -s
+ - python setup.py build
+ - py.test -s
 
 notifications:
     email:
