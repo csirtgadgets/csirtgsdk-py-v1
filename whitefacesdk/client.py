@@ -164,7 +164,7 @@ def main():
     if options.get('search'):
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
         format = format_factory(options['format'])
-        print format(ret)
+        print(format(ret))
 
     elif options.get('feeds'):
         feeds = Feed(cli).index(options['user'])
@@ -181,7 +181,7 @@ def main():
                 y = (y[:30] + '..') if len(y) > 30 else y
                 r.append(y)
             t.add_row(r)
-        print str(t)
+        print(str(t))
 
     elif options.get('feed') and options.get('new') and not options.get('thing'):
         if not options.get('user'):
@@ -202,7 +202,7 @@ def main():
             r.append(y)
         t.add_row(r)
 
-        print str(t)
+        print(str(t))
 
     elif options.get('feed') and not options.get('new'):
         if not options.get('user'):
@@ -210,7 +210,7 @@ def main():
 
         f = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
         format = format_factory(options['format'])
-        print format(f.show())
+        print(format(f.show()))
 
     elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
@@ -222,7 +222,7 @@ def main():
                 }
             }
             format = format_factory(options['format'])
-            print format(ret)
+            print(format(ret))
 
         except RuntimeError as e:
             logger.error(e)
