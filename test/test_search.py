@@ -8,7 +8,7 @@ def client():
     return Client()
 
 
-def test_feed(client):
+def test_search(client):
     f = Search(client)
 
     assert f.client
