@@ -58,7 +58,7 @@ class Client(object):
             err = 'request failed: %s' % str(body.status_code)
             self.logger.debug(err)
             try:
-                err = json.loads(body.content).get('message')
+                err = json.loads(body.content).get('errors')
             except ValueError as e:
                 err = body.content
 
@@ -72,6 +72,10 @@ class Client(object):
         return self._post(uri, data)
 
     def _post(self, uri, data):
+        if not uri.startswith(self.remote):
+            uri = '{}/{}'.format(self.remote, uri)
+            self.logger.debug(uri)
+
         data = json.dumps(data)
 
         body = self.session.post(uri, data=data, verify=self.verify_ssl)
@@ -87,6 +91,10 @@ class Client(object):
             elif body.status_code == 404:
                 err = 'not found'
                 raise RuntimeError(err)
+            elif body.status_code == 422:
+                d = json.loads(data)
+                err = 'invalid observable: {}'.format(d['observable']['thing'])
+                raise RuntimeError(err)
             else:
                 try:
                     err = json.loads(err).get('message')
@@ -95,6 +103,8 @@ class Client(object):
 
                 self.logger.error(err)
                 raise RuntimeWarning(err)
+
+
 
         self.logger.debug(body.content)
         body = json.loads(body.content)
@@ -211,9 +221,9 @@ def main():
         format = format_factory(options['format'])
         print(format(data))
 
-    elif options.get('feed') and options.get('observable') and options.get('new'):
+    elif options.get('feed') and options.get('thing') and options.get('new'):
         try:
-            ret = Observable(**options).new()
+            ret = Observable(cli, options['thing']).new(options['user'], options['feed'])
             logger.info('posted: {0}'.format(ret['observable']['location']))
             ret = {
                 'feed': {

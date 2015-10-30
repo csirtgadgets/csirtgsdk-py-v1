@@ -35,6 +35,20 @@ class Observable(object):
         uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
         return self.client.get(uri)
 
+    def attachment(self, user, feed, observable, attachment, text=None):
+        uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, observable)
+        data = {
+            'comment': {
+                'attachment': attachment,
+            },
+            #'user_id': user,
+            #'feed_id': feed,
+        }
+        return self.post(uri, data)
+
+    def comment(self, user, feed, text):
+        pass
+
     def comments(self, user, feed, id):
         uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
@@ -48,8 +62,8 @@ class Observable(object):
                 "tags": self.tags,
                 "portlist": self.portlist,
                 "protocol": self.protocol,
-                'firsttime': self.firsttime.timestamp(),
-                'lasttime': self.lasttime.timestamp()
+                'firsttime': self.firsttime,
+                'lasttime': self.lasttime
             },
 
             "comment": self.comment
