@@ -156,6 +156,8 @@ def main():
     parser.add_argument('--firsttime')
     parser.add_argument('--lasttime')
 
+    parser.add_argument('--attachment', help="specify an attachment")
+
 
     # Process arguments
     args = parser.parse_args()
@@ -221,9 +223,12 @@ def main():
         format = format_factory(options['format'])
         print(format(data))
 
+    # submit new observable
     elif options.get('feed') and options.get('thing') and options.get('new'):
         try:
-            ret = Observable(cli, options['thing']).new(options['user'], options['feed'])
+            o = Observable(cli, options['thing'], attachment=options.get('attachment'), comment=options.get('comment'))
+            ret = o.new(options['user'], options['feed'])
+
             logger.info('posted: {0}'.format(ret['observable']['location']))
             ret = {
                 'feed': {
