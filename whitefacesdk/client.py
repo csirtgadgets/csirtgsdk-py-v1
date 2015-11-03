@@ -108,7 +108,7 @@ def main():
         example usage:
             $ wf --search example.com
             $ wf --user wes --feeds
-            $ wf --user wes --feed scanners --new --thing 1.2.3.4 --portlist 22 --tags ssh,scanner
+            $ wf --user wes --feed scanners --new --observable 1.2.3.4 --portlist 22 --tags ssh,scanner
             $ wf --user wes --feed vnc --new
         '''),
         formatter_class=RawDescriptionHelpFormatter,
@@ -183,11 +183,11 @@ def main():
             t.add_row(r)
         print(str(t))
 
-    elif options.get('feed') and options.get('new') and not options.get('thing'):
+    elif options.get('feed') and options.get('new') and not options.get('observable'):
         if not options.get('user'):
             parser.error('--user is required')
 
-        feed = Feed(cli).new(options['user'], options['name'], description=options['description'])
+        feed = Feed(cli).new(options['user'], options['feed'], description=options['description'])
 
         from prettytable import PrettyTable
         cols = ['name', 'description', 'license', 'updated_at']

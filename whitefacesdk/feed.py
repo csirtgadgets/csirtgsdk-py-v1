@@ -16,12 +16,12 @@ class Feed(object):
 
         data = {
             'feed': {
-                'name': self.name,
-                'description': self.description
+                'name': name,
+                'description': description
             }
         }
 
-        body = self._post(uri, data)
+        body = self.client._post(uri, data)
         if body.get('feed'):
             return body['feed']
 
