@@ -70,7 +70,6 @@ class Client(object):
         return body
 
     def post(self, uri, data):
-        print "do post: ", uri, data
         if not uri.startswith(self.remote):
             uri = '{}/{}'.format(self.remote, uri)
         return self._post(uri, data)
@@ -228,7 +227,8 @@ def main():
             print(format(ret))
 
         except RuntimeError as e:
-            logger.error(e)
+            logger.error("Error: feed doesn't exist? user={} feed={}".
+                          format(options.get('user'), options.get('feed')))
 
 if __name__ == "__main__":
     main()
