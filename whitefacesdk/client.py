@@ -70,6 +70,9 @@ class Client(object):
         return body
 
     def post(self, uri, data):
+        print "do post: ", uri, data
+        if not uri.startswith(self.remote):
+            uri = '{}/{}'.format(self.remote, uri)
         return self._post(uri, data)
 
     def _post(self, uri, data):
@@ -135,7 +138,7 @@ def main():
     # vars
     parser.add_argument('--user', help="specify a user")
     parser.add_argument('--feed', help="specify feed name")
-    parser.add_argument('--observable', dest='thing', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
+    parser.add_argument('--observable', dest='observable', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
                                                            "http://badsite.org/1.html")
     parser.add_argument('--tags', help="specify tags")
     parser.add_argument('--comment', help="specify a comment")
@@ -214,7 +217,7 @@ def main():
 
     elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
-            ret = Observable(**options).new()
+            ret = Observable(cli, options).submit()
             logger.info('posted: {0}'.format(ret['observable']['location']))
             ret = {
                 'feed': {

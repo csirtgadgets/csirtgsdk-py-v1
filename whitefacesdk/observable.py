@@ -1,35 +1,31 @@
-
+import utils
 import arrow
 import logging
 
 
 class Observable(object):
 
-    def __init__(self, client, thing, user=None, feed=None, comment=None, tags=None, portlist=None, protocol=None,
-                 firsttime=None, lasttime=None):
+    def __init__(self, client, args):
 
         self.logger = logging.getLogger(__name__)
         self.client = client
 
-        if tags and isinstance(tags, basestring):
-            tags = tags.split(',')
+        required = set(['user', 'feed', 'observable'])
 
-        self.user = user
-        self.feed = feed
-        self.thing = thing
+        if args is None or len(required - set(args.keys())) > 0:
+            raise Exception("invalid arguments. missing: {}"
+                            .format(required-set(args.keys())))
 
-        self.comment = comment
-        self.tags = tags
-        self.portlist = portlist
-        self.protocol = protocol
-        self.firsttime = firsttime
-        self.lasttime = lasttime
+        self.args = utils.Map(args)
 
-        if firsttime:
-            self.firsttime = arrow.get(firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        if self.args.tags and isinstance(self.args.tags, basestring):
+            self.args.tags = self.args.tags.split(',')
 
-        if lasttime:
-            self.lasttime = arrow.get(lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        if self.args.firsttime:
+            self.args.firsttime = arrow.get(self.args.firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
+
+        if self.args.lasttime:
+            self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
 
     def show(self, user, feed, id):
         uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
@@ -39,20 +35,19 @@ class Observable(object):
         uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
-    def new(self, user, feed):
-        uri = '/users/{0}/feeds/{1}/observables'.format(user, feed)
+    def submit(self):
+        uri = '/users/{0}/feeds/{1}/observables'.format(self.args.user, self.args.feed)
 
         data = {
             "observable": {
-                "thing": self.thing,
-                "tags": self.tags,
-                "portlist": self.portlist,
-                "protocol": self.protocol,
-                'firsttime': self.firsttime.timestamp(),
-                'lasttime': self.lasttime.timestamp()
+                "thing": self.args.observable,
+                "tags": self.args.tags,
+                "portlist": self.args.portlist,
+                "protocol": self.args.protocol,
+                'firsttime': self.args.firsttime,
+                'lasttime': self.args.lasttime
             },
-
-            "comment": self.comment
+            "comment": self.args.comment
         }
 
         return self.client.post(uri, data)
