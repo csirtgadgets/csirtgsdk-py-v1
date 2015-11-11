@@ -23,19 +23,18 @@ from pprint import pprint
 
 class Client(object):
 
-    def __init__(self, remote=REMOTE, token=None, proxy=None, timeout=TIMEOUT, no_verify_ssl=False):
+    def __init__(self, remote=REMOTE, token=None, proxy=None, timeout=TIMEOUT, verify_ssl=True):
         
         self.logger = logging.getLogger(__name__)
         self.remote = remote
         self.token = str(token)
         self.proxy = proxy
         self.timeout = timeout
+        self.verify_ssl = verify_ssl
 
-        if no_verify_ssl:
-            self.verify_ssl = False
-        else:
-            self.verify_ssl = True
-        
+        if not self.verify_ssl:
+            self.logger.debug('TLS Verification is OFF')
+
         self.session = requests.session()
         self.session.headers["Accept"] = 'application/vnd.wf.v{0}+json'.format(str(API_VERSION))
         self.session.headers['User-Agent'] = 'whiteface-sdk-python/{0}'.format(VERSION)
@@ -160,6 +159,8 @@ def main():
 
     parser.add_argument('--attachment', help="specify an attachment")
 
+    parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF', action="store_true")
+
 
     # Process arguments
     args = parser.parse_args()
@@ -172,7 +173,11 @@ def main():
     o = read_config(args)
     options.update(o)
 
-    cli = Client(remote=options['remote'], token=options['token'])
+    verify_ssl = True
+    if options.get('no_verify_ssl'):
+        verify_ssl = False
+
+    cli = Client(remote=options['remote'], token=options['token'], verify_ssl=verify_ssl)
 
     if options.get('search'):
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
