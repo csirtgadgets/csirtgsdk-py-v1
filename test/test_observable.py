@@ -9,7 +9,7 @@ def client():
 
 
 def test_observable(client):
-    f = Observable(client, 'example.com')
+    f = Observable(client, {'feed': 'testfeed', 'user': 'testuser', 'observable': 'example.com'})
 
     assert f.client
-    assert f.thing == 'example.com'
+    assert f.args.observable == 'example.com'
