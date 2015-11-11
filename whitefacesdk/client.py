@@ -166,7 +166,7 @@ def main():
     if options.get('search'):
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
         format = format_factory(options['format'])
-        print(format(ret))
+        format(ret).write()
 
     elif options.get('feeds'):
         feeds = Feed(cli).index(options['user'])
@@ -212,7 +212,7 @@ def main():
 
         f = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
         format = format_factory(options['format'])
-        print(format(f.show()))
+        format(f).write()
 
     elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
@@ -224,7 +224,7 @@ def main():
                 }
             }
             format = format_factory(options['format'])
-            print(format(ret))
+            format(ret).write()
 
         except RuntimeError as e:
             logger.error("Error: feed doesn't exist? user={} feed={}".
