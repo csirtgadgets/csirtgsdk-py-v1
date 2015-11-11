@@ -14,13 +14,21 @@ class Table(object):
         t = PrettyTable(self.cols)
         for o in self.data['feed']['observables']:
             r = []
+            print self.data
             for c in self.cols:
+                print "c ", c
                 if c == 'observable':
                     c = 'thing'
 
-                y = o['observable'].get(c) or ''
-                if c == 'comments':
+                if c == 'user':
+                    y = self.data['feed']['user']
+                elif c == 'feed':
+                    y = self.data['feed']['name']
+                elif c == 'comments':
                     y = len(y)
+                else:
+                    y = o['observable'].get(c) or ''
+
 
                 # make sure we do this last
                 if isinstance(y, list):
