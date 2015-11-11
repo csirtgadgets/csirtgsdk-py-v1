@@ -1,4 +1,4 @@
-
+import utils
 import arrow
 import logging
 import base64
@@ -6,47 +6,27 @@ import base64
 
 class Observable(object):
 
-    def __init__(self, client, thing, user=None, feed=None, comment=None, tags=None, portlist=None, protocol=None,
-                 firsttime=None, lasttime=None, attachment=None):
-        '''
-        :param client:
-        :param thing:
-        :param user:
-        :param feed:
-        :param comment:
-        :param tags:
-        :param portlist:
-        :param protocol:
-        :param firsttime:
-        :param lasttime:
-        :param attachment: filename of an attachment
-        :return:
-        '''
+    def __init__(self, client, args):
 
         self.logger = logging.getLogger(__name__)
         self.client = client
 
-        if tags and isinstance(tags, basestring):
-            tags = tags.split(',')
+        required = set(['user', 'feed', 'observable'])
 
-        self.user = user
-        self.feed = feed
-        self.thing = thing
+        if args is None or len(required - set(args.keys())) > 0:
+            raise Exception("invalid arguments. missing: {}"
+                            .format(required-set(args.keys())))
 
-        self.comment = comment
-        self.tags = tags
-        self.portlist = portlist
-        self.protocol = protocol
-        self.firsttime = firsttime
-        self.lasttime = lasttime
+        self.args = utils.Map(args)
 
-        self.attachment = attachment
+        if self.args.tags and isinstance(self.args.tags, basestring):
+            self.args.tags = self.args.tags.split(',')
+        
+        if self.args.firsttime:
+            self.args.firsttime = arrow.get(self.args.firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
 
-        if firsttime:
-            self.firsttime = arrow.get(firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-
-        if lasttime:
-            self.lasttime = arrow.get(lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        if self.args.lasttime:
+            self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
 
     def show(self, user, feed, id):
         uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
@@ -73,32 +53,26 @@ class Observable(object):
         uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
-    def new(self, user, feed):
-        '''
-        :param user: username
-        :param feed: feed name
-        :return:
-        '''
-        uri = '/users/{0}/feeds/{1}/observables'.format(user, feed)
+
+    def submit(self):
+        uri = '/users/{0}/feeds/{1}/observables'.format(self.args.user, self.args.feed)
 
         data = {
             "observable": {
-                "thing": self.thing,
-                "tags": self.tags,
-                "portlist": self.portlist,
-                "protocol": self.protocol,
-                'firsttime': self.firsttime,
-                'lasttime': self.lasttime
+                "thing": self.args.observable,
+                "tags": self.args.tags,
+                "portlist": self.args.portlist,
+                "protocol": self.args.protocol,
+                'firsttime': self.args.firsttime,
+                'lasttime': self.args.lasttime
             },
-
-            "comment": {
-                'text': self.comment,
-            }
+            "comment": { 'text': self.args.comment }
         }
 
-        if self.attachment:
+        if self.args.attachment:
+            del data['comment']
             self.logger.debug('adding attachment')
-            attachment = self._file_to_attachment(self.attachment)
+            attachment = self._file_to_attachment(self.args.attachment)
             data['comment']['attachment'] = attachment
 
         return self.client.post(uri, data)
