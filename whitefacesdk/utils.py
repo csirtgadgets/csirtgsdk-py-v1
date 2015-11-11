@@ -11,13 +11,15 @@ def read_config(args):
         config = yaml.load(f)
         f.close()
         if not config:
-            raise Exception("Unable to read {} config file".format(args.config ))
+            raise Exception("Unable to read {} config file".format(args.config))
         for k in config:
             if not options.get(k):
                 options[k] = config[k]
 
         if config.get('remote') and (options['remote'] == REMOTE):
             options['remote'] = config['remote']
+    else:
+        raise Exception("Unable to read {} config file".format(args.config))
 
     return options
 
