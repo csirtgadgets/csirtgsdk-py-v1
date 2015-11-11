@@ -1,4 +1,5 @@
 from prettytable import PrettyTable
+import sys
 
 from whitefacesdk.constants import COLUMNS, MAX_FIELD_SIZE
 
@@ -10,17 +11,34 @@ class Table(object):
         self.max_field_size = max_field_size
         self.data = data
 
-    def __repr__(self):
+    def write(self, fh=sys.stdout):
         t = PrettyTable(self.cols)
+
         for o in self.data['feed']['observables']:
             r = []
             for c in self.cols:
+                y = ''
+                
                 if c == 'observable':
                     c = 'thing'
 
-                y = o['observable'].get(c) or ''
-                if c == 'comments':
-                    y = len(y)
+                if c == 'user':
+                    try:
+                        # json returned by --feed
+                        y = self.data['feed']['user']
+                    except:
+                        # json returned by --new
+                        y = self.data['feed']['observables'][0]['observable']['user']
+                elif c == 'feed':
+                    try:
+                        y = self.data['feed']['name']
+                    except:
+                        y = self.data['feed']['observables'][0]['observable']['feed']
+                elif c == 'comments':
+                    y = len(o['observable'].get(c)) or ''
+                else:
+                    y = o['observable'].get(c) or ''
+
 
                 # make sure we do this last
                 if isinstance(y, list):
@@ -29,4 +47,5 @@ class Table(object):
                 y = (y[:self.max_field_size] + '..') if len(y) > self.max_field_size else y
                 r.append(y)
             t.add_row(r)
-        return str(t)
+        fh.write(str(t))
+        fh.write("\n")

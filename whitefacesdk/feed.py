@@ -16,8 +16,8 @@ class Feed(object):
 
         data = {
             'feed': {
-                'name': self.name,
-                'description': self.description
+                'name': name,
+                'description': description
             }
         }
 

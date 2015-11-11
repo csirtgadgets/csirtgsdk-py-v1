@@ -13,7 +13,7 @@ LIMIT = os.environ.get('WF_LIMIT', LIMIT)
 TIMEOUT = 300
 TIMEOUT = os.environ.get('WF_TIMEOUT', TIMEOUT)
 
-COLUMNS = "user,feed,thing,comments,protocol,portlist,tags,updated_at"
+COLUMNS = "user,feed,thing,comments,protocol,portlist,tags,description,updated_at"
 COLUMNS = os.environ.get('WF_COLUMNS', COLUMNS)
 COLUMNS = COLUMNS.split(',')
 
