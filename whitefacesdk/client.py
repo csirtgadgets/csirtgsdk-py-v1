@@ -69,6 +69,8 @@ class Client(object):
         return body
 
     def post(self, uri, data):
+        if not uri.startswith(self.remote):
+            uri = '{}/{}'.format(self.remote, uri)
         return self._post(uri, data)
 
     def _post(self, uri, data):
@@ -144,7 +146,7 @@ def main():
     # vars
     parser.add_argument('--user', help="specify a user")
     parser.add_argument('--feed', help="specify feed name")
-    parser.add_argument('--observable', dest='thing', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
+    parser.add_argument('--observable', dest='observable', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
                                                            "http://badsite.org/1.html")
     parser.add_argument('--tags', help="specify tags")
     parser.add_argument('--comment', help="specify a comment")
@@ -175,7 +177,7 @@ def main():
     if options.get('search'):
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
         format = format_factory(options['format'])
-        print(format(ret))
+        format(ret).write()
 
     elif options.get('feeds'):
         feeds = Feed(cli).index(options['user'])
@@ -221,14 +223,12 @@ def main():
 
         data = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
         format = format_factory(options['format'])
-        print(format(data))
+        format(data).write()
 
     # submit new observable
-    elif options.get('feed') and options.get('thing') and options.get('new'):
+    elif options.get('feed') and options.get('observable') and options.get('new'):
         try:
-            o = Observable(cli, options['thing'], attachment=options.get('attachment'), comment=options.get('comment'))
-            ret = o.new(options['user'], options['feed'])
-
+            ret = Observable(cli, options).submit()
             logger.info('posted: {0}'.format(ret['observable']['location']))
             ret = {
                 'feed': {
@@ -236,10 +236,11 @@ def main():
                 }
             }
             format = format_factory(options['format'])
-            print(format(ret))
+            format(ret).write()
 
         except RuntimeError as e:
-            logger.error(e)
+            logger.error("Error: feed doesn't exist? user={} feed={}".
+                          format(options.get('user'), options.get('feed')))
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,9 @@
-from whitefacesdk.format.table import Table
+from whitefacesdk.format import table, format_json, format_csv
 
 plugins = {
-    'table': Table,
+    'table': table.Table,
+    'csv': format_csv.CSV,
+    'json': format_json.JSON
 }
 
 
@@ -10,4 +12,4 @@ def factory(name):
     if name in plugins:
         return plugins[name]
     else:
-        return None
+        raise Exception("No such factory: {}".format(name))
