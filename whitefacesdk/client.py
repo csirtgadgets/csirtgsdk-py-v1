@@ -82,11 +82,11 @@ class Client(object):
 
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
-            self.logger.debug(err)
+            self.logger.error(err)
             err = body.content
 
             if body.status_code == 401:
-                err = 'unauthroized'
+                err = 'unauthorized'
                 raise RuntimeError(err)
             elif body.status_code == 404:
                 err = 'not found'
@@ -95,16 +95,17 @@ class Client(object):
                 d = json.loads(data)
                 err = 'invalid observable: {}'.format(d['observable']['thing'])
                 raise RuntimeError(err)
+            elif body.status_code >= 500:
+                err = 'unknown 500 error, contact administrator'
+                raise RuntimeError(err)
             else:
                 try:
                     err = json.loads(err).get('message')
                 except ValueError as e:
-                    err = body.content
+                    err = 'unknown error, contact administrator'
 
                 self.logger.error(err)
                 raise RuntimeWarning(err)
-
-
 
         self.logger.debug(body.content)
         body = json.loads(body.content)
@@ -226,7 +227,8 @@ def main():
     # submit new observable
     elif options.get('feed') and options.get('thing') and options.get('new'):
         try:
-            o = Observable(cli, options['thing'], attachment=options.get('attachment'), comment=options.get('comment'))
+            o = Observable(cli, options['thing'], attachment=options.get('attachment'), comment=options.get(
+                'comment'), tags=options.get('tags'))
             ret = o.new(options['user'], options['feed'])
 
             logger.info('posted: {0}'.format(ret['observable']['location']))
