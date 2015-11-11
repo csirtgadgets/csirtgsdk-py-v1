@@ -1,6 +1,7 @@
 import logging
 import yaml
 import os
+import sys
 from whitefacesdk.constants import REMOTE, LOG_FORMAT
 
 
@@ -43,14 +44,24 @@ class Map(dict):
     """
     def __init__(self, *args, **kwargs):
         super(Map, self).__init__(*args, **kwargs)
-        for arg in args:
-            if isinstance(arg, dict):
-                for k, v in arg.iteritems():
-                    self[k] = v
+        if (sys.version_info < (3, 0)):
+            for arg in args:
+                if isinstance(arg, dict):
+                    for k, v in arg.iteritems():
+                        self[k] = v
 
-        if kwargs:
-            for k, v in kwargs.iteritems():
-                self[k] = v
+            if kwargs:
+                for k, v in kwargs.iteritems():
+                    self[k] = v
+        else:
+            for arg in args:
+                if isinstance(arg, dict):
+                    for k, v in arg.items():
+                        self[k] = v
+
+            if kwargs:
+                for k, v in kwargs.items():
+                    self[k] = v
 
     def __getattr__(self, attr):
         return self.get(attr)
