@@ -28,18 +28,13 @@ class CSV(object):
             o['feed'] = feedname
             o['user'] = username
 
-            try:
-                del o['description']
-                del o['license']
-                del o['location']
-            except:
-                pass
+            for i in ['license', 'location']:
+                if i in o: del o[i]
 
             try:
-                o['comments'] = o['comment']['comment']
-                (o['comments'][:self.max_field_size] + '..') if len(o['comments']) > self.max_field_size else o['comments']
+                o['comments'] = len(o['comments'])
             except:
-                o['comments'] = ''
+                o['comments'] = 0
 
             o['tags'] = ','.join(o['tags'])
             t.writerow(o)

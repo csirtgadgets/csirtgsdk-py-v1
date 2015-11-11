@@ -61,6 +61,7 @@ class Observable(object):
             "observable": {
                 "thing": self.args.observable,
                 "tags": self.args.tags,
+                "description": self.args.description,
                 "portlist": self.args.portlist,
                 "protocol": self.args.protocol,
                 'firsttime': self.args.firsttime,
