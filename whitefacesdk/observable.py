@@ -47,7 +47,7 @@ class Observable(object):
                 'firsttime': self.args.firsttime,
                 'lasttime': self.args.lasttime
             },
-            "comment": self.args.comment
+            "comment": { 'text': self.args.comment }
         }
 
         return self.client.post(uri, data)
