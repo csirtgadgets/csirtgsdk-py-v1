@@ -35,11 +35,7 @@ class Table(object):
                     except:
                         y = self.data['feed']['observables'][0]['observable']['feed']
                 elif c == 'comments':
-                    try:
-                        # only show 1st comment
-                        y = o['observable'].get(c)[0]['comment']['comment']
-                    except:
-                        y = ''
+                    y = len(o['observable'].get(c)) or ''
                 else:
                     y = o['observable'].get(c) or ''
 
