@@ -16,7 +16,6 @@ class Table(object):
 
         for o in self.data['feed']['observables']:
             r = []
-            print "XXXX ", self.data
             for c in self.cols:
                 y = ''
                 
