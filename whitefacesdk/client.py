@@ -159,6 +159,7 @@ def main():
     parser.add_argument('--lasttime')
 
     parser.add_argument('--attachment', help="specify an attachment")
+    parser.add_argument('--attachment-name', help="specify the attachment filename")
 
 
     # Process arguments
@@ -239,8 +240,7 @@ def main():
             format(ret).write()
 
         except RuntimeError as e:
-            logger.error("Error: feed doesn't exist? user={} feed={}".
-                          format(options.get('user'), options.get('feed')))
+            logger.error(e)
 
 if __name__ == "__main__":
     main()
