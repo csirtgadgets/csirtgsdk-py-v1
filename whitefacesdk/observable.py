@@ -49,8 +49,12 @@ class Observable(object):
         else:
             if filename is None:
                 raise RuntimeError('missing filename')
-            data = base64.b64decode(blob)
+            try:
+                data = base64.b64decode(blob)
+            except TypeError:
+                raise RuntimeError('attachment must be base64 encoded')
 
+        data = base64.b64encode(data)
         return {
             'data': data,
             'filename': filename,
@@ -73,13 +77,12 @@ class Observable(object):
                 'firsttime': self.args.firsttime,
                 'lasttime': self.args.lasttime
             },
-            "comment": { 'text': self.args.comment }
+            "comment": {'text': self.args.comment}
         }
 
         if self.args.attachment:
-            del data['comment']
             self.logger.debug('adding attachment')
-            attachment = self._file_to_attachment(self.args.attachment)
+            attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
             data['comment']['attachment'] = attachment
 
         return self.client.post(uri, data)
