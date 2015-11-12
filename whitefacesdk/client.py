@@ -84,11 +84,11 @@ class Client(object):
 
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
-            self.logger.debug(err)
+            self.logger.error(err)
             err = body.content
 
             if body.status_code == 401:
-                err = 'unauthroized'
+                err = 'unauthorized'
                 raise RuntimeError(err)
             elif body.status_code == 404:
                 err = 'not found'
@@ -97,16 +97,17 @@ class Client(object):
                 d = json.loads(data)
                 err = 'invalid observable: {}'.format(d['observable']['thing'])
                 raise RuntimeError(err)
+            elif body.status_code >= 500:
+                err = 'unknown 500 error, contact administrator'
+                raise RuntimeError(err)
             else:
                 try:
                     err = json.loads(err).get('message')
                 except ValueError as e:
-                    err = body.content
+                    err = 'unknown error, contact administrator'
 
                 self.logger.error(err)
                 raise RuntimeWarning(err)
-
-
 
         self.logger.debug(body.content)
         body = json.loads(body.content)
