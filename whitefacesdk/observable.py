@@ -2,6 +2,8 @@ import whitefacesdk.utils as utils
 import arrow
 import logging
 import base64
+from pprint import pprint
+import hashlib
 
 
 class Observable(object):
@@ -32,16 +34,25 @@ class Observable(object):
         uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
         return self.client.get(uri)
 
-    def _file_to_attachment(self, filename):
+    def _file_to_attachment(self, blob, filename=None):
         '''
 
         :param filename:
         :return: dict of base64 encoded filestring, with orig filename
         '''
-        import base64
 
-        with open(filename) as f:
-            data = f.read()
+        import os.path
+        if os.path.isfile(blob):
+            filename = blob
+            with open(blob) as f:
+                data = f.read()
+        else:
+            if filename is None:
+                raise RuntimeError('missing filename')
+            try:
+                data = base64.b64decode(blob)
+            except TypeError:
+                raise RuntimeError('attachment must be base64 encoded')
 
         data = base64.b64encode(data)
         return {
@@ -52,7 +63,6 @@ class Observable(object):
     def comments(self, user, feed, id):
         uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
-
 
     def submit(self):
         uri = '/users/{0}/feeds/{1}/observables'.format(self.args.user, self.args.feed)
@@ -67,13 +77,12 @@ class Observable(object):
                 'firsttime': self.args.firsttime,
                 'lasttime': self.args.lasttime
             },
-            "comment": { 'text': self.args.comment }
+            "comment": {'text': self.args.comment}
         }
 
         if self.args.attachment:
-            del data['comment']
             self.logger.debug('adding attachment')
-            attachment = self._file_to_attachment(self.args.attachment)
+            attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
             data['comment']['attachment'] = attachment
 
         return self.client.post(uri, data)
