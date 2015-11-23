@@ -7,9 +7,22 @@ import hashlib
 
 
 class Observable(object):
-
+    """
+    Represents an Observable object
+    """
     def __init__(self, client, args):
+        """
+        :param client: whitefacesdk.client.Client object
+        :param args: dict https://github.com/csirtgadgets/whiteface/wiki/API#observables
+        :return: Observable object
 
+        Example:
+            Observable(cli, {
+                'observable': 'example.org',
+                'tags': 'botnet',
+                'lasttime': '2015-01-01T00:00:59Z'
+            }).submit()
+        """
         self.logger = logging.getLogger(__name__)
         self.client = client
 
@@ -31,15 +44,26 @@ class Observable(object):
             self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
 
     def show(self, user, feed, id):
+        """
+        Show a specific observable by id
+
+        :param user: feed username
+        :param feed: feed name
+        :param id: observable endpoint id [INT]
+        :return: dict
+
+        Example:
+            ret = Observable.show('csirtgadgets','port-scanners', '1234')
+        """
         uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
         return self.client.get(uri)
 
     def _file_to_attachment(self, blob, filename=None):
-        '''
+        """
 
-        :param filename:
+        :param filename: file path
         :return: dict of base64 encoded filestring, with orig filename
-        '''
+        """
 
         import os.path
         if os.path.isfile(blob):
@@ -61,10 +85,26 @@ class Observable(object):
         }
 
     def comments(self, user, feed, id):
+        """
+        Return comments for a specific observable id
+
+        :param user: feed username
+        :param feed: feed name
+        :param id: observable id [INT]
+        :return: list
+
+        Example:
+            ret = Observable.comments('csirtgadgets','port-scanners', '1234')
+        """
         uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
     def submit(self):
+        """
+        Submit action on the Observable object
+
+        :return: Observable Object
+        """
         uri = '/users/{0}/feeds/{1}/observables'.format(self.args.user, self.args.feed)
 
         data = {

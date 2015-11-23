@@ -42,9 +42,17 @@ class Client(object):
         self.session.headers['Content-Type'] = 'application/json'
 
     def get(self, uri, params={}):
-        return self._get(uri, params=params)
+        """
+        HTTP GET function
 
-    def _get(self, uri, params={}):
+        :param uri: REST endpoint
+        :param params: optional HTTP params to pass to the endpoint
+        :return: list of results (usually a list of dicts)
+
+        Example:
+            ret = cli.get('/search', params={ 'q': 'example.org' })
+        """
+
         self.logger.debug(uri)
         self.logger.debug(params)
         if not uri.startswith(self.remote):
@@ -68,12 +76,18 @@ class Client(object):
         return body
 
     def post(self, uri, data):
-        if not uri.startswith(self.remote):
-            uri = '{}/{}'.format(self.remote, uri)
-        return self._post(uri, data)
+        """
+        HTTP POST function
 
-    def _post(self, uri, data):
-        if not uri.startswith(self.remote):
+        :param uri: REST endpoint to POST to
+        :param data: list of dicts to be passed to the endpoint
+        :return: list of dicts, usually will be a list of objects or id's
+
+        Example:
+            ret = cli.post('/observables', { 'observable': 'example.com' })
+        """
+
+        if not uri.startswith(self.remote):  # append self.remote if the uri doesn't include it
             uri = '{}/{}'.format(self.remote, uri)
             self.logger.debug(uri)
 
