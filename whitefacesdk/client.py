@@ -132,9 +132,11 @@ def main():
         description=textwrap.dedent('''\
         example usage:
             $ wf --search example.com
-            $ wf --user wes --feeds
-            $ wf --user wes --feed scanners --new --observable 1.2.3.4 --portlist 22 --tags ssh,scanner
-            $ wf --user wes --feed vnc --new
+            $ wf --user csirtgadgets --feeds
+            $ wf --user csirtgadgets --feed uce-urls
+            $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
+            $ wf --user csirtgadgets --feed scanners --new --observable 1.1.1.1 --tags scanner --comment
+              'this is a port scanner'
         '''),
         formatter_class=RawDescriptionHelpFormatter,
         prog='wf'
@@ -153,26 +155,26 @@ def main():
     parser.add_argument('--format', help="specify an output format [default: %(default)s]", default='table')
     # actions
     parser.add_argument('-q', '--search', help="search for an observable")
-    parser.add_argument('--feeds', action="store_true", help="list feeds")
+    parser.add_argument('--feeds', action="store_true", help="show a list of feeds (per user)")
     parser.add_argument('--new', action='store_true', help="create a new feed or observable")
 
 
     # vars
     parser.add_argument('--user', help="specify a user")
     parser.add_argument('--feed', help="specify feed name")
-    parser.add_argument('--observable', dest='observable', help="specify an observable [eg: 1.2.3.4, evilsite.com, "
-                                                           "http://badsite.org/1.html")
+    parser.add_argument('--observable', dest='observable', help="specify an observable [eg: 1.2.3.4, example.com, "
+                                                           "http://example.com/1.html")
     parser.add_argument('--tags', help="specify tags")
-    parser.add_argument('--comment', help="specify a comment")
+    parser.add_argument('--comment', help="enter a comment for the observable")
     parser.add_argument('--description', help="specify a feed description")
 
     parser.add_argument('--portlist', help="specify a portlist [eg: 22,23-35,443]")
     parser.add_argument('--protocol', help="specify TCP, UDP or ICMP")
 
-    parser.add_argument('--firsttime')
-    parser.add_argument('--lasttime')
+    parser.add_argument('--firsttime', help="timestamp when first seen [eg: 2015-11-23T00:00:00Z")
+    parser.add_argument('--lasttime', help="timestamp when last seen [eg: 2015-11-24T00:00:00Z")
 
-    parser.add_argument('--attachment', help="specify an attachment")
+    parser.add_argument('--attachment', help="specify an attachment [eg: /path/to/file]")
     parser.add_argument('--attachment-name', help="specify the attachment filename")
 
     parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF', action="store_true")
