@@ -38,10 +38,10 @@ class Observable(object):
             self.args.tags = self.args.tags.split(',')
         
         if self.args.firsttime:
-            self.args.firsttime = arrow.get(self.args.firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
+            self.args.firsttime = arrow.get(self.args.firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
         if self.args.lasttime:
-            self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ").timestamp()
+            self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
     def show(self, user, feed, id):
         """
