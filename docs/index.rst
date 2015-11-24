@@ -11,7 +11,32 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   client.rst
+   mysearch.rst
+   feed.rst
+   observable.rst
+   utils.rst
 
+Search
+======
+
+.. code-block:: python
+
+   from whitefacesdk.client import Client
+   from whitefacesdk.search import Search
+   from pprint import pprint
+
+   # Initiate client object
+   cli = Client(token=token)
+
+   # Search for an observable
+   ret = Search(cli).search('example.org', limit=5)
+
+   # short form
+   ret = Search(Client(token=token)).search('example.org', limit=5)
+
+   # pretty print the returned data structure
+   pprint(ret)
 
 Indices and tables
 ==================

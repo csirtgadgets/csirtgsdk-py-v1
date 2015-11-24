@@ -6,6 +6,12 @@ from whitefacesdk.constants import REMOTE, LOG_FORMAT
 
 
 def read_config(args):
+    """
+    Reads in an ArgParse objet with args.confg as the YAML style config path
+
+    :param args: ArgParse object
+    :return: dict of options based on ArgParse and the YAML config
+    """
     options = {}
     if os.path.isfile(args.config):
         f = file(args.config)
@@ -26,6 +32,12 @@ def read_config(args):
 
 
 def setup_logging(args):
+    """
+    Sets up basic logging
+
+    :param args: ArgParse arguments
+    :return: nothing. sets logger up globally
+    """
     loglevel = logging.WARNING
     if args.verbose:
         loglevel = logging.INFO
@@ -40,9 +52,13 @@ def setup_logging(args):
 
 class Map(dict):
     """
-    http://stackoverflow.com/questions/2352181/how-to-use-a-dot-to-access-members-of-dictionary
+
+
     Example:
-    m = Map({'first_name': 'Eduardo'}, last_name='Pool', age=24, sports=['Soccer'])
+        m = Map({'first_name': 'Eduardo'}, last_name='Pool', age=24, sports=['Soccer'])
+
+    Reference:
+        http://stackoverflow.com/questions/2352181/how-to-use-a-dot-to-access-members-of-dictionary
     """
     def __init__(self, *args, **kwargs):
         super(Map, self).__init__(*args, **kwargs)
