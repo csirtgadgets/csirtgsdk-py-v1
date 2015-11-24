@@ -52,12 +52,14 @@ project = u'Whiteface SDK'
 copyright = u'2015, CSIRT Gadgets'
 author = u'CSIRT Gadgets'
 
+import whitefacesdk
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = 0
+version = whitefacesdk.VERSION
 # The full version, including alpha/beta/rc tags.
 release = '0.0'
 
