@@ -5,6 +5,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 ## Ubuntu
   ```bash
   $ apt-get install -y python-dev python-pip git
+  $ sudo pip install pip --upgrade  # requires > 6.2
   $ pip install https://github.com/csirtgadgets/py-whitefacesdk/archive/master.tar.gz
   ```
 
