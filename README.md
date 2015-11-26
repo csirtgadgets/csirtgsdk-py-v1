@@ -16,7 +16,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   token: 1234
   ```
 ## Examples
-### Search for an observable
+### Search for an indicator
   ```bash
   $ wf --search example.com
   ```
@@ -32,13 +32,13 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   ```bash
   $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
   ```
-### Create an observable within a feed
+### Create an indicator within a feed
   ```bash
-  $ wf --user csirtgadgets --feed scanners --new --observable 1.1.1.1 --tags scanner --comment 'this is a port scanner'
+  $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
   ```
 
 ## SDK
-### Search for an observable
+### Search for an indicator
 
   ```python
   from whitefacesdk.client import Client
@@ -50,13 +50,13 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   verify_ssl = True
   limit = 500
   
-  observable = 'example'
+  indicator = 'example'
   
   # Initiate client object
   cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
   
-  # Search for an observable
-  ret = Search(cli).search(observable, limit=limit)
+  # Search for an indicator
+  ret = Search(cli).search(indicator, limit=limit)
   
   # pretty print the returned data structure
   pprint(ret)
@@ -134,10 +134,10 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   pprint(ret)
   ```
   
-### Create an observable within a feed  
+### Create an indicator within a feed  
   ```python
   from whitefacesdk.client import Client
-  from whitefacesdk.observable import Observable
+  from whitefacesdk.indicator import Indicator
   from pprint import pprint
   
   remote = 'https://whiteface.csirtgadgets.com/api'
@@ -148,7 +148,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   record = {
       "user": "csirtgadgets",
       "feed": "scanners",
-      "observable": "1.1.1.1",
+      "indicator": "1.1.1.1",
       "tags": "scanner",
       "description": "seen port scanning (incomming, tcp, syn, blocked)",
       "portlist": "22",
@@ -161,8 +161,8 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   # Initiate client object
   cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
   
-  # Submit an observable
-  ret = Observable(cli, record).submit()
+  # Submit an indicator
+  ret = Indicator(cli, record).submit()
   
   # pprint the returned data structure
   pprint(ret)

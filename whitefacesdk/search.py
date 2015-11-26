@@ -28,7 +28,7 @@ class Search(object):
         body = self.client.get(uri)
         body = {
             "feed": {
-                "observables": body
+                "indicators": body
             }
         }
         return body

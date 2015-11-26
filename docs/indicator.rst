@@ -1,7 +1,7 @@
-observable
+indicator
 ==========
 
-.. autoclass:: observable.Observable
+.. autoclass:: indicator.Indicator
    :members:
    :undoc-members:
    :show-inheritance:

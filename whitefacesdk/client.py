@@ -11,7 +11,7 @@ import logging
 from whitefacesdk.utils import setup_logging, read_config
 
 from whitefacesdk.feed import Feed
-from whitefacesdk.observable import Observable
+from whitefacesdk.indicator import Indicator
 from whitefacesdk.search import Search
 
 from whitefacesdk import VERSION
@@ -84,7 +84,7 @@ class Client(object):
         :return: list of dicts, usually will be a list of objects or id's
 
         Example:
-            ret = cli.post('/observables', { 'observable': 'example.com' })
+            ret = cli.post('/indicators', { 'indicator': 'example.com' })
         """
 
         if not uri.startswith(self.remote):  # append self.remote if the uri doesn't include it
@@ -108,7 +108,7 @@ class Client(object):
                 raise RuntimeError(err)
             elif body.status_code == 422:
                 d = json.loads(data)
-                err = 'invalid observable: {}'.format(d['observable']['thing'])
+                err = 'invalid indicator: {}'.format(d['indicator']['thing'])
                 raise RuntimeError(err)
             elif body.status_code >= 500:
                 err = 'unknown 500 error, contact administrator'
@@ -135,7 +135,7 @@ def main():
             $ wf --user csirtgadgets --feeds
             $ wf --user csirtgadgets --feed uce-urls
             $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
-            $ wf --user csirtgadgets --feed scanners --new --observable 1.1.1.1 --tags scanner --comment
+            $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment
               'this is a port scanner'
         '''),
         formatter_class=RawDescriptionHelpFormatter,
@@ -154,18 +154,18 @@ def main():
 
     parser.add_argument('--format', help="specify an output format [default: %(default)s]", default='table')
     # actions
-    parser.add_argument('-q', '--search', help="search for an observable")
+    parser.add_argument('-q', '--search', help="search for an indicator")
     parser.add_argument('--feeds', action="store_true", help="show a list of feeds (per user)")
-    parser.add_argument('--new', action='store_true', help="create a new feed or observable")
+    parser.add_argument('--new', action='store_true', help="create a new feed or indicator")
 
 
     # vars
     parser.add_argument('--user', help="specify a user")
     parser.add_argument('--feed', help="specify feed name")
-    parser.add_argument('--observable', dest='observable', help="specify an observable [eg: 1.2.3.4, example.com, "
+    parser.add_argument('--indicator', dest='indicator', help="specify an indicator [eg: 1.2.3.4, example.com, "
                                                            "http://example.com/1.html")
     parser.add_argument('--tags', help="specify tags")
-    parser.add_argument('--comment', help="enter a comment for the observable")
+    parser.add_argument('--comment', help="enter a comment for the indicator")
     parser.add_argument('--description', help="specify a feed description")
 
     parser.add_argument('--portlist', help="specify a portlist [eg: 22,23-35,443]")
@@ -219,7 +219,7 @@ def main():
             t.add_row(r)
         print(str(t))
 
-    elif options.get('feed') and options.get('new') and not options.get('observable'):
+    elif options.get('feed') and options.get('new') and not options.get('indicator'):
         if not options.get('user'):
             parser.error('--user is required')
 
@@ -248,14 +248,14 @@ def main():
         format = format_factory(options['format'])
         format(data).write()
 
-    # submit new observable
-    elif options.get('feed') and options.get('observable') and options.get('new'):
+    # submit new indicator
+    elif options.get('feed') and options.get('indicator') and options.get('new'):
         try:
-            ret = Observable(cli, options).submit()
-            logger.info('posted: {0}'.format(ret['observable']['location']))
+            ret = Indicator(cli, options).submit()
+            logger.info('posted: {0}'.format(ret['indicator']['location']))
             ret = {
                 'feed': {
-                    'observables': [ret]
+                    'indicators': [ret]
                 }
             }
             format = format_factory(options['format'])
