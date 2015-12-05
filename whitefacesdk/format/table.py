@@ -35,7 +35,10 @@ class Table(object):
                     except:
                         y = self.data['feed']['observables'][0]['observable']['feed']
                 elif c == 'comments':
-                    y = len(o['observable'].get(c)) or ''
+                    if o['observable'].get(c):
+                        y = len(o['observable'].get(c)) or ''
+                    else:
+                        y = ''
                 else:
                     y = o['observable'].get(c) or ''
 
