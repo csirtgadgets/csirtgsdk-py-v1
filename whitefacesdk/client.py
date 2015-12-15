@@ -245,8 +245,9 @@ def main():
             parser.error('--user is required')
 
         data = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
-        format = format_factory(options['format'])
-        format(data).write()
+        if data['feed'].get('observables'):
+            format = format_factory(options['format'])
+            format(data).write()
 
     # submit new observable
     elif options.get('feed') and options.get('observable') and options.get('new'):
