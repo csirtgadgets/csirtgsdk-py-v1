@@ -115,7 +115,8 @@ class Observable(object):
                 "portlist": self.args.portlist,
                 "protocol": self.args.protocol,
                 'firsttime': self.args.firsttime,
-                'lasttime': self.args.lasttime
+                'lasttime': self.args.lasttime,
+                'portlist_src': self.args.portlist_src
             },
             "comment": {'text': self.args.comment}
         }
