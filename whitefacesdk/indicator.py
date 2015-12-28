@@ -99,6 +99,38 @@ class Indicator(object):
         uri = '/users/{}/feeds/{}/indicators/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
+    def submit_bulk(self, indicators):
+        """
+        Submit action against the IndicatorBulk endpoint
+
+        :return: List of Indicator Objects submitted
+        """
+
+        uri = '/users/{0}/feeds/{1}/indicators_bulk'.format(self.args.user, self.args.feed)
+
+        data = {
+            'indicators': [
+                {
+                    'indicator': {
+                        'thing': i.args.thing,
+                        'tags': i.args.tags,
+                        "description": i.args.description,
+                        "portlist": i.args.portlist,
+                        "protocol": i.args.protocol,
+                        'firsttime': i.args.firsttime,
+                        'lasttime': i.args.lasttime,
+                        'portlist_src': i.args.portlist_src
+                    },
+                    'comment': {
+                        'text': i.args.comment,
+                        'attachment':  self._file_to_attachment(i.args.attachment, filename=i.args.attachment_name)
+                    },
+                } for i in indicators
+            ]
+        }
+
+        return self.client.post(uri, data)
+
     def submit(self):
         """
         Submit action on the Indicator object
