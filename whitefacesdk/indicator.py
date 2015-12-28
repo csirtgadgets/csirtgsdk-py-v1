@@ -6,19 +6,19 @@ from pprint import pprint
 import hashlib
 
 
-class Observable(object):
+class Indicator(object):
     """
-    Represents an Observable object
+    Represents an Indicator object
     """
     def __init__(self, client, args):
         """
         :param client: whitefacesdk.client.Client object
-        :param args: dict https://github.com/csirtgadgets/whiteface/wiki/API#observables
-        :return: Observable object
+        :param args: dict https://github.com/csirtgadgets/whiteface/wiki/API#indicators
+        :return: Indicator object
 
         Example:
-            Observable(cli, {
-                'observable': 'example.org',
+            Indicator(cli, {
+                'indicator': 'example.org',
                 'tags': 'botnet',
                 'lasttime': '2015-01-01T00:00:59Z'
             }).submit()
@@ -26,7 +26,7 @@ class Observable(object):
         self.logger = logging.getLogger(__name__)
         self.client = client
 
-        required = set(['user', 'feed', 'observable'])
+        required = set(['user', 'feed', 'indicator'])
 
         if args is None or len(required - set(args.keys())) > 0:
             raise Exception("invalid arguments. missing: {}"
@@ -45,17 +45,17 @@ class Observable(object):
 
     def show(self, user, feed, id):
         """
-        Show a specific observable by id
+        Show a specific indicator by id
 
         :param user: feed username
         :param feed: feed name
-        :param id: observable endpoint id [INT]
+        :param id: indicator endpoint id [INT]
         :return: dict
 
         Example:
-            ret = Observable.show('csirtgadgets','port-scanners', '1234')
+            ret = Indicator.show('csirtgadgets','port-scanners', '1234')
         """
-        uri = '/users/{}/feeds/{}/observables/{}'.format(user, feed, id)
+        uri = '/users/{}/feeds/{}/indicators/{}'.format(user, feed, id)
         return self.client.get(uri)
 
     def _file_to_attachment(self, blob, filename=None):
@@ -86,30 +86,30 @@ class Observable(object):
 
     def comments(self, user, feed, id):
         """
-        Return comments for a specific observable id
+        Return comments for a specific indicator id
 
         :param user: feed username
         :param feed: feed name
-        :param id: observable id [INT]
+        :param id: indicator id [INT]
         :return: list
 
         Example:
-            ret = Observable.comments('csirtgadgets','port-scanners', '1234')
+            ret = Indicator.comments('csirtgadgets','port-scanners', '1234')
         """
-        uri = '/users/{}/feeds/{}/observables/{}/comments'.format(user, feed, id)
+        uri = '/users/{}/feeds/{}/indicators/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
     def submit(self):
         """
-        Submit action on the Observable object
+        Submit action on the Indicator object
 
-        :return: Observable Object
+        :return: Indicator Object
         """
-        uri = '/users/{0}/feeds/{1}/observables'.format(self.args.user, self.args.feed)
+        uri = '/users/{0}/feeds/{1}/indicators'.format(self.args.user, self.args.feed)
 
         data = {
-            "observable": {
-                "thing": self.args.observable,
+            "indicator": {
+                "thing": self.args.indicator,
                 "tags": self.args.tags,
                 "description": self.args.description,
                 "portlist": self.args.portlist,

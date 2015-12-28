@@ -20,11 +20,11 @@ class CSV(object):
             feedname = self.data['feed']['name']
             username = self.data['feed']['user']
         except:
-            feedname = self.data['feed']['observables'][0]['observable']['feed']
-            username = self.data['feed']['observables'][0]['observable']['user']
+            feedname = self.data['feed']['indicators'][0]['indicator']['feed']
+            username = self.data['feed']['indicators'][0]['indicator']['user']
 
-        for _ in self.data['feed']['observables']:
-            o = _['observable']
+        for _ in self.data['feed']['indicators']:
+            o = _['indicator']
             o['feed'] = feedname
             o['user'] = username
 

@@ -14,7 +14,7 @@ Contents:
    client.rst
    mysearch.rst
    feed.rst
-   observable.rst
+   indicator.rst
    utils.rst
 
 
@@ -27,7 +27,7 @@ Examples
    $ wf --user csirtgadgets --feeds
    $ wf --user csirtgadgets --feed uce-urls
    $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
-   $ wf --user csirtgadgets --feed scanners --new --observable 1.1.1.1 --tags scanner --comment 'this is a port scanner'
+   $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
 
 Search
 ======
@@ -41,7 +41,7 @@ Search
    # Initiate client object
    cli = Client(token=token)
 
-   # Search for an observable
+   # Search for an indicator
    ret = Search(cli).search('example.org', limit=5)
 
    # short form
