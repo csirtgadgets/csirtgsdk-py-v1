@@ -35,7 +35,10 @@ class Table(object):
                     except:
                         y = self.data['feed']['indicators'][0]['indicator']['feed']
                 elif c == 'comments':
-                    y = len(o['indicator'].get(c)) or ''
+                    if o['indicator'].get(c):
+                        y = len(o['indicator'].get(c)) or ''
+                    else:
+                        y = ''
                 else:
                     y = o['indicator'].get(c) or ''
 
