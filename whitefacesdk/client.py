@@ -245,7 +245,7 @@ def main():
             parser.error('--user is required')
 
         data = Feed(cli).show(options['user'], options['feed'], limit=options['limit'])
-        if data['feed'].get('observables'):
+        if data['feed'].get('indicators'):
             format = format_factory(options['format'])
             format(data).write()
 
