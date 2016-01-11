@@ -185,8 +185,6 @@ def main():
     args = parser.parse_args()
     setup_logging(args)
 
-    pprint(args)
-
     logger = logging.getLogger(__name__)
 
     ## TODO -- yconf ?
