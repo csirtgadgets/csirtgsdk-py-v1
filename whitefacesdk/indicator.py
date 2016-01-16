@@ -122,10 +122,6 @@ class Indicator(object):
                         'lasttime': i.args.lasttime,
                         'portlist_src': i.args.portlist_src
                     },
-                    'comment': {
-                        'text': i.args.comment,
-                        'attachment':  self._file_to_attachment(i.args.attachment, filename=i.args.attachment_name)
-                    },
                 } for i in indicators
             ]
         }
