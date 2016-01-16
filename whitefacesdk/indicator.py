@@ -4,6 +4,7 @@ import logging
 import base64
 from pprint import pprint
 import hashlib
+from six import string_types
 
 
 class Indicator(object):
@@ -34,7 +35,7 @@ class Indicator(object):
 
         self.args = utils.Map(args)
 
-        if self.args.tags and isinstance(self.args.tags, basestring):
+        if self.args.tags and isinstance(self.args.tags, string_types):
             self.args.tags = self.args.tags.split(',')
         
         if self.args.firsttime:
