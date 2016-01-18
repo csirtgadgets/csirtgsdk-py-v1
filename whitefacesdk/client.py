@@ -56,7 +56,7 @@ class Client(object):
         self.logger.debug(uri)
         self.logger.debug(params)
         if not uri.startswith(self.remote):
-            uri = '{}/{}'.format(self.remote, uri)
+            uri = '{}{}'.format(self.remote, uri)
             self.logger.debug(uri)
 
         body = self.session.get(uri, params=params, verify=self.verify_ssl)
@@ -125,6 +125,57 @@ class Client(object):
         self.logger.debug(body.content)
         body = json.loads(body.content)
         return body
+
+    def submit_bulk(self, indicators, user, feed):
+        """
+        Submit action against the IndicatorBulk endpoint
+
+        :param indicators: list of Indicator Objects
+        :param user: feed username
+        :param feed: feed name
+        :return: List of Indicator Objects submitted
+
+        from whitefacesdk.client import Client
+        from whitefacesdk.indicator import Indicator
+
+        i = {
+            'indicator': 'example.com',
+            'feed': 'test',
+            'user': 'wfadmin',
+            'comment': 'this is a test',
+        }
+
+        a = []
+
+        for x in range(0, 5):
+        a.append(
+            Indicator(cli, i)
+        )
+
+        r = cli.submit_bulk(a, 'wes', 'test-feed')
+        """
+
+        uri = '/users/{0}/feeds/{1}/indicators_bulk'.format(user, feed)
+
+        data = {
+            'indicators': [
+                {
+                    'thing': i.args.indicator,
+                    'feed_id': i.args.feed,
+                    'tag_list': i.args.tags,
+                    "description": i.args.description,
+                    "portlist": i.args.portlist,
+                    "protocol": i.args.protocol,
+                    'firsttime': i.args.firsttime,
+                    'lasttime': i.args.lasttime,
+                    'portlist_src': i.args.portlist_src,
+                    'comment': {
+                        'content': i.args.comment
+                    }
+                } for i in indicators
+            ]
+        }
+        return self.post(uri, data)
 
 
 def main():
