@@ -2,7 +2,7 @@ import logging
 import yaml
 import os
 import sys
-from whitefacesdk.constants import REMOTE, LOG_FORMAT
+from csirtgsdk.constants import REMOTE, LOG_FORMAT
 
 
 def read_config(args):

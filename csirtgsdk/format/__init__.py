@@ -1,4 +1,4 @@
-from whitefacesdk.format import table, format_json, format_csv
+from csirtgsdk.format import table, format_json, format_csv
 
 plugins = {
     'table': table.Table,

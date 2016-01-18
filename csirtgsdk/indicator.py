@@ -1,4 +1,4 @@
-import whitefacesdk.utils as utils
+import csirtgsdk.utils as utils
 import arrow
 import logging
 import base64
@@ -13,7 +13,7 @@ class Indicator(object):
     """
     def __init__(self, client, args):
         """
-        :param client: whitefacesdk.client.Client object
+        :param client: csirtgsdk.client.Client object
         :param args: dict https://github.com/csirtgadgets/whiteface/wiki/API#indicators
         :return: Indicator object
 

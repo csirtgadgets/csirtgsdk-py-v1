@@ -8,15 +8,15 @@ import json
 import requests
 import logging
 
-from whitefacesdk.utils import setup_logging, read_config
+from csirtgsdk.utils import setup_logging, read_config
 
-from whitefacesdk.feed import Feed
-from whitefacesdk.indicator import Indicator
-from whitefacesdk.search import Search
+from csirtgsdk.feed import Feed
+from csirtgsdk.indicator import Indicator
+from csirtgsdk.search import Search
 
-from whitefacesdk import VERSION
-from whitefacesdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT
-from whitefacesdk.format import factory as format_factory
+from csirtgsdk import VERSION
+from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT
+from csirtgsdk.format import factory as format_factory
 
 from pprint import pprint
 
@@ -36,8 +36,8 @@ class Client(object):
             self.logger.debug('TLS Verification is OFF')
 
         self.session = requests.session()
-        self.session.headers["Accept"] = 'application/vnd.wf.v{0}+json'.format(str(API_VERSION))
-        self.session.headers['User-Agent'] = 'whiteface-sdk-python/{0}'.format(VERSION)
+        self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}+json'.format(str(API_VERSION))
+        self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'.format(VERSION)
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'
 
@@ -135,13 +135,13 @@ class Client(object):
         :param feed: feed name
         :return: List of Indicator Objects submitted
 
-        from whitefacesdk.client import Client
-        from whitefacesdk.indicator import Indicator
+        from csirtgsdk.client import Client
+        from csirtgsdk.indicator import Indicator
 
         i = {
             'indicator': 'example.com',
             'feed': 'test',
-            'user': 'wfadmin',
+            'user': 'admin',
             'comment': 'this is a test',
         }
 
@@ -182,15 +182,15 @@ def main():
     parser = ArgumentParser(
         description=textwrap.dedent('''\
         example usage:
-            $ wf --search example.com
-            $ wf --user csirtgadgets --feeds
-            $ wf --user csirtgadgets --feed uce-urls
-            $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
-            $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment
+            $ csirtg --search example.com
+            $ csirtg --user csirtgadgets --feeds
+            $ csirtg --user csirtgadgets --feed uce-urls
+            $ csirtg --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
+            $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment
               'this is a port scanner'
         '''),
         formatter_class=RawDescriptionHelpFormatter,
-        prog='wf'
+        prog='csirtg'
     )
 
     parser.add_argument("-v", "--verbose", action="count", help="set verbosity level [default: %(default)s]")
@@ -201,7 +201,7 @@ def main():
     parser.add_argument('--remote', help="remote api location [default: %(default)s]", default=REMOTE)
     parser.add_argument('--timeout', help='connection timeout [default: %(default)s]', default=TIMEOUT)
     parser.add_argument('-C', '--config', help="configuration file [default: %(default)s]",
-                        default=os.path.expanduser("~/.wf.yml"))  # env var
+                        default=os.path.expanduser("~/.csirtg.yml"))  # env var
 
     parser.add_argument('--format', help="specify an output format [default: %(default)s]", default='table')
     # actions

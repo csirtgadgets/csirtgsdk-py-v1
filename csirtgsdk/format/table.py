@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 import sys
 
-from whitefacesdk.constants import COLUMNS, MAX_FIELD_SIZE
+from csirtgsdk.constants import COLUMNS, MAX_FIELD_SIZE
 
 
 class Table(object):

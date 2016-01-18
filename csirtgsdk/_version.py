@@ -37,8 +37,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = ""
-    cfg.parentdir_prefix = "whitefacesdk-"
-    cfg.versionfile_source = "whitefacesdk/_version.py"
+    cfg.parentdir_prefix = "csirtgsdk-"
+    cfg.versionfile_source = "csirtgsdk/_version.py"
     cfg.verbose = False
     return cfg
 

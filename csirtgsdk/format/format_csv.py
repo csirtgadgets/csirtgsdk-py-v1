@@ -1,7 +1,7 @@
 import csv
 import sys
 
-from whitefacesdk.constants import COLUMNS, MAX_FIELD_SIZE
+from csirtgsdk.constants import COLUMNS, MAX_FIELD_SIZE
 
 
 class CSV(object):

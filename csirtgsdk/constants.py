@@ -2,7 +2,7 @@ import os.path
 
 API_VERSION = 0
 
-REMOTE = 'https://whiteface.csirtgadgets.com/api'
+REMOTE = 'https://csirtg.io/api'
 REMOTE = os.environ.get('WF_REMOTE', REMOTE)
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
