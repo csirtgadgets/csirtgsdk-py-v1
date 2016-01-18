@@ -21,7 +21,9 @@ class Indicator(object):
             Indicator(cli, {
                 'indicator': 'example.org',
                 'tags': 'botnet',
-                'lasttime': '2015-01-01T00:00:59Z'
+                'lasttime': '2015-01-01T00:00:59Z',
+                'comment': 'example comment',
+                'attachment': '/tmp/malware.zip'
             }).submit()
         """
         self.logger = logging.getLogger(__name__)
@@ -119,12 +121,12 @@ class Indicator(object):
                 'lasttime': self.args.lasttime,
                 'portlist_src': self.args.portlist_src
             },
-            "comment": {'text': self.args.comment}
+            "comment": self.args.comment
         }
 
         if self.args.attachment:
             self.logger.debug('adding attachment')
             attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
-            data['comment']['attachment'] = attachment
+            data['attachment'] = attachment
 
         return self.client.post(uri, data)
