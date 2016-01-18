@@ -36,5 +36,7 @@ class CSV(object):
             except:
                 o['comments'] = 0
 
-            o['tags'] = ','.join(o['tags'])
+            if o.get('tags'):
+                o['tags'] = ','.join(o['tags'])
+
             t.writerow(o)
