@@ -65,14 +65,14 @@ class Client(object):
             err = 'request failed: %s' % str(body.status_code)
             self.logger.debug(err)
             try:
-                err = json.loads(body.content).get('errors')
+                err = json.loads(body.text).get('errors')
             except ValueError as e:
-                err = body.content
+                err = body.text
 
             self.logger.error(err)
             raise RuntimeWarning(err)
 
-        body = json.loads(body.content)
+        body = json.loads(body.text)
         return body
 
     def post(self, uri, data):
@@ -98,7 +98,7 @@ class Client(object):
         if body.status_code > 303:
             err = 'request failed: %s' % str(body.status_code)
             self.logger.error(err)
-            err = body.content
+            err = body.text
 
             if body.status_code == 401:
                 err = 'unauthorized'
@@ -122,8 +122,8 @@ class Client(object):
                 self.logger.error(err)
                 raise RuntimeWarning(err)
 
-        self.logger.debug(body.content)
-        body = json.loads(body.content)
+        self.logger.debug(body.text)
+        body = json.loads(body.text)
         return body
 
     def submit_bulk(self, indicators, user, feed):
