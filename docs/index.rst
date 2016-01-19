@@ -23,11 +23,11 @@ Examples
 
 .. code-block:: bash
 
-   $ wf --search example.com
-   $ wf --user csirtgadgets --feeds
-   $ wf --user csirtgadgets --feed uce-urls
-   $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
-   $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
+   $ csirtg --search example.com
+   $ csirtg --user csirtgadgets --feeds
+   $ csirtg --user csirtgadgets --feed uce-urls
+   $ csirtg --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
+   $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
 
 Search
 ======
