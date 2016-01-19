@@ -14,7 +14,7 @@ class Indicator(object):
     def __init__(self, client, args):
         """
         :param client: csirtgsdk.client.Client object
-        :param args: dict https://github.com/csirtgadgets/whiteface/wiki/API#indicators
+        :param args: dict https://github.com/csirtgadgets/csirtgsdk/wiki/API#indicators
         :return: Indicator object
 
         Example:

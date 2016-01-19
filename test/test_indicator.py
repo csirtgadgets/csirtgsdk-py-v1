@@ -1,7 +1,7 @@
 import pytest
 
-from whitefacesdk.indicator import Indicator
-from whitefacesdk.client import Client
+from csirtgsdk.indicator import Indicator
+from csirtgsdk.client import Client
 
 @pytest.fixture
 def client():

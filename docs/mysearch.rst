@@ -1,7 +1,7 @@
 search
 ======
 
-.. autoclass:: whitefacesdk.search.Search
+.. autoclass:: csirtgsdk.search.Search
    :members:
    :undoc-members:
    :show-inheritance:

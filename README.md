@@ -1,52 +1,52 @@
-# WhiteFace Software Development Kit for Python
-The WhiteFace Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using WhiteFace.
+# CSIRTG Software Development Kit for Python
+The CSIRTG Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using CSIRTG.
 
 # Installation
 ## Ubuntu
   ```bash
   $ apt-get install -y python-dev python-pip git
   $ sudo pip install pip --upgrade  # requires > 6.2
-  $ pip install https://github.com/csirtgadgets/py-whitefacesdk/archive/master.tar.gz
+  $ pip install https://github.com/csirtgadgets/py-csirtgsdk/archive/master.tar.gz
   ```
 
 # Examples
 ## CLI
 ### Config
   ```yaml
-  # ~/.wf.yml
+  # ~/.csirtg.yml
   token: 1234
   ```
 ## Examples
 ### Search for an indicator
   ```bash
-  $ wf --search example.com
+  $ csirtg --search example.com
   ```
 ### Show a list of feeds (per user)
   ```bash
-  $ wf --user csirtgadgets --feeds
+  $ csirtg --user csirtgadgets --feeds
   ```
 ### Get a feed
   ```bash
-  $ wf --user csirtgadgets --feed uce-urls
+  $ csirtg --user csirtgadgets --feed uce-urls
   ```
 ### Create a feed
   ```bash
-  $ wf --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
+  $ csirtg --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
   ```
 ### Create an indicator within a feed
   ```bash
-  $ wf --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
+  $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
   ```
 
 ## SDK
 ### Search for an indicator
 
   ```python
-  from whitefacesdk.client import Client
-  from whitefacesdk.search import Search
+  from csirtgsdk.client import Client
+  from csirtgsdk.search import Search
   from pprint import pprint
   
-  remote = 'https://whiteface.csirtgadgets.com/api'
+  remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
   limit = 500
@@ -65,11 +65,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   
 ### Show a list of feeds (per user)
   ```python
-  from whitefacesdk.client import Client
-  from whitefacesdk.feed import Feed
+  from csirtgsdk.client import Client
+  from csirtgsdk.feed import Feed
   from pprint import pprint
   
-  remote = 'https://whiteface.csirtgadgets.com/api'
+  remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
   limit = 500
@@ -88,11 +88,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 
 ### Get a feed
   ```python
-  from whitefacesdk.client import Client
-  from whitefacesdk.feed import Feed
+  from csirtgsdk.client import Client
+  from csirtgsdk.feed import Feed
   from pprint import pprint
   
-  remote = 'https://whiteface.csirtgadgets.com/api'
+  remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
   limit = 500
@@ -112,11 +112,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   
 ### Create a feed
   ```python
-  from whitefacesdk.client import Client
-  from whitefacesdk.feed import Feed
+  from csirtgsdk.client import Client
+  from csirtgsdk.feed import Feed
   from pprint import pprint
   
-  remote = 'https://whiteface.csirtgadgets.com/api'
+  remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
   limit = 500
@@ -137,11 +137,11 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
   
 ### Create an indicator within a feed  
   ```python
-  from whitefacesdk.client import Client
-  from whitefacesdk.indicator import Indicator
+  from csirtgsdk.client import Client
+  from csirtgsdk.indicator import Indicator
   from pprint import pprint
   
-  remote = 'https://whiteface.csirtgadgets.com/api'
+  remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
   limit = 500
@@ -156,7 +156,8 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
       "protocol": "TCP",
       "firsttime": "2015-11-22T00:00:00Z",
       "lasttime": "2015-11-23T00:00:00Z",
-      "comment": {'text': "comment text"}
+      "comment": "comment text",
+      "attachment": "/tmp/malware.zip"
   }
   
   # Initiate client object
@@ -171,7 +172,7 @@ The WhiteFace Software Development Kit (SDK) for Python contains library code an
 
 # Documentation
 
-http://py-whitefacesdk.readthedocs.org/
+http://py-csirtgsdk.readthedocs.org/
 
 
 # License and Copyright

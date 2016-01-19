@@ -1,7 +1,7 @@
 import pytest
 
-from whitefacesdk.search import Search
-from whitefacesdk.client import Client
+from csirtgsdk.search import Search
+from csirtgsdk.client import Client
 
 @pytest.fixture
 def client():

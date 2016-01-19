@@ -1,7 +1,7 @@
 client
 ======
 
-.. autoclass:: whitefacesdk.client.Client
+.. autoclass:: csirtgsdk.client.Client
    :members:
    :undoc-members:
    :show-inheritance:

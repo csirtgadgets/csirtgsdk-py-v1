@@ -1,6 +1,6 @@
 import pytest
 
-from whitefacesdk.client import Client
+from csirtgsdk.client import Client
 
 
 def test_client():

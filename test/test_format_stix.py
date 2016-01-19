@@ -2,7 +2,7 @@ STIX_ENABLED = True
 
 try:
     from stix.core import STIXHeader
-    from whitefacesdk.format.format_stix import Stix
+    from csirtgsdk.format.format_stix import Stix
 except ImportError:
     STIX_ENABLED = False
 

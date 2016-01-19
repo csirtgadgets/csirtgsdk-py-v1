@@ -1,7 +1,7 @@
 import pytest
 
-from whitefacesdk.feed import Feed
-from whitefacesdk.client import Client
+from csirtgsdk.feed import Feed
+from csirtgsdk.client import Client
 
 @pytest.fixture
 def client():

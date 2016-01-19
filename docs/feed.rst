@@ -1,7 +1,7 @@
 feed
 ====
 
-.. autoclass:: whitefacesdk.feed.Feed
+.. autoclass:: csirtgsdk.feed.Feed
    :members:
    :undoc-members:
    :show-inheritance:
