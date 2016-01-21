@@ -72,7 +72,6 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
-  limit = 500
   
   user = 'csirtgadgets'
   
@@ -95,7 +94,6 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
-  limit = 500
   
   user = 'csirtgadgets'
   feed = 'uce-urls'
@@ -119,7 +117,6 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
-  limit = 500
   
   user = 'csirtgadgets'
   feed = 'scanners'
@@ -144,7 +141,6 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   remote = 'https://csirtg.io/api'
   token = ''
   verify_ssl = True
-  limit = 500
   
   record = {
       "user": "csirtgadgets",
