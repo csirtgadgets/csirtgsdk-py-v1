@@ -135,7 +135,7 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   pprint(ret)
   ```
   
-### Create an indicator within a feed  
+### Submit a indicator to a feed  
   ```python
   from csirtgsdk.client import Client
   from csirtgsdk.indicator import Indicator
@@ -168,6 +168,46 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   
   # pprint the returned data structure
   pprint(ret)
+  ```
+
+### Submit a list of indicators to a feed
+  ```python
+from csirtgsdk.client import Client                                                                                                                                                                                    
+from csirtgsdk.indicator import Indicator
+from pprint import pprint
+
+remote = 'https://csirtg.io/api'
+token = ''
+verify_ssl = True
+
+user = 'csirtgadgets'
+feed = 'test-feed'
+
+i = {
+    'indicator': 'example.com',
+    'feed': 'csirtgadgets',
+    'user': 'test-feed',
+    'comment': 'this is a test',
+}
+
+data = []
+
+# Initiate client object
+cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+# Build a list of Indicator objects
+for x in range(0, 5):
+    data.append(
+        Indicator(cli, i)
+    )
+
+# Call the submit bulk function
+ret = cli.submit_bulk(data, user, feed)
+
+# Print the return value
+pprint(ret)
+
+{u'message': u'5 indicators received'}
   ```
 
 # Documentation
