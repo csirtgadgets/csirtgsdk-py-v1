@@ -133,10 +133,14 @@ class Client(object):
         :param indicators: list of Indicator Objects
         :param user: feed username
         :param feed: feed name
-        :return: List of Indicator Objects submitted
+        :return: list of Indicator Objects submitted
 
         from csirtgsdk.client import Client
         from csirtgsdk.indicator import Indicator
+
+        remote = 'https://csirtg.io/api'
+        token = ''
+        verify_ssl = True
 
         i = {
             'indicator': 'example.com',
@@ -145,14 +149,16 @@ class Client(object):
             'comment': 'this is a test',
         }
 
-        a = []
+        data = []
+
+        cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
 
         for x in range(0, 5):
-        a.append(
-            Indicator(cli, i)
-        )
+            data.append(
+                Indicator(cli, i)
+            )
 
-        r = cli.submit_bulk(a, 'wes', 'test-feed')
+        ret = cli.submit_bulk(data, 'csirtgadgets', 'test-feed')
         """
 
         uri = '/users/{0}/feeds/{1}/indicators_bulk'.format(user, feed)
