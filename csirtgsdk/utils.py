@@ -3,7 +3,7 @@ import yaml
 import os
 import sys
 from csirtgsdk.constants import REMOTE, LOG_FORMAT
-
+from io import open
 
 def read_config(args):
     """
@@ -14,7 +14,7 @@ def read_config(args):
     """
     options = {}
     if os.path.isfile(args.config):
-        f = file(args.config)
+        f = open(args.config, 'rt')
         config = yaml.load(f)
         f.close()
         if not config:
