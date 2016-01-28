@@ -1,5 +1,6 @@
 import csv
 import sys
+import logging
 
 from csirtgsdk.constants import COLUMNS, MAX_FIELD_SIZE
 
@@ -11,6 +12,7 @@ class CSV(object):
         self.cols = cols
         self.max_field_size = max_field_size
         self.data = data
+        self.logger = logging.getLogger(__name__)
 
     def write(self, fh=sys.stdout):
         t = csv.DictWriter(fh, delimiter=',', fieldnames=self.cols)
@@ -19,9 +21,14 @@ class CSV(object):
         try:
             feedname = self.data['feed']['name']
             username = self.data['feed']['user']
-        except:
-            feedname = self.data['feed']['indicators'][0]['indicator']['feed']
-            username = self.data['feed']['indicators'][0]['indicator']['user']
+        except KeyError:
+            try:
+                feedname = self.data['feed']['indicators'][0]['indicator']['feed']
+                username = self.data['feed']['indicators'][0]['indicator']['user']
+            except IndexError:
+                self.logger.info("No results to format as csv")
+        except Exception as e:
+            raise RuntimeWarning(e)
 
         for _ in self.data['feed']['indicators']:
             o = _['indicator']
