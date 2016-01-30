@@ -281,7 +281,7 @@ def main():
         print(str(t))
         logger.info("Done")
 
-    elif options.get('feed') and options.get('new') and not options.get('indicator'):
+    elif options.get('feed') and options.get('new') and (not options.get('indicator') and not options.get('attachment')):
         if not options.get('user'):
             parser.error('--user is required')
 
@@ -321,7 +321,7 @@ def main():
         logger.info("Done")
 
     # submit new indicator
-    elif options.get('feed') and options.get('indicator') and options.get('new') and options.get('user'):
+    elif options.get('feed') and (options.get('indicator') or (options.get('attachment') and not options.get('indicator'))) and options.get('new') and options.get('user'):
         try:
             logger.info("Creating indicator in feed {0} for user {1}".format(options['feed'],options['user']))
             ret = Indicator(cli, options).submit()
