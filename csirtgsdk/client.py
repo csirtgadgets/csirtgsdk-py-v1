@@ -15,7 +15,7 @@ from csirtgsdk.indicator import Indicator
 from csirtgsdk.search import Search
 
 from csirtgsdk import VERSION
-from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT
+from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
 from csirtgsdk.format import factory as format_factory
 
 from pprint import pprint
@@ -196,7 +196,7 @@ def main():
     parser.add_argument("-v", "--verbose", action="count", help="set verbosity level [default: %(default)s]")
     parser.add_argument('-d', '--debug', action="store_true")
 
-    parser.add_argument('--token', help="specify token")
+    parser.add_argument('--token', help="specify token", default=TOKEN)
     parser.add_argument('-l', '--limit', help="specify results limit [default: %(default)s]", default=LIMIT)
     parser.add_argument('--remote', help="remote api location [default: %(default)s]", default=REMOTE)
     parser.add_argument('--timeout', help='connection timeout [default: %(default)s]', default=TIMEOUT)
