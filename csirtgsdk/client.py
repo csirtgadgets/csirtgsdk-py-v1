@@ -133,10 +133,14 @@ class Client(object):
         :param indicators: list of Indicator Objects
         :param user: feed username
         :param feed: feed name
-        :return: List of Indicator Objects submitted
+        :return: list of Indicator Objects submitted
 
         from csirtgsdk.client import Client
         from csirtgsdk.indicator import Indicator
+
+        remote = 'https://csirtg.io/api'
+        token = ''
+        verify_ssl = True
 
         i = {
             'indicator': 'example.com',
@@ -145,14 +149,16 @@ class Client(object):
             'comment': 'this is a test',
         }
 
-        a = []
+        data = []
+
+        cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
 
         for x in range(0, 5):
-        a.append(
-            Indicator(cli, i)
-        )
+            data.append(
+                Indicator(cli, i)
+            )
 
-        r = cli.submit_bulk(a, 'wes', 'test-feed')
+        ret = cli.submit_bulk(data, 'csirtgadgets', 'test-feed')
         """
 
         uri = '/users/{0}/feeds/{1}/indicators_bulk'.format(user, feed)
@@ -250,11 +256,14 @@ def main():
     cli = Client(remote=options['remote'], token=options['token'], verify_ssl=verify_ssl)
 
     if options.get('search'):
+        logger.info("Searching for: {0}".format(options.get('search')))
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
         format = format_factory(options['format'])
         format(ret).write()
+        logger.info("Done")
 
     elif options.get('feeds'):
+        logger.info("Searching feeds for user: {0}".format(options['user']))
         feeds = Feed(cli).index(options['user'])
         from prettytable import PrettyTable
         cols = ['name', 'description', 'license', 'updated_at']
@@ -270,11 +279,13 @@ def main():
                 r.append(y)
             t.add_row(r)
         print(str(t))
+        logger.info("Done")
 
     elif options.get('feed') and options.get('new') and not options.get('indicator'):
         if not options.get('user'):
             parser.error('--user is required')
 
+        logger.info("Creating feed {0} for user {1}".format(options['feed'], options['user']))
         feed = Feed(cli).new(options['user'], options['feed'], description=options['description'])
 
         from prettytable import PrettyTable
@@ -291,11 +302,13 @@ def main():
         t.add_row(r)
 
         print(str(t))
+        logger.info("Done")
 
     elif options.get('feed') and not options.get('new'):
         if not options.get('user'):
             parser.error('--user is required')
 
+        logger.info("Fetching feed {0} for user {1}".format(options['feed'], options['user']))
         data = Feed(cli).show(
                 options['user'],
                 options['feed'],
@@ -305,10 +318,12 @@ def main():
         if data['feed'].get('indicators'):
             format = format_factory(options['format'])
             format(data).write()
+        logger.info("Done")
 
     # submit new indicator
-    elif options.get('feed') and options.get('indicator') and options.get('new'):
+    elif options.get('feed') and options.get('indicator') and options.get('new') and options.get('user'):
         try:
+            logger.info("Creating indicator in feed {0} for user {1}".format(options['feed'],options['user']))
             ret = Indicator(cli, options).submit()
             logger.info('posted: {0}'.format(ret['indicator']['location']))
             ret = {
@@ -318,6 +333,7 @@ def main():
             }
             format = format_factory(options['format'])
             format(ret).write()
+            logger.info("Done")
 
         except RuntimeError as e:
             logger.error(e)
