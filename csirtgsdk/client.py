@@ -108,7 +108,7 @@ class Client(object):
                 raise RuntimeError(err)
             elif body.status_code == 422:
                 d = json.loads(data)
-                err = 'invalid indicator: {}'.format(d['indicator']['thing'])
+                err = 'invalid indicator: {}'.format(d['indicator']['indicator'])
                 raise RuntimeError(err)
             elif body.status_code >= 500:
                 err = 'unknown 500 error, contact administrator'
@@ -166,7 +166,7 @@ class Client(object):
         data = {
             'indicators': [
                 {
-                    'thing': i.args.indicator,
+                    'indicator': i.args.indicator,
                     'feed_id': i.args.feed,
                     'tag_list': i.args.tags,
                     "description": i.args.description,

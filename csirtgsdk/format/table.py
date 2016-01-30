@@ -20,7 +20,7 @@ class Table(object):
                 y = ''
                 
                 if c == 'indicator':
-                    c = 'thing'
+                    c = 'indicator'
 
                 if c == 'user':
                     try:
