@@ -5,6 +5,7 @@ import base64
 from pprint import pprint
 import hashlib
 from six import string_types
+import os.path
 
 
 class Indicator(object):
@@ -29,7 +30,7 @@ class Indicator(object):
         self.logger = logging.getLogger(__name__)
         self.client = client
 
-        required = set(['user', 'feed', 'indicator'])
+        required = set(['user', 'feed'])
 
         if args is None or len(required - set(args.keys())) > 0:
             raise Exception("invalid arguments. missing: {}"
@@ -64,11 +65,11 @@ class Indicator(object):
     def _file_to_attachment(self, blob, filename=None):
         """
 
+        :param blob: a local file path or base64 encoded blob
         :param filename: file path
         :return: dict of base64 encoded filestring, with orig filename
         """
 
-        import os.path
         if os.path.isfile(blob):
             filename = blob
             with open(blob) as f:
@@ -81,10 +82,19 @@ class Indicator(object):
             except TypeError:
                 raise RuntimeError('attachment must be base64 encoded')
 
+        md5 = hashlib.md5(data).hexdigest()
+        sha1 = hashlib.sha1(data).hexdigest()
+        sha256 = hashlib.sha256(data).hexdigest()
+        sha512 = hashlib.sha512(data).hexdigest()
         data = base64.b64encode(data)
+
         return {
             'data': data,
             'filename': filename,
+            'sha1': sha1,
+            'md5': md5,
+            'sha256': sha256,
+            'sha512': sha512
         }
 
     def comments(self, user, feed, id):
@@ -127,6 +137,14 @@ class Indicator(object):
         if self.args.attachment:
             self.logger.debug('adding attachment')
             attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
-            data['attachment'] = attachment
+            data['attachment'] = {
+                'data': attachment['data'],
+                'filename': attachment['filename']
+            }
+            if not data['indicator'].get('indicator'):
+                data['indicator']['indicator'] = attachment['sha1']
+
+        if not data['indicator'].get('indicator'):
+            raise Exception('Missing indicator')
 
         return self.client.post(uri, data)
