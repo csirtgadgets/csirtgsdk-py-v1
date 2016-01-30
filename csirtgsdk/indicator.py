@@ -112,7 +112,7 @@ class Indicator(object):
 
         data = {
             "indicator": {
-                "thing": self.args.indicator,
+                "indicator": self.args.indicator,
                 "tags": self.args.tags,
                 "description": self.args.description,
                 "portlist": self.args.portlist,
