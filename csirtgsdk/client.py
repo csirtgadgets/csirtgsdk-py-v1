@@ -194,6 +194,8 @@ def main():
             $ csirtg --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
             $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment
               'this is a port scanner'
+            $ csirtg --user csirtgadgets --feed uce-attachments --new --attachment 'fax.zip'
+              --description 'file attached in uce email'
         '''),
         formatter_class=RawDescriptionHelpFormatter,
         prog='csirtg'
