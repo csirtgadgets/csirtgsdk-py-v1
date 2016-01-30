@@ -5,6 +5,8 @@ API_VERSION = 0
 REMOTE = 'https://csirtg.io/api'
 REMOTE = os.environ.get('CSIRTG_REMOTE', REMOTE)
 
+TOKEN = os.environ.get('CSIRTG_TOKEN', None)
+
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 
 LIMIT = 500

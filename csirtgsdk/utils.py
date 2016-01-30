@@ -2,7 +2,7 @@ import logging
 import yaml
 import os
 import sys
-from csirtgsdk.constants import REMOTE, LOG_FORMAT
+from csirtgsdk.constants import REMOTE, LOG_FORMAT, TOKEN
 from io import open
 
 def read_config(args):
@@ -25,6 +25,10 @@ def read_config(args):
 
         if config.get('remote') and (options['remote'] == REMOTE):
             options['remote'] = config['remote']
+
+        if args.token:
+            options['token'] = args.token
+
     else:
         raise Exception("Unable to read {} config file".format(args.config))
 
