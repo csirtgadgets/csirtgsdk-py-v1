@@ -138,7 +138,7 @@ class Indicator(object):
         if self.args.attachment:
             try:
                 self.logger.debug('trying to decode attachment as base64 string')
-                _test = base64.decodestring(self.args.attachment)
+                base64.decodestring(self.args.attachment)
                 # if successful, set attachment to base64 string
                 data['attachment'] = {
                     'data': self.args.attachment,
@@ -152,8 +152,6 @@ class Indicator(object):
                     'data': attachment['data'],
                     'filename': attachment['filename']
                 }
-            except Exception as e:
-                raise (e)
 
         if not data['indicator'].get('indicator'):
             data['indicator']['indicator'] = attachment['sha1']
