@@ -2,6 +2,7 @@ import csirtgsdk.utils as utils
 import arrow
 import logging
 import base64
+import binascii
 from pprint import pprint
 import hashlib
 from six import string_types
@@ -135,14 +136,27 @@ class Indicator(object):
         }
 
         if self.args.attachment:
-            self.logger.debug('adding attachment')
-            attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
-            data['attachment'] = {
-                'data': attachment['data'],
-                'filename': attachment['filename']
-            }
-            if not data['indicator'].get('indicator'):
-                data['indicator']['indicator'] = attachment['sha1']
+            try:
+                self.logger.debug('trying to decode attachment as base64 string')
+                _test = base64.decodestring(self.args.attachment)
+                # if successful, set attachment to base64 string
+                data['attachment'] = {
+                    'data': self.args.attachment,
+                    'filename': self.args.attachment_name
+                }
+            except binascii.Error:
+                self.logger.debug('attachment cannot be decoded as base64, binascii error')
+                self.logger.debug('trying to add attachment via a filename')
+                attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
+                data['attachment'] = {
+                    'data': attachment['data'],
+                    'filename': attachment['filename']
+                }
+            except Exception as e:
+                raise (e)
+
+        if not data['indicator'].get('indicator'):
+            data['indicator']['indicator'] = attachment['sha1']
 
         if not data['indicator'].get('indicator'):
             raise Exception('Missing indicator')
