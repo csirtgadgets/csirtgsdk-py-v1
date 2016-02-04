@@ -90,7 +90,7 @@ class Indicator(object):
         data = base64.b64encode(data)
 
         return {
-            'data': data,
+            'data': data.decode("utf-8"),
             'filename': filename,
             'sha1': sha1,
             'md5': md5,
@@ -136,22 +136,11 @@ class Indicator(object):
         }
 
         if self.args.attachment:
-            try:
-                self.logger.debug('trying to decode attachment as base64 string')
-                base64.decodestring(self.args.attachment)
-                # if successful, set attachment to base64 string
-                data['attachment'] = {
-                    'data': self.args.attachment,
-                    'filename': self.args.attachment_name
-                }
-            except binascii.Error:
-                self.logger.debug('attachment cannot be decoded as base64, binascii error')
-                self.logger.debug('trying to add attachment via a filename')
-                attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
-                data['attachment'] = {
-                    'data': attachment['data'],
-                    'filename': attachment['filename']
-                }
+            attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
+            data['attachment'] = {
+                'data': attachment['data'],
+                'filename': attachment['filename']
+            }
 
         if not data['indicator'].get('indicator'):
             data['indicator']['indicator'] = attachment['sha1']
