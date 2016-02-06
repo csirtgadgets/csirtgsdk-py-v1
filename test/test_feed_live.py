@@ -20,18 +20,17 @@ def client():
 
 @liveonly
 def test_create_feed(client):
-    if CI_BUILD:
-        f = Feed(client).new(USER, 'CI_BUILD_TEST', description='test build feed')
+    f = Feed(client).new(USER, 'CI_BUILD_TEST', description='test build feed')
 
-        assert f['created_at']
+    assert f['created_at']
 
-        f = Feed(client).remove(USER, 'CI_BUILD_TEST')
+    f = Feed(client).remove(USER, 'CI_BUILD_TEST')
 
-        assert f == 200
+    assert f == 200
+
 
 @liveonly
 def test_feed(client):
-    if CI_BUILD:
-        f = Feed(client)
+    f = Feed(client)
 
-        assert f.client
+    assert f.client
