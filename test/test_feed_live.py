@@ -20,6 +20,9 @@ def client():
 
 @liveonly
 def test_create_feed(client):
+    # make sure feed isnt left over from a previous run
+    f = Feed(client).remove(USER, 'CI_BUILD_TEST')
+
     f = Feed(client).new(USER, 'CI_BUILD_TEST', description='test build feed')
 
     assert f['created_at']
