@@ -35,7 +35,7 @@ class CSV(object):
             o['feed'] = feedname
             o['user'] = username
 
-            for i in ['license', 'location', 'thing']:
+            for i in ['license', 'location', 'thing', 'attachments']:
                 if i in o: del o[i]
 
             try:
