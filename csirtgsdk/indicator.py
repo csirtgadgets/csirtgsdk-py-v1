@@ -2,6 +2,7 @@ import csirtgsdk.utils as utils
 import arrow
 import logging
 import base64
+import binascii
 from pprint import pprint
 import hashlib
 from six import string_types
@@ -89,7 +90,7 @@ class Indicator(object):
         data = base64.b64encode(data)
 
         return {
-            'data': data,
+            'data': data.decode("utf-8"),
             'filename': filename,
             'sha1': sha1,
             'md5': md5,
@@ -135,14 +136,14 @@ class Indicator(object):
         }
 
         if self.args.attachment:
-            self.logger.debug('adding attachment')
             attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
             data['attachment'] = {
                 'data': attachment['data'],
                 'filename': attachment['filename']
             }
-            if not data['indicator'].get('indicator'):
-                data['indicator']['indicator'] = attachment['sha1']
+
+        if not data['indicator'].get('indicator'):
+            data['indicator']['indicator'] = attachment['sha1']
 
         if not data['indicator'].get('indicator'):
             raise Exception('Missing indicator')

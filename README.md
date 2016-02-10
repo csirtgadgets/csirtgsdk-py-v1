@@ -1,5 +1,5 @@
 # CSIRTG Software Development Kit for Python
-The CSIRTG Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using CSIRTG.
+The CSIRTG Software Development Kit (SDK) for Python contains library code and examples designed to enable developers to build applications using https://csirtg.io.
 
 # Installation
 ## Ubuntu
@@ -36,6 +36,11 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
 ### Create an indicator within a feed
   ```bash
   $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment 'this is a port scanner'
+  ```
+
+### Create an attachment within a feed
+  ```bash
+  $ csirtg --user csirtgadgets --feed uce-attachments --new --attachment 'fax.zip' --description 'file attached in uce email'
   ```
 
 ## SDK
@@ -205,6 +210,81 @@ pprint(ret)
 
 {u'message': u'5 indicators received'}
   ```
+  
+### Submit a file to a feed using a filehandle
+   ```python
+   from csirtgsdk.client import Client
+   from csirtgsdk.indicator import Indicator
+   from pprint import pprint
+   
+   filename = '/tmp/sample.txt'
+   
+   remote = 'https://csirtg.io/api'
+   token = ''
+   verify_ssl = True
+   
+   # read the file
+   with open(filename) as f:
+       data = f.read()
+   
+   # Create a dict to submit
+   record = {
+       'user': 'csirtgadgets',
+       'feed': 'uce-attachments',
+       'tags': 'uce-attachment',
+       'description': 'file attached to spam email',
+       'attachment': filename
+   }
+   
+   # Initiate client object
+   cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+   
+   # Submit an indicator
+   ret = Indicator(cli, record).submit()
+   
+   # pprint the returned data structure
+   pprint(ret)
+   ```
+   
+### Submit a file to a feed using a base64 encoded string
+  ```python
+  import hashlib
+  import base64
+  from csirtgsdk.client import Client
+  from csirtgsdk.indicator import Indicator
+  from pprint import pprint
+  
+  filename = '/tmp/sample.txt'
+  
+  remote = 'https://csirtg.io/api'
+  token = ''
+  verify_ssl = True
+  
+  # read the file
+  with open(filename) as f:
+      data = f.read()
+  
+  # Create a dict to submit
+  record = {
+      'user': 'csirtgadgets',
+      'feed': 'uce-attachments',
+      'indicator': hashlib.sha1(data).hexdigest(),
+      'tags': 'uce-attachment',
+      'description': 'file attached to spam email',
+      'attachment': base64.b64encode(data),
+      'attachment_name': filename
+  }
+  
+  # Initiate client object
+  cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+  
+  # Submit an indicator
+  ret = Indicator(cli, record).submit()
+  
+  # pprint the returned data structure
+  pprint(ret)
+  ```
+
 
 # Documentation
 
