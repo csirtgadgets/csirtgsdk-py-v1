@@ -107,8 +107,8 @@ class Client(object):
                 err = 'not found'
                 raise RuntimeError(err)
             elif body.status_code == 422:
-                d = json.loads(data)
-                err = 'invalid indicator: {}'.format(d['indicator']['indicator'])
+                err = json.loads(err)['message']
+                #err = 'invalid indicator: {}'.format(d['indicator']['indicator'])
                 raise RuntimeError(err)
             elif body.status_code >= 500:
                 err = 'unknown 500 error, contact administrator'
