@@ -34,11 +34,15 @@ def test_indicator_attachment_zip(client):
         'comment': 'asdfasdfasdf'
     })
     r = i.submit()
-    pprint(r)
+
     assert r['indicator']['indicator'] == '8b71e770f763d2c57aa6f6c8dcb55645d57b9096'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
+
+    # delete test feed
+    f = Feed(client).remove(USER, FEED)
+    assert f == 200
 
 
 @liveonly
@@ -54,12 +58,15 @@ def test_indicator_attachment_jar(client):
         'comment': 'asdfasdfasdf'
     })
     r = i.submit()
-    pprint(r)
+
     assert r['indicator']['indicator'] == '2097a35058b337aa4c8b3bafdb6ecc7b8dc4df5c'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
-    
+
+    # delete test feed
+    f = Feed(client).remove(USER, FEED)
+    assert f == 200
 
 @liveonly
 def test_indicator_attachment_docx(client):
@@ -74,10 +81,12 @@ def test_indicator_attachment_docx(client):
         'comment': 'asdfasdfasdf'
     })
     r = i.submit()
-    pprint(r)
+
     assert r['indicator']['indicator'] == '3758401d18b855f33777c5081f9a0c1836be44e3'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
 
-    #Indicator(client).remove()
+    # delete test feed
+    f = Feed(client).remove(USER, FEED)
+    assert f == 200
