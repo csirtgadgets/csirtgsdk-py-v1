@@ -90,3 +90,26 @@ def test_indicator_attachment_docx(client):
     # delete test feed
     f = Feed(client).remove(USER, FEED)
     assert f == 200
+
+@liveonly
+def test_indicator_attachment_docx(client):
+    f = Feed(client).new(USER, FEED, description='test build feed')
+
+    assert f['created_at']
+
+    i = Indicator(client, {
+        'user': USER,
+        'feed': FEED,
+        'attachment': 'samples/message.txt',
+        'comment': 'asdfasdfasdf'
+    })
+    r = i.submit()
+
+    assert r['indicator']['indicator'] == 'c9e4fc6f2a15d04696b082a5a7620860dc9f4f9a'
+    assert r['indicator']['attachments'][0]['attachment']
+    assert r['indicator']['attachments'][0]['filesize']
+    assert r['indicator']['attachments'][0]['created_at']
+
+    # delete test feed
+    f = Feed(client).remove(USER, FEED)
+    assert f == 200
