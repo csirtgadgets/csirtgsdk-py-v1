@@ -92,7 +92,7 @@ def test_indicator_attachment_docx(client):
     assert f == 200
 
 @liveonly
-def test_indicator_attachment_docx(client):
+def test_indicator_attachment_txt(client):
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
