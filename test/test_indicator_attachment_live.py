@@ -100,7 +100,7 @@ def test_indicator_attachment_txt(client):
     i = Indicator(client, {
         'user': USER,
         'feed': FEED,
-        'attachment': 'samples/message.txt',
+        'attachment': 'samples/message.eml',
         'comment': 'asdfasdfasdf'
     })
     r = i.submit()
