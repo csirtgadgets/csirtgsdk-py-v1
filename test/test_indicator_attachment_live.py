@@ -20,6 +20,28 @@ def client():
         remote=REMOTE
     )
 
+@liveonly
+def test_indicator_attachment_txt(client):
+    f = Feed(client).new(USER, FEED, description='test build feed')
+
+    assert f['created_at']
+
+    i = Indicator(client, {
+        'user': USER,
+        'feed': FEED,
+        'attachment': 'samples/message.eml',
+        'comment': 'asdfasdfasdf'
+    })
+    r = i.submit()
+
+    assert r['indicator']['indicator'] == 'c9e4fc6f2a15d04696b082a5a7620860dc9f4f9a'
+    assert r['indicator']['attachments'][0]['attachment']
+    assert r['indicator']['attachments'][0]['filesize']
+    assert r['indicator']['attachments'][0]['created_at']
+
+    # delete test feed
+    f = Feed(client).remove(USER, FEED)
+    assert f == 200
 
 @liveonly
 def test_indicator_attachment_zip(client):
@@ -92,7 +114,7 @@ def test_indicator_attachment_docx(client):
     assert f == 200
 
 @liveonly
-def test_indicator_attachment_txt(client):
+def test_indicator_attachment_doc(client):
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -100,12 +122,12 @@ def test_indicator_attachment_txt(client):
     i = Indicator(client, {
         'user': USER,
         'feed': FEED,
-        'attachment': 'samples/message.eml',
+        'attachment': 'samples/business_relationship.doc',
         'comment': 'asdfasdfasdf'
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == 'c9e4fc6f2a15d04696b082a5a7620860dc9f4f9a'
+    assert r['indicator']['indicator'] == 'a8f4c8f7a410af30f871cb4ab61aaaeb6714210e'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
