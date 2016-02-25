@@ -31,7 +31,4 @@ class Search(object):
                 "indicators": body
             }
         }
-
-        from pprint import pprint
-        pprint(body)
         return body

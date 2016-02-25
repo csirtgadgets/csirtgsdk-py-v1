@@ -24,16 +24,16 @@ class Table(object):
 
                 if c == 'user':
                     try:
+                        # json returned by --new and --search
+                        y = o['indicator']['user']
+                    except:
                         # json returned by --feed
                         y = self.data['feed']['user']
-                    except:
-                        # json returned by --new
-                        y = self.data['feed']['indicators'][0]['indicator']['user']
                 elif c == 'feed':
                     try:
-                        y = self.data['feed']['name']
+                        y = o['indicator']['feed']
                     except:
-                        y = self.data['feed']['indicators'][0]['indicator']['feed']
+                        y = self.data['feed']['name']
                 elif c == 'comments':
                     if o['indicator'].get(c):
                         y = len(o['indicator'].get(c)) or ''
