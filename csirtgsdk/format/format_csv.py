@@ -18,22 +18,8 @@ class CSV(object):
         t = csv.DictWriter(fh, delimiter=',', fieldnames=self.cols)
         t.writeheader()
 
-        try:
-            feedname = self.data['feed']['name']
-            username = self.data['feed']['user']
-        except KeyError:
-            try:
-                feedname = self.data['feed']['indicators'][0]['indicator']['feed']
-                username = self.data['feed']['indicators'][0]['indicator']['user']
-            except IndexError:
-                self.logger.info("No results to format as csv")
-        except Exception as e:
-            raise RuntimeWarning(e)
-
         for _ in self.data['feed']['indicators']:
             o = _['indicator']
-            o['feed'] = feedname
-            o['user'] = username
 
             for i in ['license', 'location', 'thing', 'attachments']:
                 if i in o: del o[i]
@@ -42,6 +28,17 @@ class CSV(object):
                 o['comments'] = len(o['comments'])
             except:
                 o['comments'] = 0
+
+            try:
+                o['user'] = o['user']
+            except:
+                o['user'] = self.data['feed']['user']
+
+
+            try:
+                o['feed'] = o['feed']
+            except:
+                o['feed'] = self.data['feed']['name']
 
             if o.get('tags'):
                 o['tags'] = ','.join(o['tags'])
