@@ -317,6 +317,7 @@ def main():
                 limit=options['limit'],
                 lasttime=options['lasttime'],
         )
+
         if data['feed'].get('indicators'):
             format = format_factory(options['format'])
             format(data).write()
