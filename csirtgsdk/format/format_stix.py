@@ -90,5 +90,5 @@ class Stix(object):
         for d in self.data:
             i = self._create_indicator(d)
             stix_package.add_indicator(i)
-        return stix_package.to_xml()
+        return str(stix_package.to_xml())
 
