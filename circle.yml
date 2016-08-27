@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-    - py.test test
+    - py.test --cov=csirtgsdk --cov-fail-under=25

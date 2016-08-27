@@ -10,7 +10,7 @@ before_install:
     - sudo pip install pytest-cov
 
 script:
-    - py.test --cov=cifsdk --cov-fail-under=65
+    - py.test --cov=csirtgsdk --cov-fail-under=25
 
 notifications:
     email:
