@@ -34,7 +34,7 @@ def test_indicator_attachment_txt(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == 'c9e4fc6f2a15d04696b082a5a7620860dc9f4f9a'
+    assert r['indicator']['indicator'] == '2f9496a6331b2e75e5208b93d144e8fe484b316a'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
@@ -57,7 +57,7 @@ def test_indicator_attachment_zip(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == '8b71e770f763d2c57aa6f6c8dcb55645d57b9096'
+    assert r['indicator']['indicator'] == 'f31e226048d9bd45513e691a50a4b83893397235'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
@@ -81,7 +81,7 @@ def test_indicator_attachment_jar(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == '2097a35058b337aa4c8b3bafdb6ecc7b8dc4df5c'
+    assert r['indicator']['indicator'] == '8ab0079d8e80c2e166b3b12364c89255d79c9f75'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
@@ -104,7 +104,7 @@ def test_indicator_attachment_docx(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == '3758401d18b855f33777c5081f9a0c1836be44e3'
+    assert r['indicator']['indicator'] == 'c2642e519c7f325300ed250710b4f815ac542c1d'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
@@ -127,7 +127,7 @@ def test_indicator_attachment_doc(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == 'a8f4c8f7a410af30f871cb4ab61aaaeb6714210e'
+    assert r['indicator']['indicator'] == 'f0ee0d5a1279fbdd93a9c5b9a1377894113f0ec0'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']
@@ -150,7 +150,7 @@ def test_indicator_attachment_pdf(client):
     })
     r = i.submit()
 
-    assert r['indicator']['indicator'] == '1dfe1152d2c31847b4e23206c6721f813a2dcc78'
+    assert r['indicator']['indicator'] == 'cc9881dc27a8d3e410cdf7e667ff5efa5cbfdaed'
     assert r['indicator']['attachments'][0]['attachment']
     assert r['indicator']['attachments'][0]['filesize']
     assert r['indicator']['attachments'][0]['created_at']

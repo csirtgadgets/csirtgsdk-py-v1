@@ -73,7 +73,7 @@ class Indicator(object):
 
         if os.path.isfile(blob):
             filename = blob
-            with open(blob) as f:
+            with open(blob, encoding="ISO-8859-1") as f:
                 data = f.read()
         else:
             if filename is None:
@@ -83,11 +83,11 @@ class Indicator(object):
             except TypeError:
                 raise RuntimeError('attachment must be base64 encoded')
 
-        md5 = hashlib.md5(data).hexdigest()
-        sha1 = hashlib.sha1(data).hexdigest()
-        sha256 = hashlib.sha256(data).hexdigest()
-        sha512 = hashlib.sha512(data).hexdigest()
-        data = base64.b64encode(data)
+        md5 = hashlib.md5(data.encode('utf-8')).hexdigest()
+        sha1 = hashlib.sha1(data.encode('utf-8')).hexdigest()
+        sha256 = hashlib.sha256(data.encode('utf-8')).hexdigest()
+        sha512 = hashlib.sha512(data.encode('utf-8')).hexdigest()
+        data = base64.b64encode(data.encode('utf-8'))
 
         return {
             'data': data.decode("utf-8"),

@@ -1,7 +1,8 @@
-requests==2.9.1
-prettytable==0.7.2
+requests>=2.9.1
+prettytable>=0.7.2
 PyYAML==3.11
-tailer==0.3
-arrow==0.6.0
-pytest==2.7.0
-setuptools==18.4
+tailer>=0.3
+arrow>=0.6.0
+pytest>=2.7.0
+setuptools>=18.4
+pytest-cov>=2.3.1
