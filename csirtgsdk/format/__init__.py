@@ -1,9 +1,10 @@
-from csirtgsdk.format import table, format_json, format_csv
+from csirtgsdk.format import table, format_json, format_csv, zbro
 
 plugins = {
     'table': table.Table,
     'csv': format_csv.CSV,
-    'json': format_json.JSON
+    'json': format_json.JSON,
+    'bro': zbro .Bro
 }
 
 

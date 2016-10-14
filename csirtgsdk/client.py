@@ -17,6 +17,7 @@ from csirtgsdk.search import Search
 from csirtgsdk import VERSION
 from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
 from csirtgsdk.format import factory as format_factory
+import csirtgsdk
 
 from pprint import pprint
 
@@ -320,7 +321,10 @@ def main():
 
         if data['feed'].get('indicators'):
             format = format_factory(options['format'])
-            format(data).write()
+            if options['format'] == 'csv' or options['format'] == 'table':
+                print(format(data).write())
+            else:
+                print(format(data))
         logger.info("Done")
 
     # submit new indicator
