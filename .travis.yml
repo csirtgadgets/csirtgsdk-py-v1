@@ -6,7 +6,7 @@ python:
     - 3.4
     - 3.5
 
-before_install:
+install:
     - pip install -r dev_requirements.txt
 
 script:
