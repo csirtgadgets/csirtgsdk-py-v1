@@ -4,9 +4,8 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
 # Installation
 ## Ubuntu
   ```bash
-  $ apt-get install -y python-dev python-pip git
-  $ sudo pip install pip --upgrade  # requires > 6.2
-  $ pip install https://github.com/csirtgadgets/py-csirtgsdk/archive/master.tar.gz
+  $ sudo apt-get install -y python-dev python-pip git
+  $ pip install csirtgsdk
   ```
 
 # Examples
