@@ -1,7 +1,6 @@
 sudo: required
 dist: trusty
 language: python
-
 python:
   - 2.7
   - 3.4
@@ -23,7 +22,7 @@ deploy:
   provider: pypi
   user: wesyoung
   password:
-    secure: fyvNbZKHZWD3tX6xsv79Tqymuhct+97+Trq14S1PpSvcxAO5V9JUjdLHyVc1wEVYdDmke2zMKNbxWD/MVZb9TmzGPa8ysIbe8Ox/HfRJmmg0HPBfbyOKz4ND1kvHP9M1e04LyAzOtYFRiNEj/5KsIj4DgDjO+a/MxSo78DqlJ3w=
+    secure: gJ98IKzZZB9HjkPPO9veNMZH2/gz78eQzUBYFgtt4FkT0QGb+9tYUrTOCgn7vaa1cPuS6Ntc8uAZUOKxxQuqaHTCalPuZhudiQHgllsa56lWcEK8c23byhd3gBXLfd9bKsgAVzZJKRebrhNzEEKw08z/6399Aa0C4iMFb6xfEwA=
   on:
     branch: master
     tags: true
