@@ -20,8 +20,11 @@ if sys.argv[-1] == 'test':
         err_msg = e.message.replace("No module named ", "")
         msg = "%s is not installed. Install your test requirments." % err_msg
         raise ImportError(msg)
-    os.system('py.test test -v --cov=csirtgsdk --cov-fail-under=25')
-    sys.exit()
+    r = os.system('py.test test -v --cov=csirtgsdk --cov-fail-under=25')
+    if r == 0:
+        sys.exit()
+    else:
+        raise RuntimeError('tests failed')
 
 setup(
     name="csirtgsdk",
