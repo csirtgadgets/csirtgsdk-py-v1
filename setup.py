@@ -33,12 +33,11 @@ setup(
     description="CSIRTG Python SDK",
     long_description="CSIRTG Software Development Kit for Python",
     url="https://github.com/csirtgadgets/csirtgsdk-py",
-    license='LGPL3',
+    license='MPL2',
     classifiers=[
         "Topic :: System :: Networking",
         "Environment :: Other Environment",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Programming Language :: Python"
     ],
     keywords=['network','security'],
@@ -48,7 +47,7 @@ setup(
     install_requires=reqs,
     entry_points={
         'console_scripts': [
-            "csirtg=csirtgsdk.client:main",
+            "csirtg=csirtgsdk.client.client:main",
         ]
     },
     test_suite="test"

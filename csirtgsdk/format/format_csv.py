@@ -8,7 +8,7 @@ from csirtgsdk.constants import COLUMNS, MAX_FIELD_SIZE
 class CSV(object):
 
     def __init__(self, data, cols=COLUMNS, max_field_size=MAX_FIELD_SIZE):
-        cols += [u'firsttime', u'created_at', u'itype', u'lasttime', u'id']
+        cols += [u'firsttime', u'created_at', u'itype', u'lasttime', u'id', u'updated_at']
         self.cols = cols
         self.max_field_size = max_field_size
         self.data = data
@@ -17,6 +17,8 @@ class CSV(object):
     def write(self, fh=sys.stdout):
         t = csv.DictWriter(fh, delimiter=',', fieldnames=self.cols)
         t.writeheader()
+
+        from pprint import pprint
 
         for _ in self.data['feed']['indicators']:
             o = _['indicator']

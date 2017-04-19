@@ -6,6 +6,22 @@ class Feed(object):
     def __init__(self, client):
         self.client = client
 
+    def get_lines(self, data):
+        from prettytable import PrettyTable
+        cols = ['name', 'description', 'license', 'updated_at']
+        t = PrettyTable(cols)
+        for f in data:
+            r = []
+            for c in cols:
+                y = f['feed'].get(c)
+                if c == 'license':
+                    y = y['name']
+                y = str(y)
+                y = (y[:30] + '..') if len(y) > 30 else y
+                r.append(y)
+            t.add_row(r)
+        yield str(t)
+
     def new(self, user, name, description=None):
         """
         Creates a new Feed object
@@ -24,13 +40,13 @@ class Feed(object):
             }
         }
 
-        body = self.client.post(uri, data)
-        if body.get('feed'):
-            return body['feed']
+        resp = self.client.post(uri, data)
+        if resp.get('feed'):
+            return [resp]
 
-        return body
+        return resp
 
-    def remove(self, user, name):
+    def delete(self, user, name):
         """
         Removes a feed
 
@@ -41,9 +57,10 @@ class Feed(object):
 
         uri = self.client.remote + '/users/{}/feeds/{}'.format(user, name)
 
-        body = self.client.session.delete(uri)
-        return body.status_code
+        resp = self.client.session.delete(uri)
+        return resp.status_code
 
+    remove = delete
 
     def index(self, user):
         """
