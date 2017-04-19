@@ -147,11 +147,9 @@ def main():
         if data['feed'].get('indicators'):
             format = format_factory(options['format'])
             if options['format'] == 'csv' or options['format'] == 'table':
-                print(format(data).write())
+                format(data).write()
             else:
                 print(format(data))
-
-        raise SystemExit
 
 if __name__ == "__main__":
     main()
