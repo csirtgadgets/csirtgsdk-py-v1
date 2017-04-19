@@ -1,7 +1,7 @@
 import json
 import requests
 import logging
-from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed
+from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed, RateLimitExceeded
 
 from csirtgsdk import VERSION
 from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
@@ -44,6 +44,9 @@ class HTTP(object):
 
         if resp.status_code == 422:
             raise SubmissionFailed()
+
+        if resp.status_code == 429:
+            raise RateLimitExceeded()
 
         raise RuntimeError(resp.text)
 

@@ -30,3 +30,8 @@ class NotFound(CsirtgsdkException):
 class SubmissionFailed(CsirtgsdkException):
     def __init__(self, msg='Submission Failed'):
         self.msg = msg
+
+
+class RateLimitExceeded(CsirtgsdkException):
+    def __init__(self, msg='Rate Limit Threshold Exceeded'):
+        self.msg = msg
