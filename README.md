@@ -292,6 +292,6 @@ http://py-csirtgsdk.readthedocs.org/
 
 # License and Copyright
 
-Copyright (C) 2015 [CSIRT Gadgets](http://csirtgadgets.com)
+Copyright (C) 2017 [CSIRT Gadgets](http://csirtgadgets.com)
 
-Free use of this software is granted under the terms of the [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl.html) (LGPL v3.0). For details see the file ``LICENSE`` included with the distribution.
+Free use of this software is granted under the terms of the [MPL2 License](https://www.mozilla.org/en-US/MPL/2.0/). For details see the file ``LICENSE`` included with the distribution.
