@@ -10,8 +10,6 @@ class Feed(object):
         from prettytable import PrettyTable
         cols = ['name', 'description', 'license', 'updated_at']
         t = PrettyTable(cols)
-        from pprint import pprint
-        pprint(data)
         for f in data:
             r = []
             for c in cols:
