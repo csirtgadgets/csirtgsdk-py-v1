@@ -48,7 +48,7 @@ setup(
     install_requires=reqs,
     entry_points={
         'console_scripts': [
-            "csirtg=csirtgsdk.client:main",
+            "csirtg=csirtgsdk.client.client:main",
         ]
     },
     test_suite="test"

@@ -26,7 +26,7 @@ class Indicator(object):
                 'lasttime': '2015-01-01T00:00:59Z',
                 'comment': 'example comment',
                 'attachment': '/tmp/malware.zip'
-            }).submit()
+            }).create()
         """
         self.logger = logging.getLogger(__name__)
         self.client = client
@@ -113,7 +113,7 @@ class Indicator(object):
         uri = '/users/{}/feeds/{}/indicators/{}/comments'.format(user, feed, id)
         return self.client.get(uri)
 
-    def submit(self):
+    def create(self):
         """
         Submit action on the Indicator object
 
@@ -149,3 +149,64 @@ class Indicator(object):
             raise Exception('Missing indicator')
 
         return self.client.post(uri, data)
+
+    submit = create
+
+    def create_bulk(self, indicators, user, feed):
+        """
+        Submit action against the IndicatorBulk endpoint
+
+        :param indicators: list of Indicator Objects
+        :param user: feed username
+        :param feed: feed name
+        :return: list of Indicator Objects submitted
+
+        from csirtgsdk.client import Client
+        from csirtgsdk.indicator import Indicator
+
+        remote = 'https://csirtg.io/api'
+        token = ''
+        verify_ssl = True
+
+        i = {
+            'indicator': 'example.com',
+            'feed': 'test',
+            'user': 'admin',
+            'comment': 'this is a test',
+        }
+
+        data = []
+
+        cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+        for x in range(0, 5):
+            data.append(
+                Indicator(cli, i)
+            )
+
+        ret = cli.submit_bulk(data, 'csirtgadgets', 'test-feed')
+        """
+
+        uri = '/users/{0}/feeds/{1}/indicators_bulk'.format(user, feed)
+
+        data = {
+            'indicators': [
+                {
+                    'indicator': i.args.indicator,
+                    'feed_id': i.args.feed,
+                    'tag_list': i.args.tags,
+                    "description": i.args.description,
+                    "portlist": i.args.portlist,
+                    "protocol": i.args.protocol,
+                    'firsttime': i.args.firsttime,
+                    'lasttime': i.args.lasttime,
+                    'portlist_src': i.args.portlist_src,
+                    'comment': {
+                        'content': i.args.comment
+                    }
+                } for i in indicators
+                ]
+        }
+        return self.client._post(uri, data)
+
+    submit_bulk = create_bulk
