@@ -81,6 +81,9 @@ def main():
 
     logger = logging.getLogger(__name__)
 
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+
     options = vars(args)
     o = read_config(args)
     options.update(o)

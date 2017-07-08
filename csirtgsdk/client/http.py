@@ -2,15 +2,22 @@ import json
 import requests
 import logging
 from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed, RateLimitExceeded
+import os
 
 from csirtgsdk import VERSION
 from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
+import gzip
+
+logger = logging.getLogger(__name__)
+
+if os.getenv('CSIRTGSDK_HTTP_TRACE'):
+    logger.setLevel(logging.DEBUG)
 
 
 class HTTP(object):
     def __init__(self, remote=REMOTE, token=TOKEN, proxy=None, timeout=TIMEOUT, verify_ssl=True):
 
-        self.logger = logging.getLogger(__name__)
+        self.logger = logger
         self.remote = remote
         self.token = str(token)
         self.proxy = proxy
@@ -25,6 +32,7 @@ class HTTP(object):
         self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'.format(VERSION)
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'
+        self.session.headers['Accept-Encoding'] = 'gzip'
 
     def _check_return(self, resp, expects=[200, 201]):
         if isinstance(expects, int):
@@ -64,11 +72,13 @@ class HTTP(object):
 
         if not uri.startswith(self.remote):
             uri = '{}{}'.format(self.remote, uri)
-            self.logger.debug(uri)
+
+        self.logger.debug(uri)
 
         resp = self.session.get(uri, params=params, verify=self.verify_ssl)
 
         self._check_return(resp)
+        self.logger.debug(resp.headers)
         return json.loads(resp.text)
 
     get = _get
