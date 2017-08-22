@@ -10,7 +10,7 @@ CI_BUILD = os.environ.get('CI_BUILD', False)
 TOKEN = os.environ.get('CSIRTG_TOKEN', None)
 USER = os.environ.get('CSIRTG_USER', 'wes')
 REMOTE = os.environ.get('CSIRTG_REMOTE', 'https://csirtg.io/api')
-FEED = os.environ.get('CSIRTG_FEED', 'CI_SEARCH_TEST')
+FEED = os.environ.get('CSIRTG_TEST_FEED', 'CI_SEARCH_TEST')
 
 liveonly = pytest.mark.skipif(CI_BUILD is False, reason="CI_BUILD env var not set")
 
@@ -30,7 +30,7 @@ def test_indicator_search_fqdn(client):
 
     # create feed and test created feed
     f = Feed(client).new(USER, FEED, description='build search test feed')
-    assert f['created_at']
+    assert f[0]['feed']['updated_at']
 
     # create test and submit test indicator
     i = Indicator(client, {
