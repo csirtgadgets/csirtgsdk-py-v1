@@ -10,6 +10,7 @@ from csirtgsdk.utils import setup_logging, read_config
 from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.search import Search
+from csirtgsdk.predict import Predict
 from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN
 from csirtgsdk.format import factory as format_factory
 from csirtgsdk.client.http import HTTP as Client
@@ -49,6 +50,8 @@ def main():
     parser.add_argument('-q', '--search', help="search for an indicator")
     parser.add_argument('--feeds', action="store_true", help="show a list of feeds (per user)")
     parser.add_argument('--new', action='store_true', help="create a new feed or indicator")
+
+    parser.add_argument('--predict', help="test an indicator against the prediction api")
 
 
     # vars
@@ -93,6 +96,12 @@ def main():
         verify_ssl = False
 
     cli = Client(remote=options['remote'], token=options['token'], verify_ssl=verify_ssl)
+
+    if options.get('predict'):
+        logger.info("Searching for: {0}".format(options.get('search')))
+        ret = Predict(cli).get(options.get('predict'))
+        print("Prediction Score: %s" % ret)
+        raise SystemExit
 
     if options.get('search'):
         logger.info("Searching for: {0}".format(options.get('search')))
