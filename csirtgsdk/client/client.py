@@ -77,6 +77,8 @@ def main():
 
     parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF', action="store_true")
 
+    parser.add_argument('--sinkhole', action='store_true')
+
 
     # Process arguments
     args = parser.parse_args()
@@ -96,6 +98,28 @@ def main():
         verify_ssl = False
 
     cli = Client(remote=options['remote'], token=options['token'], verify_ssl=verify_ssl)
+
+    if options.get('sinkhole'):
+        import sys
+        if not sys.stdin.isatty():
+            stdin = sys.stdin.read()
+        else:
+            logger.error("No data passed via STDIN")
+            raise SystemExit
+
+        from csirtgsdk.sinkhole import Sinkhole
+        ret = Sinkhole(cli).post(stdin)
+
+        if ret.get('status') == 'unauthorized':
+            logger.error('unauthorized')
+        else:
+            if logger.getEffectiveLevel() == logging.DEBUG:
+                print("Predictions: \n")
+                for p in ret['predictions']:
+                    print("\t%s" % p)
+
+        raise SystemExit
+
 
     if options.get('predict'):
         logger.info("Searching for: {0}".format(options.get('search')))
