@@ -1,6 +1,7 @@
 import logging
 import json
 from pprint import pprint
+from ..constants import PYVERSION
 
 
 class Sinkhole(object):
@@ -25,6 +26,12 @@ class Sinkhole(object):
         """
         uri = '{}/sinkhole'.format(self.client.remote)
         self.logger.debug(uri)
+
+        if PYVERSION == 2:
+            try:
+                data = data.decode('utf-8')
+            except Exception:
+                data = data.decode('latin-1')
 
         data = {
             'message': data
