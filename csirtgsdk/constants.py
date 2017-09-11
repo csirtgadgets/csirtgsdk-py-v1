@@ -1,4 +1,5 @@
 import os.path
+import sys
 
 API_VERSION = 0
 
@@ -21,3 +22,7 @@ COLUMNS = COLUMNS.split(',')
 
 MAX_FIELD_SIZE = 30
 MAX_FIELD_SIZE = os.getenv('CSIRTG_MAX_FIELD_SIZE', MAX_FIELD_SIZE)
+
+PYVERSION = 2
+if sys.version_info > (3,):
+    PYVERSION = 3
