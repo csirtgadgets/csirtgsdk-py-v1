@@ -120,7 +120,6 @@ def main():
 
         raise SystemExit
 
-
     if options.get('predict'):
         logger.info("Searching for: {0}".format(options.get('search')))
         ret = Predict(cli).get(options.get('predict'))

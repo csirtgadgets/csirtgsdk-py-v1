@@ -1,7 +1,7 @@
 import logging
 import json
 from pprint import pprint
-from ..constants import PYVERSION
+from .constants import PYVERSION
 
 
 class Sinkhole(object):
