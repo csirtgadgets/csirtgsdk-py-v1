@@ -115,7 +115,7 @@ def main():
         else:
             if logger.getEffectiveLevel() == logging.DEBUG:
                 print("Predictions: \n")
-                for p in ret['predictions']:
+                for p in ret.get('predictions', []):
                     print("\t%s" % p)
 
         raise SystemExit
