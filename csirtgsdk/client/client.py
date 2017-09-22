@@ -125,16 +125,20 @@ def main():
         if options.get('predict'):
             logger.info("Searching for: {0}".format(options.get('predict')))
             predict = options['predict']
+            ret = Predict(cli).get(predict)
+            print("Prediction Score: %s - %s" % (ret, predict))
         else:
             import sys
             if not sys.stdin.isatty():
-                predict = sys.stdin.ready()
+                for predict in sys.stdin.read().split("\n"):
+                    if predict == '':
+                        continue
+                    ret = Predict(cli).get(predict)
+                    print("Prediction Score: %s - %s" % (ret, predict))
             else:
                 logger.error("No data passed via STDIN")
                 raise SystemExit
 
-        ret = Predict(cli).get(predict)
-        print("Prediction Score: %s - %s" % (ret, predict))
         raise SystemExit
 
     if options.get('search'):
