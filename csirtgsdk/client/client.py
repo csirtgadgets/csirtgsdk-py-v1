@@ -52,7 +52,7 @@ def main():
     parser.add_argument('--new', action='store_true', help="create a new feed or indicator")
 
     parser.add_argument('--predict', help="test an indicator against the prediction api")
-
+    parser.add_argument('--predict-stdin', action="store_true")
 
     # vars
     parser.add_argument('--user', help="specify a user")
@@ -120,10 +120,21 @@ def main():
 
         raise SystemExit
 
-    if options.get('predict'):
-        logger.info("Searching for: {0}".format(options.get('search')))
-        ret = Predict(cli).get(options.get('predict'))
-        print("Prediction Score: %s" % ret)
+    if options.get('predict') or options.get('predict_stdin'):
+        import sys
+        if options.get('predict'):
+            logger.info("Searching for: {0}".format(options.get('predict')))
+            predict = options['predict']
+        else:
+            import sys
+            if not sys.stdin.isatty():
+                predict = sys.stdin.ready()
+            else:
+                logger.error("No data passed via STDIN")
+                raise SystemExit
+
+        ret = Predict(cli).get(predict)
+        print("Prediction Score: %s - %s" % (ret, predict))
         raise SystemExit
 
     if options.get('search'):
