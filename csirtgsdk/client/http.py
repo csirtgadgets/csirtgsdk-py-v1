@@ -34,6 +34,8 @@ class HTTP(object):
         self.session.headers['Content-Type'] = 'application/json'
         self.session.headers['Accept-Encoding'] = 'gzip'
 
+        #self.logger.debug(self.session.headers)
+
     def _check_return(self, resp, expects=[200, 201]):
         if isinstance(expects, int):
             expects = [expects]
