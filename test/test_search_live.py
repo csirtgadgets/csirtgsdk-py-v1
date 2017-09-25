@@ -26,11 +26,11 @@ def client():
 @liveonly
 def test_indicator_search_fqdn(client):
 
-    INDICATOR = 'example.com'
+    INDICATOR = 'example123123123.com'
 
     # create feed and test created feed
     f = Feed(client).new(USER, FEED, description='build search test feed')
-    assert f[0]['feed']['updated_at']
+    assert f['updated_at']
 
     # create test and submit test indicator
     i = Indicator(client, {
@@ -42,16 +42,16 @@ def test_indicator_search_fqdn(client):
     r = i.submit()
 
     # test creating the indicator
-    assert r['indicator']['indicator'] == INDICATOR
-    assert r['indicator']['itype'] == 'fqdn'
-    assert r['indicator']['created_at']
+    assert r['indicator'] == INDICATOR
+    assert r['itype'] == 'fqdn'
+    assert r['created_at']
 
     # search for indicator
     s = Search(client)
     r = s.search(INDICATOR, 10)
-    for record in r['feed']['indicators']:
-        if record['indicator']['feed'] == 'live-test-feed':
-            assert record['indicator']['indicator'] == INDICATOR
+    for record in r:
+        if record['feed'] == 'live-test-feed':
+            assert record['indicator'] == INDICATOR
 
     # delete test feed
     f = Feed(client).remove(USER, FEED)
@@ -77,16 +77,16 @@ def test_indicator_search_ipv4(client):
     r = i.submit()
 
     # test creating the indicator
-    assert r['indicator']['indicator'] == INDICATOR
-    assert r['indicator']['itype'] == 'ipv4'
-    assert r['indicator']['created_at']
+    assert r['indicator'] == INDICATOR
+    assert r['itype'] == 'ipv4'
+    assert r['created_at']
 
     # search for indicator
     s = Search(client)
     r = s.search(INDICATOR, 10)
-    for record in r['feed']['indicators']:
-        if record['indicator']['feed'] == 'live-test-feed':
-            assert record['indicator']['indicator'] == INDICATOR
+    for record in r:
+        if record['feed'] == 'live-test-feed':
+            assert record['indicator'] == INDICATOR
 
     # delete test feed
     f = Feed(client).remove(USER, FEED)
@@ -112,16 +112,16 @@ def test_indicator_search_ipv6(client):
     r = i.submit()
 
     # test creating the indicator
-    assert r['indicator']['indicator'] == INDICATOR
-    assert r['indicator']['itype'] == 'ipv6'
-    assert r['indicator']['created_at']
+    assert r['indicator'] == INDICATOR
+    assert r['itype'] == 'ipv6'
+    assert r['created_at']
 
     # search for indicator
     s = Search(client)
     r = s.search(INDICATOR, 10)
-    for record in r['feed']['indicators']:
-        if record['indicator']['feed'] == 'live-test-feed':
-            assert record['indicator']['indicator'] == INDICATOR
+    for record in r:
+        if record['feed'] == 'live-test-feed':
+            assert record['indicator'] == INDICATOR
 
     # delete test feed
     f = Feed(client).remove(USER, FEED)
@@ -147,16 +147,16 @@ def test_indicator_search_email(client):
     r = i.submit()
 
     # test creating the indicator
-    assert r['indicator']['indicator'] == INDICATOR
-    assert r['indicator']['itype'] == 'email'
-    assert r['indicator']['created_at']
+    assert r['indicator'] == INDICATOR
+    assert r['itype'] == 'email'
+    assert r['created_at']
 
     # search for indicator
     s = Search(client)
     r = s.search(INDICATOR, 10)
-    for record in r['feed']['indicators']:
-        if record['indicator']['feed'] == 'live-test-feed':
-            assert record['indicator']['indicator'] == INDICATOR
+    for record in r:
+        if record['feed'] == 'live-test-feed':
+            assert record['indicator'] == INDICATOR
 
     # delete test feed
     f = Feed(client).remove(USER, FEED)
@@ -182,16 +182,16 @@ def test_indicator_search_url(client):
     r = i.submit()
 
     # test creating the indicator
-    assert r['indicator']['indicator'] == INDICATOR
-    assert r['indicator']['itype'] == 'uri'
-    assert r['indicator']['created_at']
+    assert r['indicator'] == INDICATOR
+    assert r['itype'] == 'uri'
+    assert r['created_at']
 
     # search for indicator
     s = Search(client)
     r = s.search(INDICATOR, 10)
-    for record in r['feed']['indicators']:
-        if record['indicator']['feed'] == 'live-test-feed':
-            assert record['indicator']['indicator'] == INDICATOR
+    for record in r:
+        if record['feed'] == 'live-test-feed':
+            assert record['indicator'] == INDICATOR
 
     # delete test feed
     f = Feed(client).remove(USER, FEED)

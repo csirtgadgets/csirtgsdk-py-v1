@@ -28,7 +28,7 @@ class HTTP(object):
             self.logger.debug('TLS Verification is OFF')
 
         self.session = requests.session()
-        self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}+json'.format(str(API_VERSION))
+        self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}'.format(str(API_VERSION))
         self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'.format(VERSION)
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'

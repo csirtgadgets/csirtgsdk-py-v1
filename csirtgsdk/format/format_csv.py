@@ -18,12 +18,8 @@ class CSV(object):
         t = csv.DictWriter(fh, delimiter=',', fieldnames=self.cols)
         t.writeheader()
 
-        from pprint import pprint
-
-        for _ in self.data['feed']['indicators']:
-            o = _['indicator']
-
-            for i in ['license', 'location', 'thing', 'attachments']:
+        for o in self.data['indicators']:
+            for i in ['license', 'location', 'attachments']:
                 if i in o: del o[i]
 
             try:
@@ -34,13 +30,13 @@ class CSV(object):
             try:
                 o['user'] = o['user']
             except:
-                o['user'] = self.data['feed']['user']
+                o['user'] = self.data['user']
 
 
             try:
                 o['feed'] = o['feed']
             except:
-                o['feed'] = self.data['feed']['name']
+                o['feed'] = self.data['name']
 
             if o.get('tags'):
                 o['tags'] = ','.join(o['tags'])
