@@ -13,5 +13,5 @@ class JSON(object):
         self.data = data
 
     def write(self, fh=sys.stdout):        
-        fh.write(json.dumps(self.data['feed']))
+        fh.write(json.dumps(self.data))
         fh.write("\n")

@@ -25,8 +25,8 @@ def main():
             $ csirtg --search example.com
             $ csirtg --user csirtgadgets --feeds
             $ csirtg --user csirtgadgets --feed uce-urls
-            $ csirtg --user csirtgadgets --new --feed scanners --description 'a feed of port scanners'
-            $ csirtg --user csirtgadgets --feed scanners --new --indicator 1.1.1.1 --tags scanner --comment
+            $ csirtg --user csirtgadgets --feed-new scanners --description 'a feed of port scanners'
+            $ csirtg --user csirtgadgets --feed scanners --indicator-new 1.1.1.1 --tags scanner --comment
               'this is a port scanner'
             $ csirtg --user csirtgadgets --feed uce-attachments --new --attachment 'fax.zip'
               --description 'file attached in uce email'
@@ -154,9 +154,7 @@ def main():
         ret = Indicator(cli, options).submit()
         logger.info('posted: {0}'.format(ret['indicator']['location']))
         ret = {
-            'feed': {
-                'indicators': [ret]
-            }
+            'indicators': [ret]
         }
         format = format_factory(options['format'])
         format(ret).write()
@@ -173,6 +171,9 @@ def main():
     if options.get('feed_new'):
         if not options.get('user'):
             parser.error('--user is required')
+
+        if not options.get('description'):
+            parser.error('--description is required')
 
         logger.info("Creating feed {0} for user {1}".format(options['feed_new'], options['user']))
         f = Feed(cli)
@@ -194,7 +195,7 @@ def main():
                 lasttime=options['lasttime'],
         )
 
-        if data['feed'].get('indicators'):
+        if data.get('indicators'):
             format = format_factory(options['format'])
             if options['format'] == 'csv' or options['format'] == 'table':
                 format(data).write()

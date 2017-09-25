@@ -10,16 +10,16 @@ class Feed(object):
         from prettytable import PrettyTable
         cols = ['name', 'description', 'license', 'updated_at']
         t = PrettyTable(cols)
-        for f in data:
-            r = []
-            for c in cols:
-                y = f['feed'].get(c)
-                if c == 'license':
-                    y = y['name']
-                y = str(y)
-                y = (y[:30] + '..') if len(y) > 30 else y
-                r.append(y)
-            t.add_row(r)
+        r = []
+        for c in cols:
+            y = data.get(c)
+            if c == 'license':
+                y = y['name']
+            y = str(y)
+            y = (y[:30] + '..') if len(y) > 30 else y
+            r.append(y)
+        t.add_row(r)
+
         yield str(t)
 
     def new(self, user, name, description=None):
@@ -41,9 +41,6 @@ class Feed(object):
         }
 
         resp = self.client.post(uri, data)
-        if resp.get('feed'):
-            return [resp]
-
         return resp
 
     def delete(self, user, name):

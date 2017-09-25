@@ -14,7 +14,7 @@ class Table(object):
     def write(self, fh=sys.stdout):
         t = PrettyTable(self.cols)
 
-        for o in self.data['feed']['indicators']:
+        for o in self.data['indicators']:
             r = []
             for c in self.cols:
                 y = ''
@@ -25,22 +25,23 @@ class Table(object):
                 if c == 'user':
                     try:
                         # json returned by --new and --search
-                        y = o['indicator']['user']
+                        y = o['user']
                     except:
+
                         # json returned by --feed
-                        y = self.data['feed']['user']
+                        y = self.data['user']
                 elif c == 'feed':
                     try:
-                        y = o['indicator']['feed']
+                        y = o['feed']
                     except:
-                        y = self.data['feed']['name']
+                        y = self.data['name']
                 elif c == 'comments':
-                    if o['indicator'].get(c):
-                        y = len(o['indicator'].get(c)) or ''
+                    if o.get(c):
+                        y = len(o.get(c)) or ''
                     else:
                         y = ''
                 else:
-                    y = o['indicator'].get(c) or ''
+                    y = o.get(c) or ''
 
 
                 # make sure we do this last

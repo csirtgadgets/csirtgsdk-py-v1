@@ -26,9 +26,4 @@ class Search(object):
         self.logger.debug(uri)
 
         body = self.client.get(uri)
-        body = {
-            "feed": {
-                "indicators": body
-            }
-        }
         return body

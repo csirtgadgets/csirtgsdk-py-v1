@@ -153,6 +153,11 @@ class Indicator(object):
     submit = create
 
     def create_bulk(self, indicators, user, feed):
+        from .constants import API_VERSION
+        if API_VERSION == '1':
+            print("create_bulk currently un-avail with APIv1")
+            raise SystemExit
+
         """
         Submit action against the IndicatorBulk endpoint
 

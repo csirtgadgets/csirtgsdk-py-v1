@@ -1,7 +1,7 @@
 import os.path
 import sys
 
-API_VERSION = 0
+API_VERSION = os.getenv('CSIRTG_API_VERSION', '1')
 
 REMOTE = 'https://csirtg.io/api'
 REMOTE = os.getenv('CSIRTG_REMOTE', REMOTE)
@@ -16,7 +16,7 @@ LIMIT = os.getenv('CSIRTG_LIMIT', LIMIT)
 TIMEOUT = 300
 TIMEOUT = os.getenv('CSIRTG_TIMEOUT', TIMEOUT)
 
-COLUMNS = "user,feed,indicator,firsttime,lasttime,count,comments,protocol,portlist,tags,description"
+COLUMNS = "user,feed,indicator,firsttime,lasttime,count,comments,protocol,portlist,tags,description,cc,asn,asn_desc"
 COLUMNS = os.getenv('CSIRTG_COLUMNS', COLUMNS)
 COLUMNS = COLUMNS.split(',')
 
