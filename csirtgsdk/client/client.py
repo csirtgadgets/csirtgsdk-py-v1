@@ -152,7 +152,8 @@ def main():
         options['indicator'] = options['indicator_new']
         logger.info("Creating indicator in feed {0} for user {1}".format(options['feed'], options['user']))
         ret = Indicator(cli, options).submit()
-        logger.info('posted: {0}'.format(ret['indicator']['location']))
+        pprint(ret)
+        logger.info('posted: {0}'.format(ret['location']))
         ret = {
             'indicators': [ret]
         }
