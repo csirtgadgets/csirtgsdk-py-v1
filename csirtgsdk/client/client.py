@@ -145,6 +145,7 @@ def main():
         logger.info("Searching for: {0}".format(options.get('search')))
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
         format = format_factory(options['format'])
+        ret = {'indicators': ret}
         format(ret).write()
         raise SystemExit
 
