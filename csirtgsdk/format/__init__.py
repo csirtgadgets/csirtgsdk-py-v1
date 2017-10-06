@@ -1,4 +1,10 @@
 from csirtgsdk.format import table, format_json, format_csv, zbro
+from csirtgsdk.constants import PYVERSION
+
+if PYVERSION == 2:
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('UTF8')
 
 plugins = {
     'table': table.Table,
