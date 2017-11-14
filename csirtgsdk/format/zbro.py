@@ -29,19 +29,12 @@ class Bro(object):
         text = []
         for _ in self.data['indicators']:
             o = _
-            
+
             for i in ['license', 'location', 'thing', 'attachments']:
                 if i in o: del o[i]
 
-            try:
-                o['user'] = o['user']
-            except:
-                o['user'] = self.data['user']
-
-            try:
-                o['feed'] = o['feed']
-            except:
-                o['feed'] = self.data['name']
+            o['user'] = self.data['user']
+            o['feed'] = self.data['name']
 
             if o.get('tags'):
                 o['tags'] = ','.join(o['tags'])
