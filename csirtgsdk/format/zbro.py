@@ -27,26 +27,21 @@ class Bro(object):
 
     def __repr__(self):
         text = []
-        for _ in self.data['feed']['indicators']:
-            o = _['indicator']
-
+        for _ in self.data['indicators']:
+            o = _
+            
             for i in ['license', 'location', 'thing', 'attachments']:
                 if i in o: del o[i]
 
             try:
-                o['comments'] = len(o['comments'])
-            except:
-                o['comments'] = 0
-
-            try:
                 o['user'] = o['user']
             except:
-                o['user'] = self.data['feed']['user']
+                o['user'] = self.data['user']
 
             try:
                 o['feed'] = o['feed']
             except:
-                o['feed'] = self.data['feed']['name']
+                o['feed'] = self.data['name']
 
             if o.get('tags'):
                 o['tags'] = ','.join(o['tags'])
