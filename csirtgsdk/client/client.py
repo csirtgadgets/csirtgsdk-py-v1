@@ -11,8 +11,9 @@ from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.search import Search
 from csirtgsdk.predict import Predict
-from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN
-from csirtgsdk.format import factory as format_factory
+from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
+#from csirtgsdk.format import factory as format_factory
+from csirtg_indicator.format import FORMATS
 from csirtgsdk.client.http import HTTP as Client
 
 from pprint import pprint
@@ -46,6 +47,8 @@ def main():
                         default=os.path.expanduser("~/.csirtg.yml"))  # env var
 
     parser.add_argument('--format', help="specify an output format [default: %(default)s]", default='table')
+    parser.add_argument('--columns', help='specify output columns [default %(default)s]', default=','.join(COLUMNS))
+
     # actions
     parser.add_argument('-q', '--search', help="search for an indicator")
     parser.add_argument('--feeds', action="store_true", help="show a list of feeds (per user)")
@@ -144,9 +147,10 @@ def main():
     if options.get('search'):
         logger.info("Searching for: {0}".format(options.get('search')))
         ret = Search(cli).search(options.get('search'), limit=options['limit'])
-        format = format_factory(options['format'])
-        ret = {'indicators': ret}
-        format(ret).write()
+        if isinstance(ret, dict):
+            ret = [ret]
+
+        print(FORMATS[options.get('format')](data=ret, cols=args.columns.split(',')))
         raise SystemExit
 
     if options.get('indicator_new') or options.get('attachment'):
@@ -154,11 +158,11 @@ def main():
         logger.info("Creating indicator in feed {0} for user {1}".format(options['feed'], options['user']))
         ret = Indicator(cli, options).submit()
         logger.info('posted: {0}'.format(ret['location']))
-        ret = {
-            'indicators': [ret]
-        }
-        format = format_factory(options['format'])
-        format(ret).write()
+
+        if isinstance(ret, dict):
+            ret = [ret]
+
+        print(FORMATS[options.get('format')](data=ret, cols=args.columns.split(',')))
         raise SystemExit
 
     if options.get('feeds'):
@@ -197,11 +201,8 @@ def main():
         )
 
         if data.get('indicators'):
-            format = format_factory(options['format'])
-            if options['format'] == 'csv' or options['format'] == 'table':
-                format(data).write()
-            else:
-                print(format(data))
+            print(FORMATS[options.get('format')](data=data['indicators'], cols=args.columns.split(',')))
+
 
 if __name__ == "__main__":
     main()
