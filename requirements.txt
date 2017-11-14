@@ -3,3 +3,4 @@ prettytable>=0.7.2
 PyYAML>=3.11,<4.0
 tailer>=0.3
 arrow>=0.6.0
+csirtg_indicator>=0.0.0b22,<1.0
