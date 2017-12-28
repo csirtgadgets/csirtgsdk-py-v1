@@ -4,3 +4,4 @@ PyYAML>=3.11,<4.0
 tailer>=0.3
 arrow>=0.6.0
 csirtg_indicator>=0.0.0b23,<1.0
+websocket-client>=0.44,<1
