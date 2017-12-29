@@ -6,7 +6,7 @@ from pprint import pprint
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import textwrap
-from csirtgsdk.constants import LOG_FORMAT
+from csirtgsdk.constants import LOG_FORMAT, REMOTE, TOKEN
 
 try:
     import thread
@@ -26,12 +26,15 @@ if os.getenv('CSIRTG_HTTP_WEBSOCKET_TRACE'):
     websocket.enableTrace(True)
 
 
-TOKEN = os.getenv('CSIRTG_TOKEN')
-REMOTE = os.getenv('CSIRTG_REMOTE', 'ws://csirtg.io/firehose')
-
-
 class DefaultHandler(object):
     def __init__(self, remote=REMOTE, token=TOKEN):
+
+        if remote.startswith('https://'):
+            remote = 'wss://csirtg.io'
+        else:
+            remote = 'ws://localhost:3000'
+
+        remote = '%s/firehose' % remote
 
         self.handle = websocket.WebSocketApp(
             remote,
