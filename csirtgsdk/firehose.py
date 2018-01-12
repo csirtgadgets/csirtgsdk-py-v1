@@ -6,7 +6,8 @@ from pprint import pprint
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import textwrap
-from csirtgsdk.constants import LOG_FORMAT, REMOTE, TOKEN
+from csirtgsdk.constants import LOG_FORMAT, TOKEN
+REMOTE = 'wss://csirtg.io/firehose'
 
 try:
     import thread
@@ -17,24 +18,17 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.DEBUG)
 
-if os.getenv('CSIRTGSDK_HTTP_TRACE'):
+if os.getenv('CSIRTGSDK_HTTP_TRACE' or 1):
     logger.setLevel(logging.DEBUG)
 
 logging.getLogger('websocket').setLevel(logging.WARN)
-if os.getenv('CSIRTG_HTTP_WEBSOCKET_TRACE'):
+if os.getenv('CSIRTG_HTTP_WEBSOCKET_TRACE' or 1):
     logging.getLogger('websocket').setLevel(logging.DEBUG)
     websocket.enableTrace(True)
 
 
 class DefaultHandler(object):
     def __init__(self, remote=REMOTE, token=TOKEN):
-
-        if remote.startswith('https://'):
-            remote = 'wss://csirtg.io'
-        else:
-            remote = 'ws://localhost:3000'
-
-        remote = '%s/firehose' % remote
 
         self.handle = websocket.WebSocketApp(
             remote,
@@ -77,6 +71,7 @@ class DefaultHandler(object):
     # https://github.com/tobiasfeistmantl/python-actioncable-zwei/blob/master/actioncable/subscription.py
     # https://github.com/NullVoxPopuli/action_cable_client#the-action-cable-protocol
     def on_open(self, ws):
+
         data = {
             'command': 'subscribe',
             'identifier': json.dumps({'channel': 'IndicatorsChannel'}),
