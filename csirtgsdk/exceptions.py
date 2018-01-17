@@ -35,3 +35,8 @@ class SubmissionFailed(CsirtgsdkException):
 class RateLimitExceeded(CsirtgsdkException):
     def __init__(self, msg='Rate Limit Threshold Exceeded'):
         self.msg = msg
+
+
+class SystemBusy(CsirtgsdkException):
+    def __init__(self, msg='System appears busy at the moment'):
+        self.msg = msg

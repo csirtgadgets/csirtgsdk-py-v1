@@ -26,6 +26,7 @@ ignore_errors = True
 omit =
     csirtgsdk/_version.py
     csirtgsdk/format/*
+    csirtgsdk/firehose.py
 
 [html]
 directory = coverage_html_report
