@@ -12,11 +12,8 @@ from csirtgsdk.indicator import Indicator
 from csirtgsdk.search import Search
 from csirtgsdk.predict import Predict
 from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
-#from csirtgsdk.format import factory as format_factory
 from csirtg_indicator.format import FORMATS
 from csirtgsdk.client.http import HTTP as Client
-
-from pprint import pprint
 
 
 def main():
@@ -88,6 +85,9 @@ def main():
     setup_logging(args)
 
     logger = logging.getLogger(__name__)
+
+    if args.verbose:
+        logger.setLevel(logging.INFO)
 
     if args.debug:
         logger.setLevel(logging.DEBUG)
