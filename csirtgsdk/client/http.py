@@ -1,12 +1,19 @@
 import json
 import requests
 import logging
-from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed, RateLimitExceeded
+from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed, RateLimitExceeded, SystemBusy
 import os
-
+import random
+from time import sleep
 from csirtgsdk import VERSION
 from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
 import gzip
+
+RETRIES = os.getenv('CSIRTGSDK_CLIENT_HTTP_RETRIES', 5)
+RETRIES_DELAY = os.getenv('CSIRTGSDK_CLIENT_HTTP_RETRIES_DELAY', '30,60')
+
+s, e = RETRIES_DELAY.split(',')
+RETRIES_DELAY = random.uniform(int(s), int(e))
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +65,9 @@ class HTTP(object):
         if resp.status_code == 429:
             raise RateLimitExceeded()
 
+        if resp.status_code in [500, 501, 502, 503, 504]:
+            raise SystemBusy()
+
         raise RuntimeError(resp.text)
 
     def _get(self, uri, params={}):
@@ -104,7 +114,28 @@ class HTTP(object):
         data = json.dumps(data)
 
         resp = self.session.post(uri, data=data, verify=self.verify_ssl)
-        self._check_return(resp)
+
+        n = RETRIES
+        try:
+            self._check_return(resp)
+            n = 0
+        except Exception as e:
+            logger.error(e)
+            if resp.status_code not in [500, 501, 502, 503, 504]:
+                raise e
+
+        while n != 0:
+            logger.info('setting random retry interval to spread out the load')
+            logger.info('retrying in %.00fs' % RETRIES_DELAY)
+            sleep(RETRIES_DELAY)
+
+            resp = self.session.post(uri, data=data, verify=self.verify_ssl)
+            if self._check_return(resp):
+                break
+
+            if n == 0:
+                raise SystemBusy('system seems busy.. try again later')
+
         return json.loads(resp.text)
 
     post = _post
