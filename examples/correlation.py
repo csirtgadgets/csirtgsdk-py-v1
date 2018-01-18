@@ -39,6 +39,9 @@ def main():
 
             m = json.loads(m['message'])
 
+            if m['provider'] == "%s/%s" % (USER, FEED):
+                return
+
             today = datetime.today().strftime('%Y-%m-%d')
             if self.today != today:
                 self.context = {}
@@ -73,7 +76,7 @@ def main():
         description=textwrap.dedent('''\
             example usage:
               $ export CSIRTG_TOKEN=abcdefg1234...
-                $ csirtg-firehose -v
+                $ CSIRTG_USER=wes CSIRTG_FEED=correlated csirtg-firehose -v -s
             '''),
         formatter_class=RawDescriptionHelpFormatter,
         prog='csirtg-firehose'
