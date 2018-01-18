@@ -17,7 +17,7 @@ REMOTE = 'wss://csirtg.io/firehose'
 USER = os.getenv('CSIRTG_USER')
 FEED = os.getenv('CSIRTG_FEED')
 
-TRIGGER = os.getenv('CSIRTG_CORRELATION_TRIGGER', '2')
+TRIGGER = os.getenv('CSIRTG_CORRELATION_TRIGGER', '3')
 TRIGGER = int(TRIGGER)
 
 logger = logging.getLogger(__name__)
@@ -68,9 +68,6 @@ def main():
                 }
                 ret = Indicator(self.cli, h).submit()
                 logger.info('posted: {0}'.format(ret['location']))
-                pprint(h)
-                pprint(self.context)
-                pprint("\n")
 
     parser = ArgumentParser(
         description=textwrap.dedent('''\
