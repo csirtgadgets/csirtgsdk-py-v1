@@ -45,6 +45,7 @@ def main():
             today = datetime.today().strftime('%Y-%m-%d')
             if self.today != today:
                 self.context = {}
+                self.today = today
 
             if m['indicator'] not in self.context:
                self.context[m['indicator']] = {}
