@@ -51,7 +51,7 @@ def main():
                self.context[m['indicator']] = {}
                self.context[m['indicator']]['providers'] = set()
                self.context[m['indicator']]['tags'] = set()
-               self.context[m['indicator']]['firsttime'] = m.get('firsttime', datetime.today())
+               self.context[m['indicator']]['lasttime'] = m.get('lasttime', datetime.today())
 
             self.context[m['indicator']]['providers'].add(m['provider'])
 
@@ -65,7 +65,8 @@ def main():
                     'indicator': m['indicator'],
                     'feed': FEED,
                     'user': USER,
-                    'firsttime': self.context[m['indicator']]['firsttime']
+                    'lasttime': self.context[m['indicator']]['lasttime'],
+
                 }
                 ret = Indicator(self.cli, h).submit()
                 logger.info('posted: {0}'.format(ret['location']))
