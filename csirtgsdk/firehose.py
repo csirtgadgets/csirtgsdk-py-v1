@@ -16,7 +16,7 @@ REMOTE = 'wss://csirtg.io/firehose'
 
 logger = logging.getLogger(__name__)
 
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 if os.getenv('CSIRTGSDK_HTTP_TRACE', '0') == '1':
     logger.setLevel(logging.DEBUG)
@@ -40,7 +40,6 @@ class DefaultHandler(object):
         )
 
         self.error = False
-        self.format = 'json'
 
     def on_admin_message(self, m):
         if not m.get('type'):
