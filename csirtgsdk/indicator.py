@@ -130,7 +130,8 @@ class Indicator(object):
                 "protocol": self.args.protocol,
                 'firsttime': self.args.firsttime,
                 'lasttime': self.args.lasttime,
-                'portlist_src': self.args.portlist_src
+                'portlist_src': self.args.portlist_src,
+                'content': self.args.content
             },
             "comment": self.args.comment
         }
