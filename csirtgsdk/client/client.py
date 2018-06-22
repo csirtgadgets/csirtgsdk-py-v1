@@ -79,6 +79,8 @@ def main():
 
     parser.add_argument('--sinkhole', action='store_true')
 
+    parser.add_argument('--threatmodel', '--tm', help='predict using a threatmodel (eg: wes/phishing-urls)')
+
 
     # Process arguments
     args = parser.parse_args()
@@ -120,6 +122,23 @@ def main():
                 print("Predictions: \n")
                 for p in ret.get('predictions', []):
                     print("\t%s" % p)
+
+        raise SystemExit
+
+    if options.get('threatmodel'):
+        try:
+            from csirtgsdk.threatmodel import Threatmodel
+        except:
+            print("")
+            print("Missing some extra machine learning libraries required to make this work..")
+            print("$ pip install numpy keras pandas tensorflow")
+            print("")
+            raise SystemExit
+
+        user, name = options['threatmodel'].split('/')
+        m = Threatmodel(cli).show(user, name, options['search'])
+
+        print("Prediction: %f" % (m * 100))
 
         raise SystemExit
 
