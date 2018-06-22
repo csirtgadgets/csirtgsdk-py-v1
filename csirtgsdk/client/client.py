@@ -9,6 +9,7 @@ from csirtgsdk.utils import setup_logging, read_config
 
 from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
+from csirtgsdk.threatmodel import Threatmodel
 from csirtgsdk.search import Search
 from csirtgsdk.predict import Predict
 from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
@@ -79,6 +80,8 @@ def main():
 
     parser.add_argument('--sinkhole', action='store_true')
 
+    parser.add_argument('--threatmodel', '--tm', help='predict using a threatmodel (eg: wes/phishing-urls)')
+
 
     # Process arguments
     args = parser.parse_args()
@@ -120,6 +123,12 @@ def main():
                 print("Predictions: \n")
                 for p in ret.get('predictions', []):
                     print("\t%s" % p)
+
+        raise SystemExit
+
+    if options.get('threatmodel'):
+        user, name = options['threatmodel'].split('/')
+        m = Threatmodel(cli).show(user, name, options['search'])
 
         raise SystemExit
 
