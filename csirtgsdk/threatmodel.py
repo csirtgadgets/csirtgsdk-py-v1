@@ -3,15 +3,20 @@ import tempfile
 import os
 import zipfile
 import requests
-
+import json
 import pandas
 import numpy as np
 import optparse
 from keras.models import Sequential, load_model, model_from_json
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer
+import os
+import tensorflow as tf
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 MODEL_PATH = os.getenv('CSIRTGSDK_TM_PATH', os.getcwd())
+
 
 class Threatmodel(object):
     """
@@ -20,21 +25,17 @@ class Threatmodel(object):
     def __init__(self, client):
         self.client = client
 
-
     @staticmethod
     def predict(i, path):
-        # Loading processed word dictionary into keras Tokenizer would be better
-        #dataframe = pandas.read_fwf('data.txt', header=None, engine='python')
-        dataframe = pandas.read_csv('data.txt', engine='python', quotechar='"', header=None)
-        dataset = dataframe.values
-
-        # Preprocess dataset
-        X = dataset[:, 0]
-        for index, item in enumerate(X):
-            X[index] = item
-
         tokenizer = Tokenizer(filters='\t\n', char_level=True)
-        tokenizer.fit_on_texts(X)
+        word_dict_file = os.path.join(path, 'word-dict.json')
+
+        with open(word_dict_file) as F:
+            txt = F.read()
+
+        txt = json.loads(txt)
+        tokenizer.word_index = txt
+
         seq = tokenizer.texts_to_sequences([i])
         max_log_length = 2083
         i_processed = sequence.pad_sequences(seq, maxlen=max_log_length)
@@ -42,9 +43,8 @@ class Threatmodel(object):
         model = load_model(os.path.join(path, 'model.h5'))
         model.load_weights(os.path.join(path, 'weights.h5'))
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        pprint(model)
         prediction = model.predict(i_processed)
-        print(prediction[0])
+        return prediction[0][0]
 
     @staticmethod
     def _get_model(url, path):
@@ -70,4 +70,4 @@ class Threatmodel(object):
             # download model
             self._get_model(m['model']['url'], path)
 
-        self.predict(i, path)
+        return self.predict(i, path)

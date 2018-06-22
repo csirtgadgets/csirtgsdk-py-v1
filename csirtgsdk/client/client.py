@@ -9,7 +9,6 @@ from csirtgsdk.utils import setup_logging, read_config
 
 from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
-from csirtgsdk.threatmodel import Threatmodel
 from csirtgsdk.search import Search
 from csirtgsdk.predict import Predict
 from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
@@ -127,8 +126,19 @@ def main():
         raise SystemExit
 
     if options.get('threatmodel'):
+        try:
+            from csirtgsdk.threatmodel import Threatmodel
+        except:
+            print("")
+            print("Missing some extra machine learning libraries required to make this work..")
+            print("$ pip install numpy keras pandas tensorflow")
+            print("")
+            raise SystemExit
+
         user, name = options['threatmodel'].split('/')
         m = Threatmodel(cli).show(user, name, options['search'])
+
+        print("Prediction: %f" % (m * 100))
 
         raise SystemExit
 
