@@ -136,10 +136,14 @@ def main():
             raise SystemExit
 
         user, name = options['threatmodel'].split('/')
-        m = Threatmodel(cli).show(user, name, options['search'])
+        q = options['search'].split(',')
+        m = Threatmodel(cli).show(user, name, q)
 
-        print("Prediction: %f" % (m * 100))
+        print("")
+        for idx, v in enumerate(q):
+            print("Prediction: %.2f%% - %s" % (m[idx] * 100, q[idx]))
 
+        print("")
         raise SystemExit
 
     if options.get('predict') or options.get('predict_stdin'):

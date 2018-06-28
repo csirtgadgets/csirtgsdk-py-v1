@@ -36,15 +36,15 @@ class Threatmodel(object):
         txt = json.loads(txt)
         tokenizer.word_index = txt
 
-        seq = tokenizer.texts_to_sequences([i])
-        max_log_length = 2083
+        seq = tokenizer.texts_to_sequences(i)
+        max_log_length = 255
         i_processed = sequence.pad_sequences(seq, maxlen=max_log_length)
 
         model = load_model(os.path.join(path, 'model.h5'))
         model.load_weights(os.path.join(path, 'weights.h5'))
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         prediction = model.predict(i_processed)
-        return prediction[0][0]
+        return prediction
 
     @staticmethod
     def _get_model(url, path):
