@@ -131,7 +131,8 @@ class Indicator(object):
                 'firsttime': self.args.firsttime,
                 'lasttime': self.args.lasttime,
                 'portlist_src': self.args.portlist_src,
-                'content': self.args.content
+                'content': self.args.content,
+                'provider': self.args.provider,
             },
             "comment": self.args.comment
         }
@@ -209,7 +210,9 @@ class Indicator(object):
                     'portlist_src': i.args.portlist_src,
                     'comment': {
                         'content': i.args.comment
-                    }
+                    },
+                    'content': i.args.content,
+                    'provider': i.args.provider,
                 } for i in indicators
                 ]
         }
