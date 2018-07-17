@@ -67,6 +67,8 @@ def main():
 
     parser.add_argument('--portlist', help="specify a portlist [eg: 22,23-35,443]")
     parser.add_argument('--protocol', help="specify TCP, UDP or ICMP")
+    parser.add_argument('--content')
+    parser.add_argument('--provider')
 
     parser.add_argument('--firsttime', help="timestamp when first seen [eg: 2015-11-23T00:00:00Z]")
     parser.add_argument('--lasttime', help="timestamp when last seen [eg: 2015-11-24T00:00:00Z], treated as 'greater "
