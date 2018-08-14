@@ -226,7 +226,8 @@ def main():
         )
 
         if data.get('indicators'):
-            print(FORMATS[options.get('format')](data=data['indicators'], cols=args.columns.split(',')))
+            for l in FORMATS[options.get('format')](data=data['indicators'], cols=args.columns.split(',')):
+                print(l)
 
 
 if __name__ == "__main__":
