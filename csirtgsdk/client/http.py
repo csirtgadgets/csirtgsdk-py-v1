@@ -86,6 +86,7 @@ class HTTP(object):
             uri = '{}{}'.format(self.remote, uri)
 
         self.logger.debug(uri)
+        self.logger.debug(params)
 
         resp = self.session.get(uri, params=params, verify=self.verify_ssl)
 
