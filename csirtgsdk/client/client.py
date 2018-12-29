@@ -203,8 +203,8 @@ def main():
         )
 
         if data.get('indicators'):
-            for l in FORMATS[options.get('format')](data=data['indicators'], cols=args.columns.split(',')):
-                print(l)
+            print(FORMATS[options.get('format')](data=data['indicators'],
+                                                 cols=args.columns.split(',')))
 
 
 if __name__ == "__main__":
