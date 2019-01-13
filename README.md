@@ -9,8 +9,7 @@ The CSIRTG Software Development Kit (SDK) for Python contains library code and e
   ```
 
 # Examples
-## CLI
-## Examples
+## CLI Examples
 ### Search for an indicator
   ```bash
   $ export CSIRTG_TOKEN=1234..
@@ -133,96 +132,96 @@ rv = indicator_create('wes/test',i)
 ### Advanced SDK
 #### Search for an indicator
 
-  ```python
-  from csirtgsdk.client import Client
-  from csirtgsdk.search import Search
-  from pprint import pprint
-  
-  remote = 'https://csirtg.io/api'
-  token = ''
-  verify_ssl = True
-  limit = 500
-  
-  indicator = 'example'
-  
-  # Initiate client object
-  cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-  
-  # Search for an indicator
-  ret = Search(cli).search(indicator, limit=limit)
-  
-  # pretty print the returned data structure
-  pprint(ret)
-  ```
+```python
+from csirtgsdk.client import Client
+from csirtgsdk.search import Search
+from pprint import pprint
+
+remote = 'https://csirtg.io/api'
+token = ''
+verify_ssl = True
+limit = 500
+
+indicator = 'example'
+
+# Initiate client object
+cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+# Search for an indicator
+ret = Search(cli).search(indicator, limit=limit)
+
+# pretty print the returned data structure
+pprint(ret)
+```
   
 #### Show a list of feeds (per user)
-  ```python
-  from csirtgsdk.client import Client
-  from csirtgsdk.feed import Feed
-  from pprint import pprint
-  
-  remote = 'https://csirtg.io/api'
-  token = ''
-  verify_ssl = True
-  
-  user = 'csirtgadgets'
-  
-  # Initiate client object
-  cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-  
-  # Return a list of feeds (per user)
-  ret = Feed(cli).index(user)
-  
-  # pprint the returned data structure
-  pprint(ret)
-  ```
+```python
+from csirtgsdk.client import Client
+from csirtgsdk.feed import Feed
+from pprint import pprint
+
+remote = 'https://csirtg.io/api'
+token = ''
+verify_ssl = True
+
+user = 'csirtgadgets'
+
+# Initiate client object
+cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+# Return a list of feeds (per user)
+ret = Feed(cli).index(user)
+
+# pprint the returned data structure
+pprint(ret)
+```
 
 #### Get a feed
-  ```python
-  from csirtgsdk.client import Client
-  from csirtgsdk.feed import Feed
-  from pprint import pprint
-  
-  remote = 'https://csirtg.io/api'
-  token = ''
-  verify_ssl = True
-  
-  user = 'csirtgadgets'
-  feed = 'uce-urls'
-  
-  # Initiate client object
-  cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-  
-  # Pull a feed
-  ret = Feed(cli).show(user, feed, limit=None)
-  
-  # pprint the returned data structure
-  pprint(ret)
-  ```
+```python
+from csirtgsdk.client import Client
+from csirtgsdk.feed import Feed
+from pprint import pprint
+
+remote = 'https://csirtg.io/api'
+token = ''
+verify_ssl = True
+
+user = 'csirtgadgets'
+feed = 'uce-urls'
+
+# Initiate client object
+cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+# Pull a feed
+ret = Feed(cli).show(user, feed, limit=None)
+
+# pprint the returned data structure
+pprint(ret)
+```
   
 #### Create a feed
-  ```python
-  from csirtgsdk.client import Client
-  from csirtgsdk.feed import Feed
-  from pprint import pprint
-  
-  remote = 'https://csirtg.io/api'
-  token = ''
-  verify_ssl = True
-  
-  user = 'csirtgadgets'
-  feed = 'scanners'
-  feed_description = 'a feed of port scanners'
-  
-  # Initiate client object
-  cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-  
-  # Create a feed
-  ret = Feed(cli).new(user, feed, description=feed_description)
-  
-  # pprint the returned data structure
-  pprint(ret)
-  ```
+```python
+from csirtgsdk.client import Client
+from csirtgsdk.feed import Feed
+from pprint import pprint
+
+remote = 'https://csirtg.io/api'
+token = ''
+verify_ssl = True
+
+user = 'csirtgadgets'
+feed = 'scanners'
+feed_description = 'a feed of port scanners'
+
+# Initiate client object
+cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+
+# Create a feed
+ret = Feed(cli).new(user, feed, description=feed_description)
+
+# pprint the returned data structure
+pprint(ret)
+```
   
 #### Submit a indicator to a feed  
 ```python
