@@ -15,7 +15,7 @@ class Indicator(object):
     """
     Represents an Indicator object
     """
-    def __init__(self, args, client=Client()):
+    def __init__(self, client, args):
         """
         :param client: csirtgsdk.client.Client object
         :param args: dict https://github.com/csirtgadgets/csirtgsdk/wiki/API#indicators
@@ -30,6 +30,10 @@ class Indicator(object):
                 'attachment': '/tmp/malware.zip'
             }).create()
         """
+
+        if not client:
+            client = Client()
+
         self.logger = logging.getLogger(__name__)
         self.client = client
 

@@ -1,6 +1,6 @@
 import pytest
 
-from csirtgsdk.client import Client
+from csirtgsdk.client.http import HTTP as Client
 
 
 def test_client():
