@@ -1,9 +1,11 @@
+from csirtgsdk.client.http import HTTP as Client
+
 
 class Feed(object):
     """
     Represents a Feed Object
     """
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         self.client = client
 
     def get_lines(self, data):

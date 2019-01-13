@@ -102,7 +102,8 @@ def main():
     if options.get('no_verify_ssl'):
         verify_ssl = False
 
-    cli = Client(remote=options['remote'], token=options['token'], verify_ssl=verify_ssl)
+    cli = Client(remote=options['remote'], token=options['token'],
+                 verify_ssl=verify_ssl)
 
     if options.get('sinkhole'):
         import sys

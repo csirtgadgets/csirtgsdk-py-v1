@@ -8,6 +8,8 @@ import hashlib
 from six import string_types
 import os.path
 
+from csirtgsdk.client.http import HTTP as Client
+
 
 class Indicator(object):
     """
@@ -28,6 +30,10 @@ class Indicator(object):
                 'attachment': '/tmp/malware.zip'
             }).create()
         """
+
+        if not client:
+            client = Client()
+
         self.logger = logging.getLogger(__name__)
         self.client = client
 

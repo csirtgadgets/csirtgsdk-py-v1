@@ -3,14 +3,14 @@ import os
 from pprint import pprint
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.feed import Feed
-from csirtgsdk.client import Client
+from csirtgsdk.client.http import HTTP as Client
 from csirtgsdk.search import Search
 
 CI_BUILD = os.environ.get('CI_BUILD', False)
 TOKEN = os.environ.get('CSIRTG_TOKEN', None)
 USER = os.environ.get('CSIRTG_USER', 'wes')
 REMOTE = os.environ.get('CSIRTG_REMOTE', 'https://csirtg.io/api')
-FEED = os.environ.get('CSIRTG_TEST_FEED', 'CI_SEARCH_TEST')
+FEED = os.environ.get('CSIRTG_TEST_FEED', 'ci_search_test')
 
 liveonly = pytest.mark.skipif(CI_BUILD is False, reason="CI_BUILD env var not set")
 

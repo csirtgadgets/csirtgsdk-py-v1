@@ -44,10 +44,18 @@ setup(
     author="Wes Young",
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
-    install_requires=reqs,
+    install_requires=[
+        'requests',
+        'prettytable',
+        'pyyaml',
+        'tailer',
+        'arrow',
+        'csirtg_indicator',
+        'websocket-client',
+    ],
     entry_points={
         'console_scripts': [
-            "csirtg=csirtgsdk.client.client:main",
+            "csirtg=csirtgsdk.cli:main",
             'csirtg-firehose=csirtgsdk.firehose:main'
         ]
     },

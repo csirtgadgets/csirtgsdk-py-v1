@@ -1,12 +1,13 @@
 import logging
 import json
+from csirtgsdk.client.http import HTTP as Client
 
 
 class Predict(object):
     """
     Predict Object class
     """
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         """
 
         :param client: client.Client object

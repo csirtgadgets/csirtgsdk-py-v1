@@ -2,7 +2,7 @@ import pytest
 import os
 from pprint import pprint
 from csirtgsdk.feed import Feed
-from csirtgsdk.client import Client
+from csirtgsdk.client.http import HTTP as Client
 
 CI_BUILD = os.environ.get('CI_BUILD', False)
 TOKEN = os.environ.get('CSIRTG_TOKEN', None)
@@ -21,13 +21,13 @@ def client():
 @liveonly
 def test_create_feed(client):
     # make sure feed isnt left over from a previous run
-    f = Feed(client).remove(USER, 'CI_BUILD_TEST')
+    f = Feed(client).remove(USER, 'ci_build_test')
 
-    f = Feed(client).new(USER, 'CI_BUILD_TEST', description='test build feed')
+    f = Feed(client).new(USER, 'ci_build_test', description='test build feed')
 
     assert f['created_at']
 
-    f = Feed(client).remove(USER, 'CI_BUILD_TEST')
+    f = Feed(client).remove(USER, 'ci_build_test')
 
     assert f == 200
 

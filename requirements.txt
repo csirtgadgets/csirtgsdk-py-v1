@@ -1,6 +1,6 @@
 requests>=2.9.1
 prettytable>=0.7.2
-PyYAML>=3.11,<4.0
+pyyaml>=4.2b1
 tailer>=0.3
 arrow>=0.6.0
 csirtg_indicator>=1.0

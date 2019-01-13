@@ -5,8 +5,8 @@ from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFa
 import os
 import random
 from time import sleep
-from csirtgsdk import VERSION
-from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN
+from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN, \
+    VERSION
 import gzip
 
 RETRIES = os.getenv('CSIRTGSDK_CLIENT_HTTP_RETRIES', 5)

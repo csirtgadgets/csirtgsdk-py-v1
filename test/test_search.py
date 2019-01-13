@@ -1,7 +1,7 @@
 import pytest
 
 from csirtgsdk.search import Search
-from csirtgsdk.client import Client
+from csirtgsdk.client.http import HTTP as Client
 
 @pytest.fixture
 def client():
