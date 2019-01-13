@@ -8,12 +8,14 @@ import hashlib
 from six import string_types
 import os.path
 
+from csirtgsdk.client.http import HTTP as Client
+
 
 class Indicator(object):
     """
     Represents an Indicator object
     """
-    def __init__(self, client, args):
+    def __init__(self, args, client=Client()):
         """
         :param client: csirtgsdk.client.Client object
         :param args: dict https://github.com/csirtgadgets/csirtgsdk/wiki/API#indicators

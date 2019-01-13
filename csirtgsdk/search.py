@@ -1,11 +1,12 @@
 import logging
+from csirtgsdk.client.http import HTTP as Client
 
 
 class Search(object):
     """
     Search Object class
     """
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         """
 
         :param client: client.Client object

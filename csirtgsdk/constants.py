@@ -1,6 +1,10 @@
 import os.path
 import sys
 
+from ._version import get_versions
+VERSION = get_versions()['version']
+del get_versions
+
 API_VERSION = os.getenv('CSIRTG_API_VERSION', '1')
 
 REMOTE = 'https://csirtg.io/api'
