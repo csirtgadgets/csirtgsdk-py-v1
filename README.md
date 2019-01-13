@@ -205,42 +205,6 @@ ret = Indicator(i).submit()
 pprint(ret)
 ```
 
-#### Submit a list of indicators to a feed
-```python
-from csirtgsdk.client import Client                                                                                                                                                                    
-from csirtgsdk.indicator import Indicator
-from pprint import pprint
-
-user = 'csirtgadgets'
-feed = 'test-feed'
-
-i = {
-    'indicator': 'example.com',
-    'feed': 'csirtgadgets',
-    'user': 'test-feed',
-    'comment': 'this is a test',
-}
-
-data = []
-
-# Initiate client object
-cli = Client()
-
-# Build a list of Indicator objects
-for x in range(0, 5):
-    data.append(
-        Indicator(cli, i)
-    )
-
-# Call the submit bulk function
-ret = cli.submit_bulk(data, user, feed)
-
-# Print the return value
-pprint(ret)
-
-{u'message': u'5 indicators received'}
-```
-  
 #### Submit a file to a feed using a filehandle
 ```python
 from csirtgsdk.indicator import Indicator
