@@ -133,22 +133,11 @@ rv = indicator_create('wes/test',i)
 #### Search for an indicator
 
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.search import Search
 from pprint import pprint
 
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
-limit = 500
-
-indicator = 'example'
-
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Search for an indicator
-ret = Search(cli).search(indicator, limit=limit)
+ret = Search().search('example')
 
 # pretty print the returned data structure
 pprint(ret)
@@ -156,21 +145,11 @@ pprint(ret)
   
 #### Show a list of feeds (per user)
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.feed import Feed
 from pprint import pprint
 
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
-
-user = 'csirtgadgets'
-
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Return a list of feeds (per user)
-ret = Feed(cli).index(user)
+ret = Feed().index('csirtgadgets')
 
 # pprint the returned data structure
 pprint(ret)
@@ -178,22 +157,11 @@ pprint(ret)
 
 #### Get a feed
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.feed import Feed
 from pprint import pprint
 
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
-
-user = 'csirtgadgets'
-feed = 'uce-urls'
-
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Pull a feed
-ret = Feed(cli).show(user, feed, limit=None)
+ret = Feed().show('csirtgadgets', 'uce-urls', limit=25)
 
 # pprint the returned data structure
 pprint(ret)
@@ -201,23 +169,11 @@ pprint(ret)
   
 #### Create a feed
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.feed import Feed
 from pprint import pprint
 
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
-
-user = 'csirtgadgets'
-feed = 'scanners'
-feed_description = 'a feed of port scanners'
-
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Create a feed
-ret = Feed(cli).new(user, feed, description=feed_description)
+ret = Feed().new('csirtgadgets', 'correlated', description='a feed of port scanners')
 
 # pprint the returned data structure
 pprint(ret)
@@ -225,15 +181,10 @@ pprint(ret)
   
 #### Submit a indicator to a feed  
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.indicator import Indicator
 from pprint import pprint
 
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
-
-record = {
+i = {
   "user": "csirtgadgets",
   "feed": "scanners",
   "indicator": "1.1.1.1",
@@ -247,11 +198,8 @@ record = {
   "attachment": "/tmp/malware.zip"
 }
 
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Submit an indicator
-ret = Indicator(cli, record).submit()
+ret = Indicator(i).submit()
 
 # pprint the returned data structure
 pprint(ret)
@@ -259,13 +207,9 @@ pprint(ret)
 
 #### Submit a list of indicators to a feed
 ```python
-from csirtgsdk.client import Client                                                                                                                                                                                    
+from csirtgsdk.client import Client                                                                                                                                                                    
 from csirtgsdk.indicator import Indicator
 from pprint import pprint
-
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
 
 user = 'csirtgadgets'
 feed = 'test-feed'
@@ -280,7 +224,7 @@ i = {
 data = []
 
 # Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
+cli = Client()
 
 # Build a list of Indicator objects
 for x in range(0, 5):
@@ -299,22 +243,17 @@ pprint(ret)
   
 #### Submit a file to a feed using a filehandle
 ```python
-from csirtgsdk.client import Client
 from csirtgsdk.indicator import Indicator
 from pprint import pprint
 
 filename = '/tmp/sample.txt'
-
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
 
 # read the file
 with open(filename) as f:
    data = f.read()
 
 # Create a dict to submit
-record = {
+i = {
    'user': 'csirtgadgets',
    'feed': 'uce-attachments',
    'tags': 'uce-attachment',
@@ -322,11 +261,8 @@ record = {
    'attachment': filename
 }
 
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Submit an indicator
-ret = Indicator(cli, record).submit()
+ret = Indicator(i).submit()
 
 # pprint the returned data structure
 pprint(ret)
@@ -336,22 +272,17 @@ pprint(ret)
 ```python
 import hashlib
 import base64
-from csirtgsdk.client import Client
 from csirtgsdk.indicator import Indicator
 from pprint import pprint
 
 filename = '/tmp/sample.txt'
-
-remote = 'https://csirtg.io/api'
-token = ''
-verify_ssl = True
 
 # read the file
 with open(filename) as f:
   data = f.read()
 
 # Create a dict to submit
-record = {
+i = {
   'user': 'csirtgadgets',
   'feed': 'uce-attachments',
   'indicator': hashlib.sha1(data).hexdigest(),
@@ -361,11 +292,8 @@ record = {
   'attachment_name': filename
 }
 
-# Initiate client object
-cli = Client(remote=remote, token=token, verify_ssl=verify_ssl)
-
 # Submit an indicator
-ret = Indicator(cli, record).submit()
+ret = Indicator(i).submit()
 
 # pprint the returned data structure
 pprint(ret)
