@@ -4,6 +4,7 @@ from pprint import pprint
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.feed import Feed
 from csirtgsdk.client.http import HTTP as Client
+from time import sleep
 
 CI_BUILD = os.environ.get('CI_BUILD', False)
 TOKEN = os.environ.get('CSIRTG_TOKEN', None)
@@ -22,6 +23,7 @@ def client():
 
 @liveonly
 def test_indicator_attachment_txt(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -45,6 +47,7 @@ def test_indicator_attachment_txt(client):
 
 @liveonly
 def test_indicator_attachment_zip(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -69,6 +72,7 @@ def test_indicator_attachment_zip(client):
 
 @liveonly
 def test_indicator_attachment_jar(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -92,6 +96,7 @@ def test_indicator_attachment_jar(client):
 
 @liveonly
 def test_indicator_attachment_docx(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -115,6 +120,7 @@ def test_indicator_attachment_docx(client):
 
 @liveonly
 def test_indicator_attachment_doc(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']
@@ -138,6 +144,7 @@ def test_indicator_attachment_doc(client):
 
 @liveonly
 def test_indicator_attachment_pdf(client):
+    sleep(3)
     f = Feed(client).new(USER, FEED, description='test build feed')
 
     assert f['created_at']

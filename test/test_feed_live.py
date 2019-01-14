@@ -1,6 +1,7 @@
 import pytest
 import os
 from pprint import pprint
+from time import sleep
 from csirtgsdk.feed import Feed
 from csirtgsdk.client.http import HTTP as Client
 
@@ -20,6 +21,7 @@ def client():
 
 @liveonly
 def test_create_feed(client):
+    sleep(3)
     # make sure feed isnt left over from a previous run
     f = Feed(client).remove(USER, 'ci_build_test')
 

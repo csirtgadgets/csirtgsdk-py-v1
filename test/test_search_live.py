@@ -1,6 +1,7 @@
 import pytest
 import os
 from pprint import pprint
+from time import sleep
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.feed import Feed
 from csirtgsdk.client.http import HTTP as Client
@@ -25,7 +26,7 @@ def client():
 
 @liveonly
 def test_indicator_search_fqdn(client):
-
+    sleep(3)
     INDICATOR = 'example123123123.com'
 
     # create feed and test created feed
@@ -60,7 +61,7 @@ def test_indicator_search_fqdn(client):
 
 @liveonly
 def test_indicator_search_ipv4(client):
-
+    sleep(3)
     INDICATOR = '1.1.1.1'
 
     # create feed and test created feed
@@ -95,7 +96,7 @@ def test_indicator_search_ipv4(client):
 
 @liveonly
 def test_indicator_search_ipv6(client):
-
+    sleep(3)
     INDICATOR = '2001:4860:4860::8888'
 
     # create feed and test created feed
@@ -130,7 +131,7 @@ def test_indicator_search_ipv6(client):
 
 @liveonly
 def test_indicator_search_email(client):
-
+    sleep(3)
     INDICATOR = 'johndoe@example.com'
 
     # create feed and test created feed
@@ -165,7 +166,7 @@ def test_indicator_search_email(client):
 
 @liveonly
 def test_indicator_search_url(client):
-
+    sleep(3)
     INDICATOR = 'http://www.example.com/test/index.html'
 
     # create feed and test created feed

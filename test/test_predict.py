@@ -2,6 +2,7 @@ import pytest
 import os
 
 from csirtgsdk.predict import Predict
+from time import sleep
 
 CI_BUILD = os.environ.get('CI_BUILD', False)
 TOKEN = os.environ.get('CSIRTG_TOKEN', None)
@@ -19,7 +20,7 @@ def test_predict():
 
 @liveonly
 def test_predict_live():
-
+    sleep(3)
     assert Predict().get("http://example.com") == 0
 
     assert not Predict().get("http://ren-isac.net")
