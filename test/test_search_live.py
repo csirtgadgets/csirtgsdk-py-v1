@@ -1,6 +1,5 @@
 import pytest
 import os
-from pprint import pprint
 from time import sleep
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.feed import Feed

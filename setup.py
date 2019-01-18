@@ -55,8 +55,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            "csirtg=csirtgsdk.cli:main",
-            'csirtg-firehose=csirtgsdk.firehose:main'
+            "csirtg=csirtgsdk.client.cli:main",
+            'csirtg-firehose=csirtgsdk.client.firehose:main'
         ]
     },
     test_suite="test"

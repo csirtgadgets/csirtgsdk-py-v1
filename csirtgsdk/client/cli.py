@@ -5,15 +5,33 @@ from argparse import RawDescriptionHelpFormatter
 import textwrap
 import logging
 
-from csirtgsdk.utils import setup_logging, read_config
-
 from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
 from csirtgsdk.search import Search
 from csirtgsdk.predict import Predict
 from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
 from csirtg_indicator.format import FORMATS
-from csirtgsdk.client.http import HTTP as Client
+
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
+
+
+def setup_logging(args):
+    """
+    Sets up basic logging
+
+    :param args: ArgParse arguments
+    :return: nothing. sets logger up globally
+    """
+    loglevel = logging.WARNING
+    if args.verbose:
+        loglevel = logging.INFO
+    if args.debug:
+        loglevel = logging.DEBUG
+
+    console = logging.StreamHandler()
+    logging.getLogger('').setLevel(loglevel)
+    console.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.getLogger('').addHandler(console)
 
 
 def main():
@@ -58,19 +76,22 @@ def main():
     parser.add_argument('--user', help="specify a user")
     parser.add_argument('--feed', help="specify feed name")
     parser.add_argument('--feed-new', help='help specify a new feed')
-    parser.add_argument('--indicator', dest='indicator', help="specify an indicator [eg: 1.2.3.4, example.com, "
-                                                           "http://example.com/1.html")
+    parser.add_argument('--indicator', dest='indicator',
+                        help="specify an indicator [eg: 1.2.3.4, example.com, "
+                        "http://example.com/1.html")
     parser.add_argument('--indicator-new', help='create a new indicator')
     parser.add_argument('--tags', help="specify tags")
     parser.add_argument('--comment', help="enter a comment for the indicator")
     parser.add_argument('--description', help="specify a feed description")
 
-    parser.add_argument('--portlist', help="specify a portlist [eg: 22,23-35,443]")
+    parser.add_argument('--portlist',
+                        help="specify a portlist [eg: 22,23-35,443]")
     parser.add_argument('--protocol', help="specify TCP, UDP or ICMP")
     parser.add_argument('--content')
     parser.add_argument('--provider')
 
-    parser.add_argument('--firsttime', help="timestamp when first seen [eg: 2015-11-23T00:00:00Z]")
+    parser.add_argument('--firsttime',
+                        help="timestamp when first seen [eg: 2015-11-23T00:00:00Z]")
     parser.add_argument('--lasttime', help="timestamp when last seen [eg: 2015-11-24T00:00:00Z], treated as 'greater "
                                            "than'")
 
@@ -80,7 +101,6 @@ def main():
     parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF', action="store_true")
 
     parser.add_argument('--sinkhole', action='store_true')
-
 
     # Process arguments
     args = parser.parse_args()
@@ -94,17 +114,14 @@ def main():
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
+    if not TOKEN:
+        print('~/.csirtg.yml configuration no longer supported')
+        print('Please setup your environment variables:')
+        print("")
+        print("export CSIRTG_TOKEN=1234..")
+        raise SystemExit
+
     options = vars(args)
-    o = read_config(args)
-    options.update(o)
-
-    verify_ssl = True
-    if options.get('no_verify_ssl'):
-        verify_ssl = False
-
-    cli = Client(remote=options['remote'], token=options['token'],
-                 verify_ssl=verify_ssl)
-
     if options.get('sinkhole'):
         import sys
         if not sys.stdin.isatty():
@@ -114,7 +131,7 @@ def main():
             raise SystemExit
 
         from csirtgsdk.sinkhole import Sinkhole
-        ret = Sinkhole(cli).post(stdin)
+        ret = Sinkhole().post(stdin)
 
         if ret.get('status') == 'unauthorized':
             logger.error('unauthorized')
@@ -131,7 +148,7 @@ def main():
         if options.get('predict'):
             logger.info("Searching for: {0}".format(options.get('predict')))
             predict = options['predict']
-            ret = Predict(cli).get(predict)
+            ret = Predict().get(predict)
             print("Prediction Score: %s - %s" % (ret, predict))
         else:
             import sys
@@ -139,7 +156,7 @@ def main():
                 for predict in sys.stdin.read().split("\n"):
                     if predict == '':
                         continue
-                    ret = Predict(cli).get(predict)
+                    ret = Predict().get(predict)
                     print("Prediction Score: %s - %s" % (ret, predict))
             else:
                 logger.error("No data passed via STDIN")
@@ -149,28 +166,36 @@ def main():
 
     if options.get('search'):
         logger.info("Searching for: {0}".format(options.get('search')))
-        ret = Search(cli).search(options.get('search'), limit=options['limit'])
+        ret = Search().search(options.get('search'), limit=options['limit'])
         if isinstance(ret, dict):
             ret = [ret]
 
-        print(FORMATS[options.get('format')](data=ret, cols=args.columns.split(',')))
+        print(FORMATS[options.get('format')](data=ret,
+                                             cols=args.columns.split(',')))
         raise SystemExit
 
     if options.get('indicator_new') or options.get('attachment'):
         options['indicator'] = options['indicator_new']
-        logger.info("Creating indicator in feed {0} for user {1}".format(options['feed'], options['user']))
-        ret = Indicator(cli, options).submit()
+        logger.info("Creating indicator in feed {0} for user {1}"
+                    .format(options['feed'], options['user']))
+        try:
+            ret = Indicator(options).submit()
+        except Exception as e:
+            print(e)
+            raise SystemExit
+
         logger.info('posted: {0}'.format(ret['location']))
 
         if isinstance(ret, dict):
             ret = [ret]
 
-        print(FORMATS[options.get('format')](data=ret, cols=args.columns.split(',')))
+        print(FORMATS[options.get('format')](data=ret,
+                                             cols=args.columns.split(',')))
         raise SystemExit
 
     if options.get('feeds'):
         logger.info("Searching feeds for user: {0}".format(options['user']))
-        f = Feed(cli)
+        f = Feed()
         feeds = f.index(options['user'])
         for l in f.get_lines(feeds):
             print(l)
@@ -183,9 +208,11 @@ def main():
         if not options.get('description'):
             parser.error('--description is required')
 
-        logger.info("Creating feed {0} for user {1}".format(options['feed_new'], options['user']))
-        f = Feed(cli)
-        feed = f.new(options['user'], options['feed_new'], description=options['description'])
+        logger.info("Creating feed {0} for user {1}"
+                    .format(options['feed_new'], options['user']))
+        f = Feed()
+        feed = f.new(options['user'], options['feed_new'],
+                     description=options['description'])
         for l in f.get_lines(feed):
             print(l)
 
@@ -195,8 +222,9 @@ def main():
         if not options.get('user'):
             parser.error('--user is required')
 
-        logger.info("Fetching feed {0} for user {1}".format(options['feed'], options['user']))
-        data = Feed(cli).show(
+        logger.info("Fetching feed {0} for user {1}"
+                    .format(options['feed'], options['user']))
+        data = Feed().show(
                 options['user'],
                 options['feed'],
                 limit=options['limit'],

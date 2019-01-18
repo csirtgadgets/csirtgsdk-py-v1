@@ -1,5 +1,3 @@
-import pytest
-
 from csirtgsdk.client.http import HTTP as Client
 
 

@@ -12,15 +12,14 @@ REMOTE = os.getenv('CSIRTG_REMOTE', REMOTE)
 
 TOKEN = os.getenv('CSIRTG_TOKEN', None)
 
-LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
-
-LIMIT = 500
+LIMIT = 25
 LIMIT = os.getenv('CSIRTG_LIMIT', LIMIT)
 
-TIMEOUT = 300
+TIMEOUT = 30
 TIMEOUT = os.getenv('CSIRTG_TIMEOUT', TIMEOUT)
 
-COLUMNS = "user,feed,indicator,firsttime,lasttime,count,comments,protocol,portlist,tags,description,cc,asn,asn_desc"
+COLUMNS = "user,feed,indicator,firsttime,lasttime,count,comments,protocol," \
+          "portlist,tags,description,cc,asn,asn_desc"
 COLUMNS = os.getenv('CSIRTG_COLUMNS', COLUMNS)
 COLUMNS = COLUMNS.split(',')
 
