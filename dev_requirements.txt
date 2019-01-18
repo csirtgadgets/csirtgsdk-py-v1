@@ -1,6 +1,5 @@
-setuptools>=18.4
-coverage>=4.2
-pytest>=2.9.1
-pytest-cov>=2.2.1
+coverage>=4.5
+pytest>=4.1
+pytest-cov>=2.6
 -r requirements.txt
 
