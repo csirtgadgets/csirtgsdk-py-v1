@@ -1,15 +1,10 @@
 import pytest
 
 from csirtgsdk.indicator import Indicator
-from csirtgsdk.client.http import HTTP as Client
-
-@pytest.fixture
-def client():
-    return Client()
 
 
-def test_indicator(client):
-    f = Indicator(client, {
+def test_indicator():
+    f = Indicator({
         'feed': 'testfeed',
         'user': 'testuser',
         'indicator': 'example.com',
@@ -17,4 +12,4 @@ def test_indicator(client):
     })
 
     assert f.client
-    assert f.args.indicator == 'example.com'
+    assert f.indicator.indicator == 'example.com'

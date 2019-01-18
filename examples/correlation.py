@@ -4,14 +4,13 @@ from argparse import RawDescriptionHelpFormatter
 import textwrap
 from csirtgsdk.constants import LOG_FORMAT
 import json
-from pprint import pprint
 from datetime import datetime
 from csirtgsdk.indicator import Indicator
 import pickle
 import os
 
 from csirtgsdk.client.http import HTTP as Client
-from csirtgsdk.firehose import DefaultHandler as FirehoseHandler
+from csirtgsdk.client.firehose import DefaultHandler as FirehoseHandler
 
 REMOTE = 'wss://csirtg.io/firehose'
 USER = os.getenv('CSIRTG_USER')

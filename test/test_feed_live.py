@@ -1,6 +1,5 @@
 import pytest
 import os
-from pprint import pprint
 from time import sleep
 from csirtgsdk.feed import Feed
 from csirtgsdk.client.http import HTTP as Client

@@ -1,5 +1,4 @@
 import logging
-import json
 from csirtgsdk.client.http import HTTP as Client
 
 

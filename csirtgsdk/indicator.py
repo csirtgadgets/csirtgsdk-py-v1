@@ -1,12 +1,9 @@
-import csirtgsdk.utils as utils
-import arrow
 import logging
 import base64
-import binascii
-from pprint import pprint
 import hashlib
-from six import string_types
+from csirtg_indicator import Indicator as I
 import os.path
+import json
 
 from csirtgsdk.client.http import HTTP as Client
 
@@ -14,15 +11,16 @@ from csirtgsdk.client.http import HTTP as Client
 class Indicator(object):
     """
     Represents an Indicator object
+    https://github.com/csirtgadgets/csirtgsdk/wiki/API#indicators
     """
-    def __init__(self, client, args):
+    def __init__(self, kwargs):
         """
         :param client: csirtgsdk.client.Client object
-        :param args: dict https://github.com/csirtgadgets/csirtgsdk/wiki/API#indicators
+        :param kwargs: dict of Indicator
         :return: Indicator object
 
         Example:
-            Indicator(cli, {
+            Indicator({
                 'indicator': 'example.org',
                 'tags': 'botnet',
                 'lasttime': '2015-01-01T00:00:59Z',
@@ -31,28 +29,21 @@ class Indicator(object):
             }).create()
         """
 
-        if not client:
-            client = Client()
-
         self.logger = logging.getLogger(__name__)
-        self.client = client
+        self.client = Client()
 
-        required = set(['user', 'feed'])
+        required = {'user', 'feed'}
 
-        if args is None or len(required - set(args.keys())) > 0:
+        if kwargs is None or len(required - set(kwargs.keys())) > 0:
             raise Exception("invalid arguments. missing: {}"
-                            .format(required-set(args.keys())))
+                            .format(required-set(kwargs.keys())))
 
-        self.args = utils.Map(args)
+        self.user = kwargs.pop('user')
+        self.feed = kwargs.pop('feed')
+        self.comment = kwargs.pop('comment', None)
+        self.attachment = kwargs.pop('attachment', None)
 
-        if self.args.tags and isinstance(self.args.tags, string_types):
-            self.args.tags = self.args.tags.split(',')
-        
-        if self.args.firsttime:
-            self.args.firsttime = arrow.get(self.args.firsttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-
-        if self.args.lasttime:
-            self.args.lasttime = arrow.get(self.args.lasttime).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.indicator = I(**kwargs)
 
     def show(self, user, feed, id):
         """
@@ -116,7 +107,8 @@ class Indicator(object):
         Example:
             ret = Indicator.comments('csirtgadgets','port-scanners', '1234')
         """
-        uri = '/users/{}/feeds/{}/indicators/{}/comments'.format(user, feed, id)
+        uri = '/users/{}/feeds/{}/indicators/{}/comments'\
+            .format(user, feed, id)
         return self.client.get(uri)
 
     def create(self):
@@ -125,26 +117,18 @@ class Indicator(object):
 
         :return: Indicator Object
         """
-        uri = '/users/{0}/feeds/{1}/indicators'.format(self.args.user, self.args.feed)
+        uri = '/users/{0}/feeds/{1}/indicators'\
+            .format(self.user, self.feed)
 
         data = {
-            "indicator": {
-                "indicator": self.args.indicator,
-                "tags": self.args.tags,
-                "description": self.args.description,
-                "portlist": self.args.portlist,
-                "protocol": self.args.protocol,
-                'firsttime': self.args.firsttime,
-                'lasttime': self.args.lasttime,
-                'portlist_src': self.args.portlist_src,
-                'content': self.args.content,
-                'provider': self.args.provider,
-            },
-            "comment": self.args.comment
+            "indicator": json.loads(str(self.indicator)),
+            "comment": self.comment,
         }
 
-        if self.args.attachment:
-            attachment = self._file_to_attachment(self.args.attachment, filename=self.args.attachment_name)
+        if self.attachment:
+            attachment = self._file_to_attachment(
+                self.attachment, filename=self.attachment_name)
+
             data['attachment'] = {
                 'data': attachment['data'],
                 'filename': attachment['filename']
@@ -157,8 +141,6 @@ class Indicator(object):
             raise Exception('Missing indicator')
 
         return self.client.post(uri, data)
-
-    submit = create
 
     def create_bulk(self, indicators, user, feed):
         from .constants import API_VERSION
@@ -222,6 +204,7 @@ class Indicator(object):
                 } for i in indicators
                 ]
         }
-        return self.client._post(uri, data)
+        return self.client.post(uri, data)
 
+    submit = create
     submit_bulk = create_bulk

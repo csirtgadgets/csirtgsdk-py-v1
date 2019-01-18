@@ -1,13 +1,14 @@
 import json
 import requests
 import logging
-from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, SubmissionFailed, RateLimitExceeded, SystemBusy
+from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, \
+    SubmissionFailed, RateLimitExceeded, SystemBusy
 import os
 import random
 from time import sleep
-from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, LIMIT, TOKEN, \
+
+from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, TOKEN, \
     VERSION
-import gzip
 
 RETRIES = os.getenv('CSIRTGSDK_CLIENT_HTTP_RETRIES', 5)
 RETRIES_DELAY = os.getenv('CSIRTGSDK_CLIENT_HTTP_RETRIES_DELAY', '30,60')
@@ -22,7 +23,8 @@ if os.getenv('CSIRTGSDK_HTTP_TRACE'):
 
 
 class HTTP(object):
-    def __init__(self, remote=REMOTE, token=TOKEN, proxy=None, timeout=TIMEOUT, verify_ssl=True):
+    def __init__(self, remote=REMOTE, token=TOKEN, proxy=None,
+                 timeout=TIMEOUT, verify_ssl=True):
 
         self.logger = logger
         self.remote = remote
@@ -35,15 +37,16 @@ class HTTP(object):
             self.logger.debug('TLS Verification is OFF')
 
         self.session = requests.session()
-        self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}'.format(str(API_VERSION))
-        self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'.format(VERSION)
+        self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}'\
+            .format(str(API_VERSION))
+        self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'\
+            .format(VERSION)
         self.session.headers['Authorization'] = 'Token token=' + self.token
         self.session.headers['Content-Type'] = 'application/json'
         self.session.headers['Accept-Encoding'] = 'gzip'
 
-        #self.logger.debug(self.session.headers)
-
-    def _check_return(self, resp, expects=[200, 201]):
+    @staticmethod
+    def _check_return(resp, expects=[200, 201]):
         if isinstance(expects, int):
             expects = [expects]
 
@@ -70,6 +73,32 @@ class HTTP(object):
 
         raise RuntimeError(resp.text)
 
+    def _make_request(self, uri, params={}, data=None):
+        n = 0
+        while n != RETRIES:
+            if len(params) > 0:
+                resp = self.session.get(uri, params=params)
+            else:
+                resp = self.session.post(uri, data=json.dumps(data))
+
+            try:
+                self._check_return(resp)
+                return json.loads(resp.text)
+
+            except Exception as e:
+                logger.error(e)
+                if resp.status_code not in [500, 501, 502, 503, 504]:
+                    raise e
+
+            logger.info('random retrying in %.00fs' % RETRIES_DELAY)
+            sleep(RETRIES_DELAY)
+
+            n += 1
+
+        if n == RETRIES:
+            raise SystemBusy("Something went wrong, "
+                             "check your data and/or try again later..")
+
     def _get(self, uri, params={}):
         """
         HTTP GET function
@@ -85,16 +114,7 @@ class HTTP(object):
         if not uri.startswith(self.remote):
             uri = '{}{}'.format(self.remote, uri)
 
-        self.logger.debug(uri)
-        self.logger.debug(params)
-
-        resp = self.session.get(uri, params=params, verify=self.verify_ssl)
-
-        self._check_return(resp)
-        self.logger.debug(resp.headers)
-        return json.loads(resp.text)
-
-    get = _get
+        return self._make_request(uri, params)
 
     def _post(self, uri, data):
         """
@@ -108,35 +128,11 @@ class HTTP(object):
             ret = cli.post('/indicators', { 'indicator': 'example.com' })
         """
 
-        if not uri.startswith(self.remote):  # append self.remote if the uri doesn't include it
+        if not uri.startswith(self.remote):
             uri = '{}/{}'.format(self.remote, uri)
             self.logger.debug(uri)
 
-        data = json.dumps(data)
-
-        resp = self.session.post(uri, data=data, verify=self.verify_ssl)
-
-        n = RETRIES
-        try:
-            self._check_return(resp)
-            n = 0
-        except Exception as e:
-            logger.error(e)
-            if resp.status_code not in [500, 501, 502, 503, 504]:
-                raise e
-
-        while n != 0:
-            logger.info('setting random retry interval to spread out the load')
-            logger.info('retrying in %.00fs' % RETRIES_DELAY)
-            sleep(RETRIES_DELAY)
-
-            resp = self.session.post(uri, data=data, verify=self.verify_ssl)
-            if self._check_return(resp):
-                break
-
-            if n == 0:
-                raise SystemBusy('system seems busy.. try again later')
-
-        return json.loads(resp.text)
+        return self._make_request(uri, data=data)
 
     post = _post
+    get = _get
