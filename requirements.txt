@@ -1,8 +1,7 @@
 requests>=2.9.1
 prettytable>=0.7.2
-pyyaml>=4.2b1
 tailer>=0.3
 arrow>=0.6.0
-csirtg_indicator>=1.0
+csirtg_indicator>=1.0,<2.0
 # need to fix before upgrading
 websocket-client==0.46.0
