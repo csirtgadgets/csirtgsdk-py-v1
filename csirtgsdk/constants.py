@@ -26,6 +26,8 @@ COLUMNS = COLUMNS.split(',')
 MAX_FIELD_SIZE = 30
 MAX_FIELD_SIZE = os.getenv('CSIRTG_MAX_FIELD_SIZE', MAX_FIELD_SIZE)
 
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
+
 PYVERSION = 2
 if sys.version_info > (3,):
     PYVERSION = 3

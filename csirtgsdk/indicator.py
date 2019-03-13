@@ -41,6 +41,7 @@ class Indicator(object):
         self.user = kwargs.pop('user')
         self.feed = kwargs.pop('feed')
         self.comment = kwargs.pop('comment', None)
+        self.content = kwargs.pop('content', None)
         self.attachment = kwargs.pop('attachment', None)
 
         self.indicator = I(**kwargs)
@@ -123,6 +124,7 @@ class Indicator(object):
         data = {
             "indicator": json.loads(str(self.indicator)),
             "comment": self.comment,
+            "content": self.content
         }
 
         if self.attachment:
