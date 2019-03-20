@@ -143,8 +143,6 @@ class Indicator(object):
         if not data['indicator'].get('indicator'):
             raise Exception('Missing indicator')
 
-        from pprint import pprint
-        pprint(data)
         return self.client.post(uri, data)
 
     def create_bulk(self, indicators, user, feed):
