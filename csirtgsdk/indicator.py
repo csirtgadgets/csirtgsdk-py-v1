@@ -43,6 +43,7 @@ class Indicator(object):
         self.comment = kwargs.pop('comment', None)
         self.content = kwargs.pop('content', None)
         self.attachment = kwargs.pop('attachment', None)
+        self.attachment_name = kwargs.pop('attachment_name', None)
 
         self.indicator = I(**kwargs)
 
@@ -71,7 +72,7 @@ class Indicator(object):
 
         if os.path.isfile(blob):
             filename = blob
-            with open(blob, encoding="ISO-8859-1") as f:
+            with open(blob,'rb') as f:
                 data = f.read()
         else:
             if filename is None:
@@ -81,14 +82,14 @@ class Indicator(object):
             except TypeError:
                 raise RuntimeError('attachment must be base64 encoded')
 
-        md5 = hashlib.md5(data.encode('utf-8')).hexdigest()
-        sha1 = hashlib.sha1(data.encode('utf-8')).hexdigest()
-        sha256 = hashlib.sha256(data.encode('utf-8')).hexdigest()
-        sha512 = hashlib.sha512(data.encode('utf-8')).hexdigest()
-        data = base64.b64encode(data.encode('utf-8'))
+        md5 = hashlib.md5(data).hexdigest()
+        sha1 = hashlib.sha1(data).hexdigest()
+        sha256 = hashlib.sha256(data).hexdigest()
+        sha512 = hashlib.sha512(data).hexdigest()
+        data = base64.b64encode(data).decode('utf-8')
 
         return {
-            'data': data.decode("utf-8"),
+            'data': data,
             'filename': filename,
             'sha1': sha1,
             'md5': md5,
@@ -142,6 +143,8 @@ class Indicator(object):
         if not data['indicator'].get('indicator'):
             raise Exception('Missing indicator')
 
+        from pprint import pprint
+        pprint(data)
         return self.client.post(uri, data)
 
     def create_bulk(self, indicators, user, feed):
