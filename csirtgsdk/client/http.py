@@ -1,11 +1,12 @@
 import json
 import requests
 import logging
-from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, \
-    SubmissionFailed, RateLimitExceeded, SystemBusy
 import os
 import random
 from time import sleep
+
+from csirtgsdk.exceptions import AuthError, TimeoutError, NotFound, \
+    SubmissionFailed, RateLimitExceeded, SystemBusy
 
 from csirtgsdk.constants import API_VERSION, TIMEOUT, REMOTE, TOKEN, \
     VERSION
@@ -26,7 +27,6 @@ class HTTP(object):
     def __init__(self, remote=REMOTE, token=TOKEN, proxy=None,
                  timeout=TIMEOUT, verify_ssl=True):
 
-        self.logger = logger
         self.remote = remote
         self.token = str(token)
         self.proxy = proxy
@@ -34,7 +34,7 @@ class HTTP(object):
         self.verify_ssl = verify_ssl
 
         if not self.verify_ssl:
-            self.logger.debug('TLS Verification is OFF')
+            logger.info('TLS Verification is OFF')
 
         self.session = requests.session()
         self.session.headers["Accept"] = 'application/vnd.csirtg.v{0}'\
@@ -130,7 +130,7 @@ class HTTP(object):
 
         if not uri.startswith(self.remote):
             uri = '{}/{}'.format(self.remote, uri)
-            self.logger.debug(uri)
+            logger.debug(uri)
 
         return self._make_request(uri, data=data)
 

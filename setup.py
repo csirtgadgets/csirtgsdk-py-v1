@@ -3,9 +3,11 @@ import os
 import sys
 import versioneer
 
-with open('requirements.txt') as f:
-    reqs = f.read().splitlines()
-
+if sys.version_info < (3, 5):
+    print("\n")
+    print("This requires python 3.5 or higher")
+    print("\n")
+    raise SystemExit
 
 # https://www.pydanny.com/python-dot-py-tricks.html
 if sys.argv[-1] == 'test':
@@ -18,9 +20,9 @@ if sys.argv[-1] == 'test':
         modules = map(__import__, test_requirements)
     except ImportError as e:
         err_msg = e.message.replace("No module named ", "")
-        msg = "%s is not installed. Install your test requirments." % err_msg
+        msg = "%s is not installed. Install your test requirements." % err_msg
         raise ImportError(msg)
-    r = os.system('py.test test -v --cov=csirtgsdk --cov-fail-under=25')
+    r = os.system('py.test test -v --cov=csirtgsdk --cov-fail-under=35 --pep8')
     if r == 0:
         sys.exit()
     else:
@@ -47,7 +49,6 @@ setup(
     install_requires=[
         'requests',
         'prettytable',
-        'pyyaml',
         'tailer',
         'arrow',
         'csirtg_indicator',

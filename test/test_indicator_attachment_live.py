@@ -11,7 +11,9 @@ USER = os.environ.get('CSIRTG_USER', 'wes')
 REMOTE = os.environ.get('CSIRTG_REMOTE', 'https://csirtg.io/api')
 FEED = os.environ.get('CSIRTG_FEED', 'ci_attachment_test')
 
-liveonly = pytest.mark.skipif(CI_BUILD is False, reason="CI_BUILD env var not set")
+liveonly = pytest.mark.skipif(CI_BUILD is False,
+                              reason="CI_BUILD env var not set")
+
 
 @pytest.fixture
 def client():
@@ -20,6 +22,7 @@ def client():
         remote=REMOTE
     )
 
+
 @liveonly
 def test_indicator_attachment_txt(client):
     sleep(3)
@@ -27,7 +30,7 @@ def test_indicator_attachment_txt(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/message.eml',
@@ -44,6 +47,7 @@ def test_indicator_attachment_txt(client):
     f = Feed(client).remove(USER, FEED)
     assert f == 200
 
+
 @liveonly
 def test_indicator_attachment_zip(client):
     sleep(3)
@@ -51,7 +55,7 @@ def test_indicator_attachment_zip(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/malware.jar.zip',
@@ -76,7 +80,7 @@ def test_indicator_attachment_jar(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/malware.jar',
@@ -93,6 +97,7 @@ def test_indicator_attachment_jar(client):
     f = Feed(client).remove(USER, FEED)
     assert f == 200
 
+
 @liveonly
 def test_indicator_attachment_docx(client):
     sleep(3)
@@ -100,7 +105,7 @@ def test_indicator_attachment_docx(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/c..docx',
@@ -117,6 +122,7 @@ def test_indicator_attachment_docx(client):
     f = Feed(client).remove(USER, FEED)
     assert f == 200
 
+
 @liveonly
 def test_indicator_attachment_doc(client):
     sleep(3)
@@ -124,7 +130,7 @@ def test_indicator_attachment_doc(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/business_relationship.doc',
@@ -141,6 +147,7 @@ def test_indicator_attachment_doc(client):
     f = Feed(client).remove(USER, FEED)
     assert f == 200
 
+
 @liveonly
 def test_indicator_attachment_pdf(client):
     sleep(3)
@@ -148,7 +155,7 @@ def test_indicator_attachment_pdf(client):
 
     assert f['created_at']
 
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'attachment': 'samples/hello_world.pdf',

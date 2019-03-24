@@ -3,6 +3,7 @@ import pytest
 from csirtgsdk.feed import Feed
 from csirtgsdk.client.http import HTTP as Client
 
+
 @pytest.fixture
 def client():
     return Client()

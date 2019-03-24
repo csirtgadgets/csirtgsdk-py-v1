@@ -1,6 +1,6 @@
 import pytest
 
-from csirtgsdk.search import Search
+from csirtgsdk.sinkhole import Sinkhole
 from csirtgsdk.client.http import HTTP as Client
 
 
@@ -10,6 +10,6 @@ def client():
 
 
 def test_search(client):
-    f = Search(client)
+    f = Sinkhole(client)
 
     assert f.client

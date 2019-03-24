@@ -26,5 +26,5 @@ class Search(object):
         uri = '{}/search?q={}&limit={}'.format(self.client.remote, q, limit)
         self.logger.debug(uri)
 
-        body = self.client.get(uri)
+        body = self.client.get('/search', params={'q': q, 'limit': limit})
         return body

@@ -1,4 +1,5 @@
 from csirtgsdk.client.http import HTTP as Client
+from prettytable import PrettyTable
 
 
 class Feed(object):
@@ -8,8 +9,8 @@ class Feed(object):
     def __init__(self, client=Client()):
         self.client = client
 
-    def get_lines(self, data):
-        from prettytable import PrettyTable
+    @staticmethod
+    def get_lines(data):
         cols = ['name', 'description', 'license', 'updated_at']
         t = PrettyTable(cols)
         if isinstance(data, dict):
@@ -79,18 +80,19 @@ class Feed(object):
         uri = self.client.remote + '/users/{0}/feeds'.format(user)
         return self.client.get(uri)
 
-    def show(self, user, name, limit=None, lasttime=None):
+    def show(self, user, name, limit=None, last_at=None):
         """
         Returns a specific Feed from the API
 
         :param user: feed username
         :param name: feed name
         :param limit: limit the results
-        :param lasttime: only show >= lasttime
+        :param last_at: only show >= last_at
         :return: dict
 
         Example:
             ret = feed.show('csirtgadgets', 'port-scanners', limit=5)
         """
         uri = self.client.remote + '/users/{0}/feeds/{1}'.format(user, name)
-        return self.client.get(uri, params={'limit': limit, 'lasttime': lasttime})
+        return self.client.get(uri, params={'limit': limit, 'last_at':
+            last_at})

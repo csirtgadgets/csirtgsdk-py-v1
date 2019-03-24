@@ -1,5 +1,4 @@
-import os
-import os.path
+import sys
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import textwrap
@@ -7,70 +6,50 @@ import logging
 
 from csirtgsdk.feed import Feed
 from csirtgsdk.indicator import Indicator
-from csirtgsdk.search import Search
-from csirtgsdk.predict import Predict
-from csirtgsdk.constants import TIMEOUT, REMOTE, LIMIT, TOKEN, COLUMNS
+from csirtgsdk import search
+from csirtgsdk.constants import LIMIT, TOKEN, COLUMNS
 from csirtg_indicator.format import FORMATS
+from csirtgsdk.sinkhole import Sinkhole
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 
 
-def setup_logging(args):
-    """
-    Sets up basic logging
-
-    :param args: ArgParse arguments
-    :return: nothing. sets logger up globally
-    """
-    loglevel = logging.WARNING
-    if args.verbose:
-        loglevel = logging.INFO
-    if args.debug:
-        loglevel = logging.DEBUG
-
-    console = logging.StreamHandler()
-    logging.getLogger('').setLevel(loglevel)
-    console.setFormatter(logging.Formatter(LOG_FORMAT))
-    logging.getLogger('').addHandler(console)
-
-
 def main():
     parser = ArgumentParser(
-        description=textwrap.dedent('''\
-        example usage:
-            $ csirtg --search example.com
-            $ csirtg --user csirtgadgets --feeds
-            $ csirtg --user csirtgadgets --feed uce-urls
-            $ csirtg --user csirtgadgets --feed-new scanners --description 'a feed of port scanners'
-            $ csirtg --user csirtgadgets --feed scanners --indicator-new 1.1.1.1 --tags scanner --comment
-              'this is a port scanner'
-            $ csirtg --user csirtgadgets --feed uce-attachments --new --attachment 'fax.zip'
-              --description 'file attached in uce email'
-        '''),
+        description=textwrap.dedent("""
+example usage:
+  $ csirtg --search example.com
+  $ csirtg --user csirtgadgets --feeds 
+  $ csirtg --user csirtgadgets --feed uce-urls
+  $ csirtg --user csirtgadgets --feed-new scanners --description 'scanners'
+  $ csirtg --user csirtgadgets --feed scanners --indicator-new 1.1.1.1 \
+--tags scanner
+  $ csirtg --user csirtgadgets --feed uce-attachments --new \
+--attachment 'fax.zip' --description 'file attached in uce email'
+        """),
         formatter_class=RawDescriptionHelpFormatter,
         prog='csirtg'
     )
 
-    parser.add_argument("-v", "--verbose", action="count", help="set verbosity level [default: %(default)s]")
+    parser.add_argument("-v", "--verbose", action="count",
+                        help="set verbosity level [default: %(default)s]")
     parser.add_argument('-d', '--debug', action="store_true")
 
     parser.add_argument('--token', help="specify token", default=TOKEN)
-    parser.add_argument('-l', '--limit', help="specify results limit [default: %(default)s]", default=LIMIT)
-    parser.add_argument('--remote', help="remote api location [default: %(default)s]", default=REMOTE)
-    parser.add_argument('--timeout', help='connection timeout [default: %(default)s]', default=TIMEOUT)
-    parser.add_argument('-C', '--config', help="configuration file [default: %(default)s]",
-                        default=os.path.expanduser("~/.csirtg.yml"))  # env var
+    parser.add_argument('-l', '--limit', default=LIMIT,
+                        help="specify results limit [default: %(default)s]")
 
-    parser.add_argument('--format', help="specify an output format [default: %(default)s]", default='table')
-    parser.add_argument('--columns', help='specify output columns [default %(default)s]', default=','.join(COLUMNS))
+    parser.add_argument('--format', default='table',
+                        help="specify an output format [default: %(default)s]")
+    parser.add_argument('--columns', default=','.join(COLUMNS),
+                        help='specify output columns [default %(default)s]')
 
     # actions
     parser.add_argument('-q', '--search', help="search for an indicator")
-    parser.add_argument('--feeds', action="store_true", help="show a list of feeds (per user)")
-    parser.add_argument('--new', action='store_true', help="create a new feed or indicator")
-
-    parser.add_argument('--predict', help="test an indicator against the prediction api")
-    parser.add_argument('--predict-stdin', action="store_true")
+    parser.add_argument('--feeds', action="store_true",
+                        help="show a list of feeds (per user)")
+    parser.add_argument('--new', action='store_true',
+                        help="create a new feed or indicator")
 
     # vars
     parser.add_argument('--user', help="specify a user")
@@ -90,21 +69,32 @@ def main():
     parser.add_argument('--content')
     parser.add_argument('--provider')
 
-    parser.add_argument('--firsttime',
-                        help="timestamp when first seen [eg: 2015-11-23T00:00:00Z]")
-    parser.add_argument('--lasttime', help="timestamp when last seen [eg: 2015-11-24T00:00:00Z], treated as 'greater "
-                                           "than'")
+    parser.add_argument('--first_at', help="timestamp when first observed")
+    parser.add_argument('--last_at', help="timestamp when last observed")
 
-    parser.add_argument('--attachment', help="specify an attachment [eg: /path/to/file]")
-    parser.add_argument('--attachment-name', help="specify the attachment filename")
+    parser.add_argument('--attachment',
+                        help="specify an attachment [eg: /path/to/file]")
+    parser.add_argument('--attachment-name',
+                        help="specify the attachment filename")
 
-    parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF', action="store_true")
+    parser.add_argument('--no-verify-ssl', help='Turn TLS verification OFF',
+                        action="store_true")
 
     parser.add_argument('--sinkhole', action='store_true')
 
     # Process arguments
     args = parser.parse_args()
-    setup_logging(args)
+
+    loglevel = logging.WARNING
+    if args.verbose:
+        loglevel = logging.INFO
+    if args.debug:
+        loglevel = logging.DEBUG
+
+    console = logging.StreamHandler()
+    logging.getLogger('').setLevel(loglevel)
+    console.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.getLogger('').addHandler(console)
 
     logger = logging.getLogger(__name__)
 
@@ -123,50 +113,26 @@ def main():
 
     options = vars(args)
     if options.get('sinkhole'):
-        import sys
+
         if not sys.stdin.isatty():
             stdin = sys.stdin.read()
         else:
             logger.error("No data passed via STDIN")
             raise SystemExit
 
-        from csirtgsdk.sinkhole import Sinkhole
         ret = Sinkhole().post(stdin)
 
         if ret.get('status') == 'unauthorized':
             logger.error('unauthorized')
-        else:
-            if logger.getEffectiveLevel() == logging.DEBUG:
-                print("Predictions: \n")
-                for p in ret.get('predictions', []):
-                    print("\t%s" % p)
+            raise SystemExit
 
-        raise SystemExit
-
-    if options.get('predict') or options.get('predict_stdin'):
-        import sys
-        if options.get('predict'):
-            logger.info("Searching for: {0}".format(options.get('predict')))
-            predict = options['predict']
-            ret = Predict().get(predict)
-            print("Prediction Score: %s - %s" % (ret, predict))
-        else:
-            import sys
-            if not sys.stdin.isatty():
-                for predict in sys.stdin.read().split("\n"):
-                    if predict == '':
-                        continue
-                    ret = Predict().get(predict)
-                    print("Prediction Score: %s - %s" % (ret, predict))
-            else:
-                logger.error("No data passed via STDIN")
-                raise SystemExit
+        print(ret)
 
         raise SystemExit
 
     if options.get('search'):
         logger.info("Searching for: {0}".format(options.get('search')))
-        ret = Search().search(options.get('search'), limit=options['limit'])
+        ret = search(options.get('search'), limit=options['limit'])
         if isinstance(ret, dict):
             ret = [ret]
 
@@ -228,7 +194,7 @@ def main():
                 options['user'],
                 options['feed'],
                 limit=options['limit'],
-                lasttime=options['lasttime'],
+                last_at=options['last_at'],
         )
 
         if data.get('indicators'):

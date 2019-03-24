@@ -12,7 +12,8 @@ USER = os.environ.get('CSIRTG_USER', 'wes')
 REMOTE = os.environ.get('CSIRTG_REMOTE', 'https://csirtg.io/api')
 FEED = os.environ.get('CSIRTG_TEST_FEED', 'ci_search_test')
 
-liveonly = pytest.mark.skipif(CI_BUILD is False, reason="CI_BUILD env var not set")
+liveonly = pytest.mark.skipif(CI_BUILD is False,
+                              reason="CI_BUILD env var not set")
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def test_indicator_search_fqdn(client):
     assert f['updated_at']
 
     # create test and submit test indicator
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'indicator': INDICATOR,
@@ -68,7 +69,7 @@ def test_indicator_search_ipv4(client):
     assert f['created_at']
 
     # create test and submit test indicator
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'indicator': INDICATOR,
@@ -103,7 +104,7 @@ def test_indicator_search_ipv6(client):
     assert f['created_at']
 
     # create test and submit test indicator
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'indicator': INDICATOR,
@@ -138,7 +139,7 @@ def test_indicator_search_email(client):
     assert f['created_at']
 
     # create test and submit test indicator
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'indicator': INDICATOR,
@@ -173,7 +174,7 @@ def test_indicator_search_url(client):
     assert f['created_at']
 
     # create test and submit test indicator
-    i = Indicator(client, {
+    i = Indicator({
         'user': USER,
         'feed': FEED,
         'indicator': INDICATOR,

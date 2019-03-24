@@ -9,7 +9,9 @@ TOKEN = os.environ.get('CSIRTG_TOKEN', None)
 USER = os.environ.get('CSIRTG_USER', 'wes')
 REMOTE = os.environ.get('CSIRTG_REMOTE', 'https://csirtg.io/api')
 
-liveonly = pytest.mark.skipif(CI_BUILD is False, reason="CI_BUILD env var not set")
+liveonly = pytest.mark.skipif(CI_BUILD is False,
+                              reason="CI_BUILD env var not set")
+
 
 @pytest.fixture
 def client():
@@ -17,6 +19,7 @@ def client():
         token=TOKEN,
         remote=REMOTE
     )
+
 
 @liveonly
 def test_create_feed(client):
