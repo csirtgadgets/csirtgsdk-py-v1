@@ -202,6 +202,8 @@ class Indicator(object):
                     'comment': {
                         'content': i.args.comment
                     },
+                    'rdata': i.args.rdata,
+                    'rtype': i.args.rtype,
                     'content': i.args.content,
                     'provider': i.args.provider,
                 } for i in indicators
