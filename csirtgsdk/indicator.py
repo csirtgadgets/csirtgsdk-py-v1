@@ -204,6 +204,8 @@ class Indicator(object):
                     },
                     'content': i.args.content,
                     'provider': i.args.provider,
+                    'rdata': i.args.rdata,
+                    'rtype': i.args.rtype,
                 } for i in indicators
                 ]
         }
