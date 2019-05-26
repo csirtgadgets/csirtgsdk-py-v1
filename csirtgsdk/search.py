@@ -23,8 +23,6 @@ class Search(object):
         :param limit: limit the results [INT]
         :return: list of dicts
         """
-        uri = '{}/search?q={}&limit={}'.format(self.client.remote, q, limit)
-        self.logger.debug(uri)
-
-        body = self.client.get(uri)
+        uri = '{}/search'.format(self.client.remote)
+        body = self.client.get(uri, {'q': q, 'limit': limit})
         return body
