@@ -136,8 +136,9 @@ example usage:
         if isinstance(ret, dict):
             ret = [ret]
 
-        print(FORMATS[options.get('format')](data=ret,
-                                             cols=args.columns.split(',')))
+        for l in FORMATS[options.get('format')](data=ret,
+                                             cols=args.columns.split(',')):
+            print(l)
         raise SystemExit
 
     if options.get('indicator_new') or options.get('attachment'):

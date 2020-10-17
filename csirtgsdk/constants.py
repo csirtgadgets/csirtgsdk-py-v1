@@ -17,7 +17,7 @@ LIMIT = os.getenv('CSIRTG_LIMIT', LIMIT)
 TIMEOUT = 30
 TIMEOUT = os.getenv('CSIRTG_TIMEOUT', TIMEOUT)
 
-COLUMNS = "user,feed,indicator,last_at,first_at,count,tags,description,cc"
+COLUMNS = "user,feed,indicator,last_at,first_at,count,tags,description,cc,rdata"
 COLUMNS = os.getenv('CSIRTG_COLUMNS', COLUMNS)
 COLUMNS = COLUMNS.split(',')
 
