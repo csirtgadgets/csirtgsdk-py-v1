@@ -41,7 +41,7 @@ class HTTP(object):
             .format(str(API_VERSION))
         self.session.headers['User-Agent'] = 'csirtgsdk-python/{0}'\
             .format(VERSION)
-        self.session.headers['Authorization'] = 'Token token=' + self.token
+        self.session.headers['x-api-key'] = self.token
         self.session.headers['Content-Type'] = 'application/json'
         self.session.headers['Accept-Encoding'] = 'gzip'
 
@@ -131,6 +131,8 @@ class HTTP(object):
         if not uri.startswith(self.remote):
             uri = '{}/{}'.format(self.remote, uri)
             logger.debug(uri)
+
+        print(uri)
 
         return self._make_request(uri, data=data)
 

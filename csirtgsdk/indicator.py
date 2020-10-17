@@ -32,18 +32,18 @@ class Indicator(object):
         self.logger = logging.getLogger(__name__)
         self.client = Client()
 
-        required = {'user', 'feed'}
+        # required = {}
 
-        if kwargs is None or len(required - set(kwargs.keys())) > 0:
-            raise Exception("invalid arguments. missing: {}"
-                            .format(required-set(kwargs.keys())))
+        # if kwargs is None or len(required - set(kwargs.keys())) > 0:
+        #     raise Exception("invalid arguments. missing: {}"
+        #                     .format(required-set(kwargs.keys())))
 
-        self.user = kwargs.pop('user')
-        self.feed = kwargs.pop('feed')
-        self.comment = kwargs.pop('comment', None)
-        self.content = kwargs.pop('content', None)
-        self.attachment = kwargs.pop('attachment', None)
-        self.attachment_name = kwargs.pop('attachment_name', None)
+        # self.user = kwargs.pop('user')
+        # self.feed = kwargs.pop('feed')
+        # self.comment = kwargs.pop('comment', None)
+        # self.content = kwargs.pop('content', None)
+        # self.attachment = kwargs.pop('attachment', None)
+        # self.attachment_name = kwargs.pop('attachment_name', None)
 
         self.indicator = I(**kwargs)
 
@@ -119,29 +119,9 @@ class Indicator(object):
 
         :return: Indicator Object
         """
-        uri = '/users/{0}/feeds/{1}/indicators'\
-            .format(self.user, self.feed)
+        uri = 'indicators'
 
-        data = {
-            "indicator": json.loads(str(self.indicator)),
-            "comment": self.comment,
-            "content": self.content
-        }
-
-        if self.attachment:
-            attachment = self._file_to_attachment(
-                self.attachment, filename=self.attachment_name)
-
-            data['attachment'] = {
-                'data': attachment['data'],
-                'filename': attachment['filename']
-            }
-
-        if not data['indicator'].get('indicator'):
-            data['indicator']['indicator'] = attachment['sha1']
-
-        if not data['indicator'].get('indicator'):
-            raise Exception('Missing indicator')
+        data = str(self.indicator)
 
         return self.client.post(uri, data)
 

@@ -6,7 +6,7 @@ del get_versions
 
 API_VERSION = os.getenv('CSIRTG_API_VERSION', '2')
 
-REMOTE = 'https://csirtg.io/api'
+REMOTE = 'https://be.csirtg.io'
 REMOTE = os.getenv('CSIRTG_REMOTE', REMOTE)
 
 TOKEN = os.getenv('CSIRTG_TOKEN', None)
